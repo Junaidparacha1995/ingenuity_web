@@ -1,8 +1,8 @@
-# About Ingenuity Systems | AI &amp; Software Engineering Team
+# About | Ingenuity Systems
 
 Source page: /pages/about
 
-About Ingenuity Systems | AI & Software Engineering Team 
+About | Ingenuity Systems 
  Skip to content 
  Technology With Purpose.
  We build digital capabilities that help businesses operate with greater intelligence, efficiency, and confidence.

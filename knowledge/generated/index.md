@@ -30,7 +30,7 @@ pipeline.live
  Interactive architecture 
  Orchestrator
  Coordinates AI, rules, data, and workflows across connected business systems.
- Hover / tap nodes
+ Select a node
  System activity
  Connected by design
  See how your digital operation becomes one working system.

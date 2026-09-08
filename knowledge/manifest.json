@@ -1,5 +1,12 @@
 [
   {
+    "page": ".local/skills/mockup-sandbox/templates/ds-entry/index.html",
+    "url": "/.local/skills/mockup-sandbox/templates/ds-entry",
+    "file": "knowledge/generated/-local__skills__mockup-sandbox__templates__ds-entry__index.md",
+    "title": "Mockup Canvas",
+    "sha256": "2d77e4337d8cb0008763f4dc1a85889efca2ca0b2b9633313eb6785d7827fea6"
+  },
+  {
     "page": "case-studies/applied-ai-lab.html",
     "url": "/case-studies/applied-ai-lab",
     "file": "knowledge/generated/case-studies__applied-ai-lab.md",
@@ -32,7 +39,7 @@
     "url": "/",
     "file": "knowledge/generated/index.md",
     "title": "Ingenuity Systems | AI, Automation &amp; Software Engineering",
-    "sha256": "0bf212241d569fdf46926c9eee206dcba73e10d98d9fa33286a1fce32fad0aeb"
+    "sha256": "0f5c02edd90756fd7821c38069176408b08e8e667287780c30ef1d9072dc71ee"
   },
   {
     "page": "industries/ecommerce.html",
@@ -94,8 +101,8 @@
     "page": "pages/about.html",
     "url": "/pages/about",
     "file": "knowledge/generated/pages__about.md",
-    "title": "About Ingenuity Systems | AI &amp; Software Engineering Team",
-    "sha256": "fb3c426459085441169254855aae318a3dda5bab2c7bc4e7b89cae491791b2f0"
+    "title": "About | Ingenuity Systems",
+    "sha256": "6dc46a12d96db7e34ba5a829f95e233675942e44ecaba11fb4fac3649c1c5e70"
   },
   {
     "page": "pages/ai-maturity.html",
