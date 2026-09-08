@@ -1,0 +1,81 @@
+# Public project metadata
+
+{
+  "profile": "Harmain11",
+  "publicRepositoryCount": 308,
+  "lastVerified": "2026-09-08",
+  "projects": [
+    {
+      "slug": "cross-chain-hub",
+      "name": "AURA Forge / Cross-Chain Hub",
+      "category": "web3 ai",
+      "description": "An autonomous AI system that generates, audits, self-corrects, and prepares smart contracts for EVM and Solana from plain-English requirements.",
+      "repository": "https://github.com/Harmain11/Cross-Chain-Hub",
+      "language": "TypeScript + Python"
+    },
+    {
+      "slug": "retail-sales-forecasting",
+      "name": "Retail Sales Forecasting",
+      "category": "ml data",
+      "description": "Time-series forecasting using multiple machine-learning models and LSTM-based sequence modeling with feature engineering.",
+      "repository": "https://github.com/Harmain11/retail-sales-forecasting-ml",
+      "language": "Python / Jupyter"
+    },
+    {
+      "slug": "sam2-segmentation",
+      "name": "SAM2 Video Wall Segmentation",
+      "category": "vision ai",
+      "description": "Video and image wall segmentation using SAM2 with custom overlays for visualizing model output across frames and images.",
+      "repository": "https://github.com/Harmain11/video-wall-segmentation-sam2",
+      "language": "Python / Jupyter"
+    },
+    {
+      "slug": "deit-skin-cancer",
+      "name": "DeiT Skin Cancer Classification",
+      "category": "vision ml",
+      "description": "A vision-transformer workflow for skin-cancer image classification, including fine-tuning and TensorFlow Lite conversion.",
+      "repository": "https://github.com/Harmain11/deit-skin-cancer-classification",
+      "language": "TensorFlow / Jupyter"
+    },
+    {
+      "slug": "fairface-bias",
+      "name": "FairFace Gender Bias Analysis",
+      "category": "ml vision responsible-ai",
+      "description": "Gender classification on FairFace with a ResNet50 baseline and fairness metrics to evaluate model behavior across groups.",
+      "repository": "https://github.com/Harmain11/fairface-gender-bias-analysis",
+      "language": "TensorFlow / Jupyter"
+    },
+    {
+      "slug": "blackjack-rl",
+      "name": "Blackjack Reinforcement Learning",
+      "category": "rl ml",
+      "description": "Dynamic programming and reinforcement-learning experiments on the Blackjack MDP using SARSA and Q-learning.",
+      "repository": "https://github.com/Harmain11/blackjack-mdp-reinforcement-learning",
+      "language": "Python / Jupyter"
+    },
+    {
+      "slug": "x15-flight",
+      "name": "X-15 Flight Dynamics Simulation",
+      "category": "simulation ml",
+      "description": "A consolidated X-15 flight-dynamics study with simulation, LQR control, literature review, and ARX system identification.",
+      "repository": "https://github.com/Harmain11/ecm06aee-flight-dynamics-simulation",
+      "language": "Python / Jupyter"
+    },
+    {
+      "slug": "airbnb-semma",
+      "name": "Airbnb SEMMA Price Regression",
+      "category": "ml data",
+      "description": "An interpretable Airbnb nightly-price model built with the SEMMA workflow, data cleaning, exploration, transformations, and regression assessment.",
+      "repository": "https://github.com/Harmain11/airbnb-semma-price-regression",
+      "language": "Python / Jupyter"
+    },
+    {
+      "slug": "kgqa-preprocessing",
+      "name": "Knowledge Graph QA Preprocessing",
+      "category": "ai data",
+      "description": "Preprocessing and loading workflows for KGQA datasets and knowledge graphs including CWQ, SimpleQuestions, WebQSP, Freebase, and Wikidata.",
+      "repository": "https://github.com/Harmain11/knowledge-graph-question-answering-preprocessing",
+      "language": "Python / Jupyter"
+    }
+  ]
+}

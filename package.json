@@ -1,0 +1,25 @@
+{
+  "name": "ingenuity-systems-site",
+  "version": "6.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js",
+    "build:knowledge": "node scripts/build-knowledge.mjs",
+    "sync:github": "node scripts/sync-github.mjs",
+    "setup:rag": "node scripts/setup-rag.mjs",
+    "audit": "node scripts/audit-site.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "compression": "1.8.1",
+    "dotenv": "17.4.2",
+    "express": "4.21.2",
+    "express-rate-limit": "8.7.0",
+    "helmet": "8.3.0",
+    "openai": "7.10.0"
+  }
+}
