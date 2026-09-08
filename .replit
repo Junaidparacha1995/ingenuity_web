@@ -33,3 +33,12 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[userenv]
+
+[userenv.shared]
+RAG_VECTOR_STORE_ID = "vs_6aa023ecb0b8819192337e9f58ffac75"
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["npm", "start"]
