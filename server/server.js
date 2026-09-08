@@ -145,6 +145,7 @@ const jsonLdFor=(rel,origin,title)=>{
 const renderHtml=(req,res,rel,status=200)=>{
   const file=path.join(root,rel);if(!fs.existsSync(file))return false;
   let html=fs.readFileSync(file,'utf8');const origin=originFor(req),canonical=`${origin}${canonicalPath(rel)}`,og=`${origin}/assets/images/og-cover.svg`,title=html.match(/<title>([^<]+)<\/title>/i)?.[1]||'Ingenuity Systems';
+  html=html.replace(/(href=["'][^"']*\/?assets\/css\/[^"'?]+\.css)(?:\?[^"']*)?(["'])/gi,'$1?v=6.9.1$2');
   html=html.replace(/<link[^>]+rel=["']canonical["'][^>]*>/gi,'').replace(/<meta[^>]+property=["']og:url["'][^>]*>/gi,'').replace(/<meta[^>]+property=["']og:image["'][^>]*>/gi,'').replace(/<meta[^>]+name=["']twitter:image["'][^>]*>/gi,'');
   const extra=`<link rel="canonical" href="${canonical}"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${og}"><meta name="twitter:image" content="${og}"><script type="application/ld+json">${JSON.stringify(jsonLdFor(rel,origin,title)).replace(/</g,'\\u003c')}</script>`;
   html=html.replace('</head>',`${extra}</head>`);res.status(status).set('Cache-Control',status===200?'public, max-age=300':'no-store').type('html').send(html);return true;
