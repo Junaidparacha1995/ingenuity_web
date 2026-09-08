@@ -606,7 +606,10 @@ footer > .wrap{position:relative; z-index:1;}
   .discovery-band{padding:36px;}
 }
 
-.cursor-dot{display:none;}
+.cursor-dot{display:none!important}
+html,body{cursor:default!important}
+a,button,[role="button"],label,select,summary{cursor:pointer!important}
+input,textarea,[contenteditable="true"]{cursor:text!important}
 
 /* Node-graph diagram — "How It Connects" */
 .diagram-wrap{position:relative; width:1200px; max-width:1200px; margin:0 auto; height:536px;}

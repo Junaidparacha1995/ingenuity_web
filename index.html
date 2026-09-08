@@ -159,7 +159,8 @@
     .hc-graph-flow .node-title{fill:#f8fbff;font:800 15px Manrope,sans-serif}
     .hc-graph-flow .node-sub{fill:#8ea9c6;font:800 8.7px Manrope,sans-serif;letter-spacing:.10em;text-transform:uppercase}
     .hc-graph-flow .node-dot{fill:#ff774f;stroke:rgba(255,255,255,.14);stroke-width:1}.hc-graph-flow .node-dot.output{fill:#48d597}.hc-graph-flow .node-dot.core{fill:#fff}
-    .hc-graph-flow .core-title{fill:#fff;font:800 20px Manrope,sans-serif}.hc-graph-flow .core-sub{fill:rgba(255,255,255,.80);font:800 9.5px Manrope,sans-serif;letter-spacing:.11em;text-transform:uppercase}
+    .hc-graph-flow .core-card{fill:url(#flowCore);stroke:rgba(255,255,255,.34);stroke-width:1.4}.hc-graph-flow .core-glass{fill:rgba(255,255,255,.10)}.hc-graph-flow .core-ring{fill:none;stroke:rgba(255,255,255,.17);stroke-width:1}
+    .hc-graph-flow .core-title{fill:#fff;font:800 17px Manrope,sans-serif;letter-spacing:-.02em}.hc-graph-flow .core-sub{fill:rgba(255,255,255,.88);font:800 8.5px Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase}.hc-graph-flow .core-meta{fill:rgba(255,255,255,.72);font:700 8px Manrope,sans-serif;letter-spacing:.08em}
     .hc-graph-flow .svg-node:hover,.hc-graph-flow .svg-node:focus-visible,.hc-graph-flow .svg-node.active{transform:translateY(-4px)}
     .hc-graph-flow .svg-node:hover .node-card,.hc-graph-flow .svg-node:focus-visible .node-card,.hc-graph-flow .svg-node.active .node-card{stroke:rgba(255,139,103,.65);filter:url(#flowGlow)}
     .hc-graph-flow .svg-node.active .node-title,.hc-graph-flow .svg-node.active .node-sub{fill:#fff}
@@ -219,9 +220,16 @@
 
 <!-- CORE -->
 <g class="svg-node core active" data-group="core" data-title="Orchestrator" data-kicker="Intelligent core" data-copy="Coordinates AI, rules, data, and workflows across connected systems with observability and human oversight.">
- <g filter="url(#flowShadow)"><rect x="495" y="196" width="132" height="128" rx="36" fill="url(#flowCore)" stroke="rgba(255,255,255,.22)"/></g>
- <text class="core-title" x="561" y="247" text-anchor="middle">Orchestrator</text><text class="core-sub" x="561" y="272" text-anchor="middle">INTELLIGENT CORE</text>
- <text x="561" y="298" text-anchor="middle" fill="rgba(255,255,255,.68)" font-family="Manrope,sans-serif" font-size="9.5" font-weight="700">AI · DATA · RULES</text>
+ <g filter="url(#flowShadow)">
+  <rect class="core-card" x="486" y="202" width="150" height="116" rx="30"/>
+  <path class="core-glass" d="M516 202h90a30 30 0 0 1 30 30v8H486v-8a30 30 0 0 1 30-30Z"/>
+  <rect class="core-ring" x="493" y="209" width="136" height="102" rx="24"/>
+ </g>
+ <circle cx="561" cy="228" r="4" fill="#fff"/><circle cx="561" cy="228" r="8" fill="none" stroke="rgba(255,255,255,.28)"/>
+ <text class="core-title" x="561" y="258" text-anchor="middle">Orchestrator</text>
+ <text class="core-sub" x="561" y="280" text-anchor="middle">INTELLIGENT CORE</text>
+ <path d="M524 290H598" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+ <text class="core-meta" x="561" y="305" text-anchor="middle">AI · DATA · RULES</text>
 </g>
 
 <!-- OUTCOMES -->
