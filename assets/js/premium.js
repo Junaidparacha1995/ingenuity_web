@@ -7,12 +7,6 @@ const premiumSiteHref = (path) => `${premiumSiteRoot}${path}`;
   const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Tech ecosystem tabs
-  $$('.tech-tab').forEach(btn=>btn.addEventListener('click',()=>{
-    $$('.tech-tab').forEach(b=>{b.classList.toggle('active',b===btn);b.setAttribute('aria-selected',String(b===btn));});
-    $$('.tech-panel').forEach(p=>p.classList.toggle('active',p.dataset.techPanel===btn.dataset.tech));
-  }));
-
   // Interactive delivery process
   const processSteps=$$('.flow-step[data-process]');
   const activateProcess=i=>{
@@ -24,19 +18,6 @@ const premiumSiteHref = (path) => `${premiumSiteRoot}${path}`;
     s.addEventListener('click',run); s.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();run();}});
   });
   if(processSteps.length) activateProcess(0);
-
-  // ROI calculator — directional planning model
-  const people=$('#roi-people'), hours=$('#roi-hours'), rate=$('#roi-rate'), potential=$('#roi-potential');
-  if(people&&hours&&rate&&potential){
-    const nf=new Intl.NumberFormat('en-US'); const money=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
-    const calc=()=>{
-      const p=+people.value||0,h=+hours.value||0,r=+rate.value||0,a=(+potential.value||0)/100;
-      const annual=p*h*52*a, value=annual*r, days=annual/8;
-      $('#roi-people-out').textContent=p; $('#roi-hours-out').textContent=h; $('#roi-potential-out').textContent=Math.round(a*100)+'%';
-      $('#roi-hours-saved').textContent=nf.format(Math.round(annual)); $('#roi-value').textContent=money.format(value); $('#roi-days').textContent=nf.format(Math.round(days));
-    };
-    [people,hours,rate,potential].forEach(i=>i.addEventListener('input',calc)); calc();
-  }
 
   // Solution finder
   const estimator=$('#estimator-ui');
@@ -91,16 +72,6 @@ const premiumSiteHref = (path) => `${premiumSiteRoot}${path}`;
 (() => {
   'use strict';
   const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
-
-  // Product cockpit micro-interaction.
-  const cockpit=$('.product-cockpit');
-  if(cockpit){
-    const titles={Overview:'Connected business overview','AI Agents':'AI agent activity','Automations':'Workflow automation control','Data':'Data synchronization overview','Integrations':'Connected systems overview'};
-    $$('.cockpit-sidebar button',cockpit).forEach(btn=>btn.addEventListener('click',()=>{
-      $$('.cockpit-sidebar button',cockpit).forEach(x=>x.classList.toggle('active',x===btn));
-      const h=$('.cockpit-top h3',cockpit); if(h) h.textContent=titles[btn.textContent.trim()]||titles.Overview;
-    }));
-  }
 
   // Build Your AI System configurator.
   const builder=$('#system-builder');

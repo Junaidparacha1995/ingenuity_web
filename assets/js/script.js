@@ -9,24 +9,27 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- Brief startup sequence ---------- */
+  const skipStartup = new URLSearchParams(window.location.search).has('skip-startup');
   const startup = document.createElement('div');
   startup.className = 'startup-screen';
   startup.setAttribute('role', 'status');
   startup.setAttribute('aria-label', 'Loading Ingenuity Systems');
   startup.innerHTML = `
     <div class="startup-core">
-      <div class="startup-mark"><img src="${siteHref('assets/images/logo-icon.svg')}" alt="" aria-hidden="true"></div>
+      <div class="startup-mark"><img src="${siteHref('assets/images/official-logo-icon.png')}" alt="" aria-hidden="true"></div>
       <div class="startup-wordmark">Ingenuity Systems</div>
       <div class="startup-status"><i aria-hidden="true"></i><span>Initializing connected systems</span></div>
     </div>`;
-  document.body.prepend(startup);
-  document.body.classList.add('startup-active');
+  if (!skipStartup) {
+    document.body.prepend(startup);
+    document.body.classList.add('startup-active');
+  }
   const finishStartup = () => {
     startup.classList.add('is-complete');
     document.body.classList.remove('startup-active');
     setTimeout(() => startup.remove(), reduceMotion ? 0 : 560);
   };
-  window.setTimeout(finishStartup, reduceMotion ? 220 : 1150);
+  if (!skipStartup) window.setTimeout(finishStartup, reduceMotion ? 220 : 1150);
 
   /* ---------- Ambient pointer + custom cursor ---------- */
   const spotlight = document.createElement('div');
@@ -96,6 +99,54 @@
     if (megaWrap) megaWrap.removeAttribute('data-active');
     if (siteHeader && innerWidth > 720) siteHeader.classList.remove('menu-open');
   };
+  /* Keep copied headers aligned: Work is a focused two-link menu and Company
+     is intentionally small. This also makes older static headers accessible
+     without duplicating navigation markup in every page. */
+  const workLink = $('.nav-work-link');
+  if (workLink && !workLink.closest('.has-dropdown')) {
+    const li = workLink.closest('li');
+    if (li) {
+      li.className = 'has-dropdown';
+      li.dataset.menu = 'work';
+      workLink.setAttribute('aria-haspopup', 'true');
+      workLink.setAttribute('aria-expanded', 'false');
+      workLink.innerHTML = 'Work <span aria-hidden="true" class="caret"></span>';
+      const panel = document.createElement('div');
+      panel.className = 'mega-dropdown mega-work';
+      panel.dataset.panel = 'work';
+      panel.setAttribute('aria-hidden', 'true');
+      panel.innerHTML = '<div class="mega-inner"><div class="mega-col"><div class="mega-col-title">Work</div><ul><li><a href="/projects">Projects</a></li><li><a href="/case-studies">Case Studies</a></li></ul></div></div>';
+      document.querySelector('header')?.append(panel);
+      menuItems.push(li);
+      panels.push(panel);
+    }
+  }
+  $$('.logo-full').forEach((logo) => {
+    logo.src = siteHref('assets/images/official-logo-light.png');
+  });
+  $$('.footer-watermark, .startup-mark img, .cockpit-brand img').forEach((logo) => {
+    logo.src = siteHref('assets/images/official-logo-icon.png');
+  });
+  $$('link[rel="icon"]').forEach((icon) => { icon.href = siteHref('assets/images/official-logo-icon.png'); });
+  $$('img[src*="images.unsplash.com"]').forEach((image) => {
+    if (image.dataset.fallback) image.src = image.dataset.fallback;
+  });
+  const companyPanel = $('.mega-dropdown[data-panel="company"]');
+  companyPanel?.querySelectorAll('a[href*="ai-maturity"],a[href*="build-your-system"]').forEach((link) => link.closest('li')?.remove());
+  const servicesPanel = $('.mega-dropdown[data-panel="services"]');
+  if (servicesPanel && !servicesPanel.querySelector('a[href*="ai-maturity"]')) {
+    const lists = servicesPanel.querySelectorAll('ul');
+    const list = lists[lists.length - 1] || servicesPanel.querySelector('ul');
+    if (list) list.insertAdjacentHTML('beforeend',
+      `<li><a href="${siteHref('pages/ai-maturity')}">AI Maturity Assessment</a></li><li><a href="${siteHref('pages/build-your-system')}">Build Your Own AI System</a></li>`);
+  }
+  const existingWorkPanel = $('.mega-dropdown[data-panel="work"]');
+  if (existingWorkPanel) {
+    existingWorkPanel.innerHTML = `<div class="mega-inner"><div class="mega-col"><div class="mega-col-title">Work</div><ul><li><a href="${siteHref('projects')}">Projects</a></li><li><a href="${siteHref('case-studies')}">Case Studies</a></li></ul></div></div>`;
+  }
+  if (companyPanel) {
+    companyPanel.innerHTML = `<div class="mega-inner"><div class="mega-col"><div class="mega-col-title">Company</div><ul><li><a href="${siteHref('pages/about')}">About Us</a></li><li><a href="${siteHref('pages/careers')}">Careers</a></li><li><a href="${siteHref('pages/contact')}">Contact</a></li></ul></div></div>`;
+  }
   menuItems.forEach(item => {
     const key = item.dataset.menu;
     const panel = $(`.mega-dropdown[data-panel="${key}"]`);
@@ -567,7 +618,7 @@
       },
       {
         keys: ['roi','return on investment','savings','hours saved','business case','estimate automation roi'],
-        html: `Use the <a href="${siteHref('index.html#roi-calculator')}"><strong>Automation ROI Calculator</strong></a> to build a directional estimate from people involved, weekly manual hours, loaded hourly cost, and realistic automation potential. It is a planning model rather than a guaranteed saving. For a validated opportunity assessment, <a href="https://calendly.com/ingenuitysystems" target="_blank" rel="noopener">book a strategy call →</a>`
+        html: `For a directional automation estimate, share the process, people involved, weekly manual hours, and realistic automation potential. It is a planning model rather than a guaranteed saving. For a validated opportunity assessment, <a href="https://calendly.com/ingenuitysystems" target="_blank" rel="noopener">book a strategy call →</a>`
       },
       {
         keys: ['case study','case studies','client story','proof','results','examples'],
@@ -766,6 +817,26 @@
     form?.addEventListener('submit', e => { e.preventDefault(); ask(input.value); input.value = ''; });
     suggestions?.addEventListener('click', e => { const b = e.target.closest('[data-question]'); if (b) ask(b.dataset.question); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && assistant.classList.contains('open')) setOpen(false); });
+  }
+  $$('.decision-toggle').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const card = toggle.closest('.decision-card');
+      const expanded = card.classList.toggle('is-expanded');
+      toggle.setAttribute('aria-expanded', String(expanded));
+      const detail = card.querySelector('.decision-detail');
+      detail?.setAttribute('aria-hidden', String(!expanded));
+      const sign = toggle.querySelector('[aria-hidden="true"]');
+      if (sign) sign.textContent = expanded ? '−' : '+';
+    });
+  });
+  const projectHeads = $$('.hero-rotating-headline .hero-headline');
+  if (projectHeads.length > 1 && !reduceMotion) {
+    let headIndex = 0;
+    setInterval(() => {
+      projectHeads[headIndex].classList.remove('active');
+      headIndex = (headIndex + 1) % projectHeads.length;
+      projectHeads[headIndex].classList.add('active');
+    }, 3600);
   }
 })();
 

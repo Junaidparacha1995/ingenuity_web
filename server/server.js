@@ -19,7 +19,7 @@ const contactWebhook=process.env.CONTACT_WEBHOOK_URL||'';
 const analyticsWebhook=process.env.ANALYTICS_WEBHOOK_URL||'';
 const requireContactDelivery=String(process.env.REQUIRE_CONTACT_DELIVERY||'false').toLowerCase()==='true';
 const calendly='https://calendly.com/ingenuitysystems';
-const assetVersion='6.9.3';
+const assetVersion='6.10.2';
 const runtimeDir=path.join(root,'.runtime');fs.mkdirSync(runtimeDir,{recursive:true});
 
 let ragState={};try{ragState=JSON.parse(fs.readFileSync(path.join(root,'.rag-store.json'),'utf8'));}catch{}
@@ -134,7 +134,7 @@ const allHtml=()=>{
 const originFor=req=>configuredSiteUrl||`${req.protocol}://${req.get('host')}`;
 const canonicalPath=rel=>{if(rel==='index.html')return '/';if(rel.endsWith('/index.html'))return `/${rel.slice(0,-'/index.html'.length)}`;return `/${rel.replace(/\.html$/,'')}`;};
 const jsonLdFor=(rel,origin,title)=>{
-  const organization={'@type':'Organization','@id':`${origin}/#organization`,name:'Ingenuity Systems',url:`${origin}/`,email:'info@ingenuitysys.com',logo:`${origin}/assets/images/logo-light.svg`,sameAs:['https://github.com/Harmain11','https://www.linkedin.com/company/ingenuitysystems'],description:'AI, automation, custom software, systems integration and data engineering.'};
+  const organization={'@type':'Organization','@id':`${origin}/#organization`,name:'Ingenuity Systems',url:`${origin}/`,email:'info@ingenuitysys.com',logo:`${origin}/assets/images/official-logo-full.png`,sameAs:['https://github.com/Harmain11','https://www.linkedin.com/company/ingenuitysystems'],description:'AI, machine learning, applied AI, automation, custom software, systems integration and data engineering.'};
   const website={'@type':'WebSite','@id':`${origin}/#website`,url:`${origin}/`,name:'Ingenuity Systems',publisher:{'@id':`${origin}/#organization`}};
   if(rel==='index.html')return {'@context':'https://schema.org','@graph':[organization,website]};
   const clean=canonicalPath(rel),parts=clean.replace(/^\//,'').split('/');

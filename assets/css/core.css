@@ -187,7 +187,7 @@ header.scrolled{
 .nav{max-width:1240px; margin:0 auto; padding:8px 32px; display:flex; align-items:center; justify-content:space-between; position:relative; z-index:2;}
 header.scrolled .nav{padding:6px 22px;}
 .brand{display:flex; align-items:center;}
-.brand img.logo-full{height:86px; width:auto; transition:transform .4s var(--ease-spring);}
+.brand img.logo-full{height:86px; width:auto; transition:transform .4s var(--ease-spring); object-fit:contain;}
 .brand:hover img.logo-full{transform:scale(1.05);}
 .nav-links{display:flex; gap:28px; font-family:'Manrope', sans-serif; font-weight:600; font-size:14.5px; align-items:center;}
 .nav-links > li{position:static;}
