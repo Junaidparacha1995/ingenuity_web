@@ -8,6 +8,26 @@
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- Brief startup sequence ---------- */
+  const startup = document.createElement('div');
+  startup.className = 'startup-screen';
+  startup.setAttribute('role', 'status');
+  startup.setAttribute('aria-label', 'Loading Ingenuity Systems');
+  startup.innerHTML = `
+    <div class="startup-core">
+      <div class="startup-mark"><img src="${siteHref('assets/images/logo-icon.svg')}" alt="" aria-hidden="true"></div>
+      <div class="startup-wordmark">Ingenuity Systems</div>
+      <div class="startup-status"><i aria-hidden="true"></i><span>Initializing connected systems</span></div>
+    </div>`;
+  document.body.prepend(startup);
+  document.body.classList.add('startup-active');
+  const finishStartup = () => {
+    startup.classList.add('is-complete');
+    document.body.classList.remove('startup-active');
+    setTimeout(() => startup.remove(), reduceMotion ? 0 : 560);
+  };
+  window.setTimeout(finishStartup, reduceMotion ? 220 : 1150);
+
   /* ---------- Ambient pointer + custom cursor ---------- */
   const spotlight = document.createElement('div');
   spotlight.id = 'dot-spotlight';
@@ -57,6 +77,13 @@
       const open = document.body.classList.toggle('menu-open');
       menuToggle.setAttribute('aria-expanded', String(open));
       navLinks.classList.toggle('open', open);
+    });
+    navLinks.addEventListener('click', (event) => {
+      if (event.target.closest('a')) {
+        document.body.classList.remove('menu-open');
+        navLinks.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }
     });
   }
 

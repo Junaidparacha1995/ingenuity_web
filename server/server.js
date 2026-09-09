@@ -19,6 +19,7 @@ const contactWebhook=process.env.CONTACT_WEBHOOK_URL||'';
 const analyticsWebhook=process.env.ANALYTICS_WEBHOOK_URL||'';
 const requireContactDelivery=String(process.env.REQUIRE_CONTACT_DELIVERY||'false').toLowerCase()==='true';
 const calendly='https://calendly.com/ingenuitysystems';
+const assetVersion='6.9.2';
 const runtimeDir=path.join(root,'.runtime');fs.mkdirSync(runtimeDir,{recursive:true});
 
 let ragState={};try{ragState=JSON.parse(fs.readFileSync(path.join(root,'.rag-store.json'),'utf8'));}catch{}
@@ -145,7 +146,9 @@ const jsonLdFor=(rel,origin,title)=>{
 const renderHtml=(req,res,rel,status=200)=>{
   const file=path.join(root,rel);if(!fs.existsSync(file))return false;
   let html=fs.readFileSync(file,'utf8');const origin=originFor(req),canonical=`${origin}${canonicalPath(rel)}`,og=`${origin}/assets/images/og-cover.svg`,title=html.match(/<title>([^<]+)<\/title>/i)?.[1]||'Ingenuity Systems';
-  html=html.replace(/(href=["'][^"']*\/?assets\/css\/[^"'?]+\.css)(?:\?[^"']*)?(["'])/gi,'$1?v=6.9.1$2');
+  html=html
+    .replace(/(href=["'][^"']*\/?assets\/css\/[^"'?]+\.css)(?:\?[^"']*)?(["'])/gi,`$1?v=${assetVersion}$2`)
+    .replace(/(src=["'][^"']*\/?assets\/js\/[^"'?]+\.js)(?:\?[^"']*)?(["'])/gi,`$1?v=${assetVersion}$2`);
   html=html.replace(/<link[^>]+rel=["']canonical["'][^>]*>/gi,'').replace(/<meta[^>]+property=["']og:url["'][^>]*>/gi,'').replace(/<meta[^>]+property=["']og:image["'][^>]*>/gi,'').replace(/<meta[^>]+name=["']twitter:image["'][^>]*>/gi,'');
   const extra=`<link rel="canonical" href="${canonical}"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${og}"><meta name="twitter:image" content="${og}"><script type="application/ld+json">${JSON.stringify(jsonLdFor(rel,origin,title)).replace(/</g,'\\u003c')}</script>`;
   html=html.replace('</head>',`${extra}</head>`);res.status(status).set('Cache-Control',status===200?'public, max-age=300':'no-store').type('html').send(html);return true;
