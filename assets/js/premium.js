@@ -25,19 +25,38 @@ const premiumSiteHref = (path) => `${premiumSiteRoot}${path}`;
     const answers={}; let step=1;
     const map={
       manual:{title:'Business Process Automation',copy:'Start by mapping the repetitive workflow, handoffs, exceptions and systems involved. A focused automation pilot can validate value before you expand.',link:premiumSiteHref('services/automation')},
-      knowledge:{title:'AI & Intelligent Systems',copy:'A knowledge assistant, RAG system, copilot or agentic workflow may be the best first move—especially when people spend time searching, interpreting or repeatedly answering the same questions.',link:premiumSiteHref('services/ai')},
+      knowledge:{title:'AI & Intelligent Systems',copy:'A knowledge assistant, RAG system, copilot or agentic workflow may be the best first move, especially when people spend time searching, interpreting, or repeatedly answering the same questions.',link:premiumSiteHref('services/ai')},
       software:{title:'Software & Digital Engineering',copy:'Your starting point is likely a purpose-built application, portal, internal tool or digital product designed around the workflow rather than forcing the workflow into a generic platform.',link:premiumSiteHref('services/software')},
       systems:{title:'Systems Integration & Data',copy:'Start with the data and system handoffs. Connecting APIs, CRM/ERP platforms, databases and reporting layers can remove duplicate work and create a reliable operating picture.',link:premiumSiteHref('services/integration')}
+    };
+    const scoreRules={
+      1:{manual:{automation:3},knowledge:{ai:3},software:{software:3},systems:{integration:3}},
+      2:{operations:{automation:2},sales:{automation:1,software:1},service:{ai:1,automation:1},data:{integration:2,ai:1}},
+      3:{spreadsheets:{automation:2},tools:{integration:2},stack:{ai:1,software:1},modernize:{software:2}},
+      4:{speed:{automation:1,software:1},cost:{automation:2},experience:{ai:1,software:1},scale:{integration:1,software:1}}
+    };
+    const serviceMap={automation:map.manual,ai:map.knowledge,software:map.software,integration:map.systems};
+    const contextLabels={
+      operations:'operations',sales:'sales and CRM',service:'customer service',data:'data and reporting',
+      spreadsheets:'a mostly manual setup',tools:'separate tools',stack:'an established software stack',modernize:'a custom system that needs modernization',
+      speed:'moving faster',cost:'reducing repetitive effort',experience:'improving user experience',scale:'scaling without added complexity'
     };
     const show=n=>{
       $$('.est-step',estimator).forEach(x=>x.classList.toggle('active',+x.dataset.step===n));
       const pct=((n-1)/4)*100; $('#est-progress-bar').style.width=pct+'%'; $('#est-progress-label').textContent=`Step ${n} of 4`;
     };
     const result=()=>{
-      const primary=map[answers[1]]||map.manual;
+      const scores={automation:0,ai:0,software:0,integration:0};
+      Object.entries(answers).forEach(([question,value])=>{
+        Object.entries(scoreRules[question]?.[value]||{}).forEach(([service,points])=>{scores[service]+=points;});
+      });
+      const winner=Object.keys(scores).reduce((best,key)=>scores[key]>scores[best]?key:best,'automation');
+      const primary=serviceMap[winner];
       $$('.est-step',estimator).forEach(x=>x.classList.remove('active')); $('#est-result').classList.add('active');
       $('#est-progress-bar').style.width='100%'; $('#est-progress-label').textContent='Recommendation ready';
-      $('#est-result-title').textContent=primary.title; $('#est-result-copy').textContent=primary.copy;
+      const context=[answers[2],answers[3],answers[4]].map(value=>contextLabels[value]).filter(Boolean);
+      $('#est-result-title').textContent=primary.title;
+      $('#est-result-copy').textContent=`${primary.copy} This recommendation also reflects your focus on ${context.join(', ')}.`;
       $('#est-result-link').href=primary.link;
       try{localStorage.setItem('ingenuitySolutionFinder',JSON.stringify(answers));}catch(e){}
     };

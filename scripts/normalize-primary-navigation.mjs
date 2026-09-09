@@ -19,6 +19,32 @@ const panels = {
   company: '<div aria-hidden="true" class="mega-dropdown mega-company" data-panel="company"><div class="mega-inner"><div class="mega-col"><div class="mega-col-title">Company</div><ul><li><a href="/pages/about">About Us</a></li><li><a href="/pages/careers">Careers</a></li><li><a href="/pages/contact">Contact</a></li></ul></div></div></div>'
 };
 
+function matchingDivEnd(source, start) {
+  const token = /<div\b[^>]*>|<\/div>/gi;
+  token.lastIndex = start;
+  let depth = 0;
+  let match;
+  while ((match = token.exec(source))) {
+    if (match[0][1] === '/') {
+      depth -= 1;
+      if (depth === 0) return token.lastIndex;
+    } else {
+      depth += 1;
+    }
+  }
+  return source.length;
+}
+
+function removePanel(source, key) {
+  let output = source;
+  let start;
+  const pattern = new RegExp(`<div\\b[^>]*data-panel="${key}"[^>]*>`, 'i');
+  while ((start = output.search(pattern)) >= 0) {
+    output = output.slice(0, start) + output.slice(matchingDivEnd(output, start));
+  }
+  return output;
+}
+
 for (const file of files) {
   const source = fs.readFileSync(file, 'utf8');
   const headerEnd = source.indexOf('</header>');
@@ -33,14 +59,13 @@ for (const file of files) {
   const item = (key, label, href, dropdown = true) =>
     `<li class="${dropdown ? 'has-dropdown' : ''}"${dropdown ? ` data-menu="${key}"` : ''}><a aria-expanded="${dropdown ? 'false' : undefined}" aria-haspopup="${dropdown ? 'true' : undefined}" class="top-link${active === key ? ' active' : ''}" href="${href}">${label}${dropdown ? ' <span aria-hidden="true" class="caret"></span>' : ''}</a></li>`
       .replace(' aria-expanded="undefined"', '').replace(' aria-haspopup="undefined"', '');
-  const nav = `<ul class="nav-links" id="primary-navigation">${item('home', 'Home', '/')}${item('services', 'Services', '/services')}${item('industries', 'Industries', '/industries')}${item('work', 'Work', '/projects')}${item('company', 'Company', '/pages/about')}</ul>`;
+  const nav = `<ul class="nav-links" id="primary-navigation">${item('home', 'Home', '/', false)}${item('services', 'Services', '/services')}${item('industries', 'Industries', '/industries')}${item('work', 'Work', '/projects')}${item('company', 'Company', '/pages/about')}</ul>`;
   let result = source.slice(0, headerEnd).replace(/<ul class="nav-links" id="primary-navigation">[\s\S]*?<\/ul>/, nav) + source.slice(headerEnd);
   const resultHeaderEnd = result.indexOf('</header>');
   let headerPart = result.slice(0, resultHeaderEnd);
-  for (const [key, panel] of Object.entries(panels)) {
-    const matches = [...headerPart.matchAll(new RegExp(`data-panel="${key}"`, 'g'))];
-    if (matches.length === 0) headerPart += panel;
-  }
+  for (const key of Object.keys(panels)) headerPart = removePanel(headerPart, key);
+  headerPart = headerPart.replace(/<div class="mega-wrap">\s*<\/div>/gi, '');
+  headerPart += `<div class="mega-wrap">${Object.values(panels).join('')}</div>`;
   result = headerPart + result.slice(resultHeaderEnd);
   fs.writeFileSync(file, result);
 }

@@ -213,9 +213,11 @@ header.menu-open .mega-wrap{max-height:640px; opacity:1; transition:max-height .
 }
 .mega-wrap[data-active="services"] .mega-dropdown[data-panel="services"],
 .mega-wrap[data-active="industries"] .mega-dropdown[data-panel="industries"],
+.mega-wrap[data-active="work"] .mega-dropdown[data-panel="work"],
 .mega-wrap[data-active="company"] .mega-dropdown[data-panel="company"]{
   display:block;
 }
+.mobile-submenu{display:none}
 .mega-company .mega-inner{grid-template-columns:repeat(2,1fr); max-width:520px;}
 header.menu-open .mega-dropdown{transform:translateY(0);}
 header.scrolled .mega-dropdown{border-radius:0 0 28px 28px;}

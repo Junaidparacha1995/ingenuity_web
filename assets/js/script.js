@@ -82,7 +82,7 @@
       navLinks.classList.toggle('open', open);
     });
     navLinks.addEventListener('click', (event) => {
-      if (event.target.closest('a')) {
+      if (event.target.closest('a') && !event.target.closest('.has-dropdown > .top-link')) {
         document.body.classList.remove('menu-open');
         navLinks.classList.remove('open');
         menuToggle.setAttribute('aria-expanded', 'false');
@@ -151,6 +151,18 @@
     const key = item.dataset.menu;
     const panel = $(`.mega-dropdown[data-panel="${key}"]`);
     if (!panel) return;
+    const topLink = item.querySelector(':scope > .top-link');
+    const mobileSubmenu = document.createElement('ul');
+    mobileSubmenu.className = 'mobile-submenu';
+    mobileSubmenu.setAttribute('aria-label', `${topLink?.textContent.trim() || key} submenu`);
+    panel.querySelectorAll('a').forEach(link => {
+      const entry = document.createElement('li');
+      const copy = link.cloneNode(true);
+      copy.removeAttribute('class');
+      entry.append(copy);
+      mobileSubmenu.append(entry);
+    });
+    item.append(mobileSubmenu);
     const activate = () => {
       menuItems.forEach(i => i.classList.remove('open'));
       panels.forEach(p => p.classList.remove('open'));
@@ -164,11 +176,38 @@
     item.addEventListener('focusin', activate);
     panel.addEventListener('mouseenter', activate);
     panel.addEventListener('mouseleave', closeMega);
+    topLink?.addEventListener('click', event => {
+      event.preventDefault();
+      if (innerWidth <= 720) {
+        const willOpen = !item.classList.contains('mobile-open');
+        menuItems.forEach(i => {
+          i.classList.remove('mobile-open');
+          i.querySelector(':scope > .top-link')?.setAttribute('aria-expanded', 'false');
+        });
+        item.classList.toggle('mobile-open', willOpen);
+        topLink.setAttribute('aria-expanded', String(willOpen));
+      } else if (item.classList.contains('open')) {
+        closeMega();
+      } else {
+        activate();
+      }
+    });
   });
   if (siteHeader) siteHeader.addEventListener('mouseleave', e => {
     if (innerWidth > 720 && !e.relatedTarget?.closest?.('.mega-dropdown')) closeMega();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMega(); });
+  document.addEventListener('click', event => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('header')) return;
+    closeMega();
+    menuItems.forEach(item => item.classList.remove('mobile-open'));
+    if (innerWidth <= 720) {
+      document.body.classList.remove('menu-open');
+      navLinks?.classList.remove('open');
+      menuToggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
 
   /* ---------- Scroll reveal / stagger ---------- */
   const revealTargets = $$([

@@ -1,0 +1,99 @@
+A. Home Page: Hero Section
+Hero section sizing: The hero section must exactly fill the screen height when a new tab is opened, not taller and not shorter than the viewport.
+
+
+Pipeline illustration nodes/cards: The nodes/cards in the pipeline illustration (hero section) should use a liquid-glass card style, matching the visual treatment currently used in the "Technology Ecosystem" section. Match the typeface, font sizes, colors, and overall design language to the rest of the site. Center the text within each node vertically (top to bottom). The orange dot markers should stay in their current position (do not move them)
+
+
+Remove the "Technology Ecosystem" section entirely. If tools/technologies need to be categorized, do this within the existing dynamic moving tech-stack marquee instead of a separate section.
+
+
+Copy fix: In the heading "ENGINEERED ON AN ADVANCED, ENTERPRISE-GRADE TECHNOLOGY STACK," remove the word "AN" → should read "ENGINEERED ON ADVANCED, ENTERPRISE-GRADE TECHNOLOGY STACK."
+
+
+Remove the "Connected by Design" section.
+
+
+
+B. Navigation
+"Work" tab: Should function like the "Services" and "Industries" tabs. It should be a dropdown-style, expandable hover menu (no green status dot). Sub-items: (i) Projects, (ii) Case Studies.
+
+
+"Company" tab: Same dropdown/hover-expand behavior. Sub-items: (i) About Us, (ii) Careers, (iii) Contact.
+
+
+
+C. "Who We Are" Section
+Move the Engineering Team section to appear below the following three points (currently part of the "Who We Are" section):
+01. Business-First Thinking: Technology decisions driven by your objectives and operations, not by what's trending.
+02. One Team, Every Discipline: No stitching together vendors; one team carries the work from idea to deployment.
+03. Built for the Long Run: Systems designed to evolve as your business grows, not just to ship and walk away.
+Remove "Core Disciplines" and "Number of Engineers" blocks from this section. Layout should be a single row of two blocks/cards. Card design should match the reference design shared separately.
+
+
+
+
+
+D. "Why Ingenuity Systems" Section
+Restore the pulsating orange grid effect in the bottom corner of each card. This was previously removed and needs to come back.
+
+E. Value Proposition Section
+Redesign the "Built to deliver meaningful, lasting value" section to match the reference design shared separately.
+
+
+F. "What We Do" Section
+Add the images from original website design file for the 4 core disciplines back into this section (confirm these images are copyright-free before reusing them)
+
+G. "How We Work" Section
+Remove the repeated placeholder content currently showing under this section (the duplicated "01. Discover..." blocks)”. Only keep the CTA button.
+
+
+Remove the ROI Calculator and "Inside the System" sections.
+
+
+Move the Solution Finder section to appear directly below the "How We Work" section.
+
+
+
+H. "Make the Decision Easier" Section
+Redesign this section to match the card style used in the Work/Projects/Case Studies section. Instead of an "Explore Our Approach" button that navigates to a separate page, make the card expandable in place; clicking it should reveal the approach and timeline in the card intself. Match the color, typeface, and font sizing to the rest of the site.
+
+I. "Engineering Evidence" Section
+Remove the "Recent Projects" and "Recent Case Studies" subsections. In their place, add two buttons: "Explore Projects" and "Explore Case Studies” in “Engineering Evidence” Section
+J. Services Page
+In the "How It Connects" section, redesign the nodes/blocks to match the pipeline illustration style used in the home page hero section.
+
+
+Add the Solution Finder section to the Services page as well, positioned at the end, just before the CTA.
+
+
+
+K. Work Page
+The hero section on the Work page should dynamically rotate between two headlines: (i) "Recent Engineering Projects," (ii) "Recent Engineering Case Studies."
+
+
+Recent project cards should all be equal in size and consistently navy in color. Remove the date currently shown in the top-right corner of each card.
+
+
+
+L. Company Page
+Remove the "Engineering Capabilities" section from the Company page.
+
+M. Card Design: Sitewide
+All cards across the site, regardless of size or shape, should follow the same design as the project cards (referenced in point 20), and should include a dynamic moving/glass-reflection hover effect and pulsating rage grid effect at right bottom corner.
+
+N. Interactive Tools
+The "AI Maturity Assessment" and "Build Your Own AI System" pages are not currently designed as proper pages, and should not appear under the Company tab. Either:
+Properly integrate them as functional pages within the Services section, or
+Remove them from the site entirely if proper integration isn't feasible.
+
+O. Page Hero Consistency
+Hero sections on the Services, Industries, Company, About, and Careers pages should match the style used on the Home and Work page heroes: large, bold typography, correctly sized, and positioned slightly left and toward the bottom of the section.
+
+P. Global Consistency
+All colors, typefaces, spacing, font sizes, theme, and overall design philosophy must be consistent across every page of the site.
+Remove All AI created “-“ in content
+Official company logo should be displayed everywhere
+
+
+Note: Several points reference "match this design." The corresponding visual references should be shared alongside this document before development begins.
