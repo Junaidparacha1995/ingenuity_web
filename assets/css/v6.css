@@ -177,3 +177,106 @@ body.startup-active{overflow:hidden}
   .startup-screen:before,.startup-mark,.startup-wordmark,.startup-status{animation:none!important}
   .startup-screen{transition:none}
 }
+
+/* =========================================================
+   CONSISTENCY PASS — source design tokens, interaction edges
+   Keep this layer deliberately narrow: it reconciles later
+   enhancements without changing page-specific composition.
+   ========================================================= */
+:root{
+  --surface-light:var(--glass-bg);
+  --surface-light-strong:var(--glass-bg-strong);
+  --surface-border:var(--glass-border);
+  --surface-shadow:var(--glass-shadow);
+  --surface-shadow-hover:var(--glass-shadow-hover);
+  --surface-dark:var(--glass-dark-bg);
+  --surface-dark-strong:var(--glass-dark-bg-strong);
+  --surface-dark-border:var(--glass-dark-border);
+  --control-height:48px;
+}
+
+/* Native cursors are intentional: communicate the affordance, never hide it. */
+html,body{cursor:default}
+a,button,[role="button"],summary,.project-card,.project-filter,.tech-tab,
+.est-options button,.maturity-q button,.flow-step[data-process]{cursor:pointer}
+input,textarea,select{cursor:text}
+input[type="range"],input[type="checkbox"],input[type="radio"]{cursor:pointer}
+.flow-wrap,.terminal-screen,.terminal-input-row,.project-detail-terminal-screen{cursor:default}
+.hc-panel canvas{cursor:grab}
+.hc-panel canvas:active{cursor:grabbing}
+
+/* One focus language across the light and inverted surfaces. */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,summary:focus-visible,[role="button"]:focus-visible,
+.project-card:focus-visible,.flow-step[data-process]:focus-visible{
+  outline:2px solid var(--orange);
+  outline-offset:3px;
+  box-shadow:0 0 0 5px rgba(225,53,17,.14);
+}
+.hc-panel canvas:focus-visible,#hc-graph-svg:focus-visible{outline:2px solid #ff8b67!important;outline-offset:-2px;box-shadow:none!important}
+
+/* Navigation: the source system's dark liquid-glass header, with a
+   consistent 1px edge and a quieter active state. */
+header{background:var(--glass-dark-bg);border-color:var(--glass-dark-border)}
+header.scrolled{background:var(--glass-dark-bg-strong);border-color:rgba(255,255,255,.18)}
+.nav-links a.top-link::after{background:var(--orange);height:2px}
+.nav-project-link{background:rgba(225,53,17,.14);border-color:rgba(225,53,17,.28)}
+.nav-project-link:hover,.nav-project-link.active{background:rgba(225,53,17,.24);box-shadow:0 10px 26px rgba(225,53,17,.18)}
+.menu-toggle{cursor:pointer}
+
+/* Deliberate project-card scope: light dossiers retain their context while
+   open/featured cards share the same border, radius and glass edge. */
+.project-card,.home-project-card,.case-card{
+  border-radius:var(--radius-md);
+  border-color:rgba(20,35,59,.10);
+  box-shadow:var(--surface-shadow);
+}
+.project-card:hover,.home-project-card:hover,.case-card:hover{box-shadow:var(--surface-shadow-hover)}
+.project-card.featured,.home-project-card.featured,.case-card.featured{
+  border-color:var(--surface-dark-border);
+  box-shadow:var(--glass-dark-shadow);
+}
+.project-card.is-open{border-color:rgba(225,53,17,.25)}
+.project-expand-btn,.project-filter{cursor:pointer}
+
+/* Calculator, estimator and maturity controls: shared geometry without
+   flattening their intentional dark/light contrast. */
+.roi-card,.estimator-shell,.maturity-q,.assessment-result{
+  border-radius:var(--radius-md);
+}
+.input-shell,.calc-fields input,.calc-fields select,.calc-fields textarea,
+.builder-form input,.builder-form select,.builder-form textarea,
+.maturity-q button{
+  font-family:'Inter',sans-serif;
+}
+.input-shell{min-height:var(--control-height);border-color:rgba(255,255,255,.16);border-radius:var(--radius-sm);box-shadow:0 1px 0 rgba(255,255,255,.06) inset}
+.input-shell:focus-within{border-color:rgba(225,53,17,.62);box-shadow:0 0 0 4px rgba(225,53,17,.14),0 1px 0 rgba(255,255,255,.06) inset}
+.input-shell input{cursor:text}
+.calc-fields input[type="range"]{cursor:grab}
+.calc-fields input[type="range"]:active{cursor:grabbing}
+.calc-fields input[type="range"]:focus-visible{outline:0;box-shadow:0 0 0 4px rgba(225,53,17,.18)}
+.maturity-q button:hover,.maturity-q button.selected{box-shadow:var(--glass-dark-shadow)}
+.est-options button,.project-filter{border-radius:var(--radius-sm)}
+
+/* Keep form text readable on the pale context and make the common fields
+   feel like the same family as the calculator controls. */
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+textarea,select{
+  border-radius:var(--radius-sm);
+}
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,select:focus{
+  border-color:rgba(225,53,17,.52);
+  box-shadow:0 0 0 4px rgba(225,53,17,.11);
+  outline:0;
+}
+
+@media(max-width:980px){
+  .nav{padding-left:20px;padding-right:20px}
+  .nav-links.open{border-color:var(--glass-dark-border);background:var(--glass-dark-bg-strong)}
+}
+@media(max-width:620px){
+  .nav{padding-left:16px;padding-right:16px}
+  .project-card,.home-project-card,.case-card{border-radius:var(--radius-sm)}
+  .roi-card,.estimator-shell,.assessment-result{border-radius:var(--radius-sm)}
+}

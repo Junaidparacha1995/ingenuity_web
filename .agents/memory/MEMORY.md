@@ -1,0 +1,1 @@
+- [Visual design source](visual-design-source.md) — Keep the site aligned to the approved liquid-glass system, but never restore cursor hiding.
