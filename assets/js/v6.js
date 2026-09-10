@@ -2,7 +2,14 @@
   'use strict';
   const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
   const root=document.documentElement.dataset.siteRoot||'';
-  const calendly='https://calendly.com/ingenuitysystems';
+  const calendly='https://calendly.com/junaidparacha-ingenuitysys';
+
+  const subjectParam=new URLSearchParams(window.location.search).get('subject');
+  const subjectField=$('#subject');
+  if(subjectParam&&subjectField){
+    const match=[...subjectField.options].find(option=>option.value===subjectParam);
+    if(match)subjectField.value=subjectParam;
+  }
 
   /* First-party analytics: no third-party trackers; opt-in stored locally. */
   const consentKey='ingenuity_analytics_consent_v1';
@@ -108,8 +115,12 @@
         const data=await res.json().catch(()=>({}));
         if(!res.ok) throw new Error(data.message||'Unable to send your inquiry.');
         contact.reset();
-        if(status){status.className='contact-status success';status.textContent='Thanks. Your inquiry was received. We’ll follow up using the email you provided.';}
+        if(status){status.className='contact-status success';status.textContent=data.message||'Thanks. Your inquiry was received. We’ll follow up using the email you provided.';}
         btn?.classList.add('success');track('contact_submit',{subject:values.subject||'general',projectStage:values.projectStage||''});
+        if(data.route==='calendly'&&data.redirectUrl){
+          if(status)status.textContent='Thanks. Redirecting you to our booking page…';
+          window.setTimeout(()=>{window.location.assign(data.redirectUrl);},700);
+        }
       }catch(err){
         const localHint=location.port && location.port!=='3000' ? ' Start the production server with npm start rather than Live Server to submit the form.' : '';
         if(status){status.className='contact-status error';status.textContent=(err?.message||'The inquiry could not be sent.')+localHint;}

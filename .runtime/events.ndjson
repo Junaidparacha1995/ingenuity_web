@@ -3,3 +3,5 @@
 {"event":"analytics_consent","path":"/","ts":"2026-09-08T15:06:41.322Z","properties":{"value":"yes"},"requestId":"7987a424-5dca-4dff-8ef4-f5ef5a31eca3"}
 {"event":"project_expanded","path":"/projects","ts":"2026-09-09T18:58:44.474Z","properties":{"project":"retail-sales-forecasting"},"requestId":"3daa6ba3-fd72-4d0f-917d-7ae31c505137"}
 {"event":"project_expanded","path":"/projects","ts":"2026-09-09T18:58:50.799Z","properties":{"project":"retail-sales-forecasting"},"requestId":"5c6775fc-3cae-42d9-8501-3ae2ec164183"}
+{"event":"booking_started","path":"/","ts":"2026-09-10T08:02:40.291Z","properties":{},"requestId":"26d1bce6-c8c4-445a-9e2d-3d598b7fc911"}
+{"event":"booking_started","path":"/","ts":"2026-09-10T08:03:46.930Z","properties":{},"requestId":"4810128f-ea25-4096-a12c-b189437c2003"}

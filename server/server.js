@@ -18,8 +18,10 @@ const configuredSiteUrl=(process.env.SITE_URL||'').replace(/\/$/,'');
 const contactWebhook=process.env.CONTACT_WEBHOOK_URL||'';
 const analyticsWebhook=process.env.ANALYTICS_WEBHOOK_URL||'';
 const requireContactDelivery=String(process.env.REQUIRE_CONTACT_DELIVERY||'false').toLowerCase()==='true';
-const calendly='https://calendly.com/ingenuitysystems';
-const assetVersion='6.10.12';
+const calendly='https://calendly.com/junaidparacha-ingenuitysys';
+const allocatedBdEmail=process.env.CONTACT_BD_EMAIL||'info@ingenuitysys.com';
+const personalEmailDomains=new Set(['gmail.com','googlemail.com','yahoo.com','yahoo.co.uk','hotmail.com','outlook.com','live.com','msn.com','icloud.com','me.com','mac.com','aol.com','proton.me','protonmail.com','gmx.com','mail.com','yandex.com','zoho.com','fastmail.com','hey.com']);
+const assetVersion='6.10.13';
 const runtimeDir=path.join(root,'.runtime');fs.mkdirSync(runtimeDir,{recursive:true});
 
 let ragState={};try{ragState=JSON.parse(fs.readFileSync(path.join(root,'.rag-store.json'),'utf8'));}catch{}
@@ -56,6 +58,8 @@ app.use('/api/',apiLimiter);
 
 const safeText=(v,max=400)=>String(v??'').replace(/[\u0000-\u001F\u007F]/g,' ').replace(/\s+/g,' ').trim().slice(0,max);
 const validEmail=email=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)&&email.length<=254;
+const emailDomain=email=>String(email).toLowerCase().split('@')[1]||'';
+const isPersonalEmail=email=>personalEmailDomains.has(emailDomain(email));
 const appendJsonLine=(file,obj)=>fs.appendFileSync(path.join(runtimeDir,file),JSON.stringify(obj)+'\n',{encoding:'utf8',mode:0o600});
 const postWebhook=async(url,payload)=>{
   if(!url)return {configured:false,ok:false};
@@ -69,13 +73,30 @@ app.get('/api/health',(req,res)=>res.set('Cache-Control','no-store').json({ok:tr
 app.post('/api/contact',contactLimiter,async(req,res)=>{
   const honeypot=safeText(req.body?.website,120);if(honeypot)return res.status(202).json({ok:true});
   const lead={
-    id:crypto.randomUUID(),receivedAt:new Date().toISOString(),name:safeText(req.body?.name,120),company:safeText(req.body?.company,160),email:safeText(req.body?.email,254),subject:safeText(req.body?.subject,80),projectStage:safeText(req.body?.projectStage,100),timeline:safeText(req.body?.timeline,100),message:safeText(req.body?.message,4000),source:'website',requestId:req.requestId
+    id:crypto.randomUUID(),receivedAt:new Date().toISOString(),name:safeText(req.body?.name,120),company:safeText(req.body?.company,160),email:safeText(req.body?.email,254),subject:safeText(req.body?.subject,80),projectStage:safeText(req.body?.projectStage,100),timeline:safeText(req.body?.timeline,100),budgetTier:safeText(req.body?.budgetTier,40),message:safeText(req.body?.message,4000),source:'website',requestId:req.requestId
   };
-  if(lead.name.length<2||!validEmail(lead.email)||lead.message.length<10)return res.status(400).json({error:'VALIDATION_FAILED',message:'Please provide your name, a valid email, and a little more detail about the project.'});
+  if(lead.name.length<2||!validEmail(lead.email)||!['under-1000','1000-5000','5000-25000','25000-plus'].includes(lead.budgetTier)||lead.message.length<10)return res.status(400).json({error:'VALIDATION_FAILED',message:'Please provide your name, a valid email, a budget tier, and a little more detail about the project.'});
+  const budgetUnder1000=lead.budgetTier==='under-1000';
+  const personalEmail=isPersonalEmail(lead.email);
+  const businessEmail=!personalEmail;
+  const hasCompany=Boolean(lead.company);
+  const calendlyRoute=hasCompany&&businessEmail&&budgetUnder1000;
+  const automatedBdRoute=!hasCompany&&personalEmail&&budgetUnder1000;
+  const route=calendlyRoute?'calendly':automatedBdRoute?'bd_automated':'bd_review';
+  lead.routing={route,budgetUnder1000,personalEmail,businessEmail,hasCompany,allocatedBdEmail};
+  lead.delivery={
+    notifyBd:!calendlyRoute,
+    bdRecipient:!calendlyRoute?allocatedBdEmail:null,
+    customerMessage:calendlyRoute
+      ?'Thanks. Based on the details you shared, the best next step is to book a short call with our team.'
+      :automatedBdRoute
+        ?'Thanks for reaching out. We have received your inquiry and our business development team will follow up by email with a practical next step.'
+        :'Thanks for reaching out. We have received your inquiry and our team will follow up using the email you provided.'
+  };
   appendJsonLine('leads.ndjson',lead);
   const delivery=await postWebhook(contactWebhook,lead);
   if(requireContactDelivery&&(!delivery.configured||!delivery.ok))return res.status(503).json({error:'DELIVERY_NOT_CONFIGURED',message:'The inquiry was saved but external lead delivery is not configured. Please email info@ingenuitysys.com.'});
-  res.status(201).set('Cache-Control','no-store').json({ok:true,id:lead.id,delivered:delivery.ok||false});
+  res.status(201).set('Cache-Control','no-store').json({ok:true,id:lead.id,delivered:delivery.ok||false,route,redirectUrl:calendlyRoute?calendly:null,message:lead.delivery.customerMessage});
 });
 
 app.post('/api/events',async(req,res)=>{
