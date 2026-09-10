@@ -127,6 +127,8 @@ header.scrolled{box-shadow:0 20px 54px -24px rgba(8,15,26,.58),0 1px 0 rgba(255,
 
 /* Deeper isometric SVG styling */
 .system-plot-card{min-height:560px;background:radial-gradient(75% 70% at 53% 44%,rgba(225,53,17,.12),transparent 63%),linear-gradient(145deg,#0b1525,#101f35 48%,#0b1628);box-shadow:0 44px 100px -38px rgba(20,35,59,.72),0 1px 0 rgba(255,255,255,.13) inset}
+.system-plot-card-reference{min-height:0;width:min(100%,430px);justify-self:center;padding:0;overflow:hidden;border-radius:30px;background:#101b2d}
+.system-plot-reference{display:block;width:100%;height:auto;aspect-ratio:397 / 564;object-fit:cover}
 .system-plot-3d{inset:45px 10px 43px;width:calc(100% - 20px);height:calc(100% - 88px)}
 .system-plot-3d text{font-family:'Manrope',sans-serif;pointer-events:none}
 .system-plot-3d .iso-routes path{stroke:rgba(255,255,255,.18);stroke-width:1.5;stroke-dasharray:4 6;animation:routeDash 7s linear infinite}
@@ -147,7 +149,7 @@ header.scrolled{box-shadow:0 20px 54px -24px rgba(8,15,26,.58),0 1px 0 rgba(255,
 @media(max-width:680px){
   .tech-card{min-height:112px}
   .tech-logo{width:40px;height:40px;border-radius:12px}.tech-logo img,.tech-logo-custom svg{width:21px;height:21px}
-  .system-plot-card{min-height:480px}.system-plot-3d{inset:48px 0 44px;width:100%;height:calc(100% - 92px)}
+  .system-plot-card{min-height:480px}.system-plot-card-reference{min-height:0}.system-plot-3d{inset:48px 0 44px;width:100%;height:calc(100% - 92px)}
 }
 @media(prefers-reduced-motion:reduce){.system-plot-3d .iso-routes path{animation:none!important}.system-plot-3d .iso-pulses{display:none}}
 
