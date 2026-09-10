@@ -197,6 +197,10 @@ body.startup-active{overflow:hidden}
 .decision-card h3,.decision-card .decision-toggle h3{color:#fff}
 .decision-card p{color:rgba(255,255,255,.72)}
 .decision-card>small{color:rgba(255,255,255,.58)}
+.compare-mini>div{background:rgba(255,255,255,.055);color:#fff;border:1px solid rgba(255,255,255,.09)}
+.compare-mini>div.featured{background:rgba(255,255,255,.095);color:#fff}
+.compare-mini b{color:#fff}
+.compare-mini span,.compare-mini .featured span{color:rgba(255,255,255,.62)}
 #engineering-team,#engagement-model{scroll-margin-top:112px}
 .decision-toggle{display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
 .decision-toggle h3{margin:0}
