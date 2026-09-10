@@ -1,3 +1,5 @@
 {"event":"project_expanded","path":"/projects","ts":"2026-09-08T08:57:14.098Z","properties":{"project":"sam2-segmentation"},"requestId":"d2fbdb22-77fb-4021-af19-cc6adf81d90d"}
 {"event":"analytics_consent","path":"/","ts":"2026-09-08T15:04:21.305Z","properties":{"value":"yes"},"requestId":"eb1e5274-e279-4b3b-96bb-96f2e4c3ee8a"}
 {"event":"analytics_consent","path":"/","ts":"2026-09-08T15:06:41.322Z","properties":{"value":"yes"},"requestId":"7987a424-5dca-4dff-8ef4-f5ef5a31eca3"}
+{"event":"project_expanded","path":"/projects","ts":"2026-09-09T18:58:44.474Z","properties":{"project":"retail-sales-forecasting"},"requestId":"3daa6ba3-fd72-4d0f-917d-7ae31c505137"}
+{"event":"project_expanded","path":"/projects","ts":"2026-09-09T18:58:50.799Z","properties":{"project":"retail-sales-forecasting"},"requestId":"5c6775fc-3cae-42d9-8501-3ae2ec164183"}
