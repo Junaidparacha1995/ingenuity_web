@@ -260,6 +260,19 @@ body.startup-active{overflow:hidden}
   background-size:18px 18px; mask-image:radial-gradient(circle at bottom right,#000,transparent 75%);
   opacity:.34; animation:cardGridPulse 3.8s ease-in-out infinite; pointer-events:none; z-index:-1;
 }
+.cap-card::before{z-index:0;opacity:.42}
+.cap-card > *{position:relative;z-index:1}
+
+.engineering-team-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:840px;margin:24px 0 0}
+.engineering-team-card{min-height:292px!important;padding:28px 30px!important;border-radius:24px!important;display:flex;flex-direction:column;justify-content:flex-start}
+.engineering-team-card .eyebrow{color:#f39a84;font-size:10px;letter-spacing:.14em;margin-bottom:28px}
+.engineering-team-card h3{color:#fff!important;font-size:clamp(22px,2.3vw,28px);line-height:1.15;letter-spacing:-.03em;margin-bottom:12px}
+.engineering-team-card p{color:rgba(255,255,255,.68)!important;font-size:13px;line-height:1.55;max-width:34ch}
+@media(max-width:720px){
+  .engineering-team-row{grid-template-columns:1fr;margin-top:28px}
+  .engineering-team-card{min-height:0!important;padding:24px!important}
+  .engineering-team-card .eyebrow{margin-bottom:20px}
+}
 .story-panel,.industry-card,.founder-card,.architecture-3d-card,.decision-card{
   position:relative;overflow:hidden;isolation:isolate;border-radius:var(--radius-md);
   border:1px solid rgba(20,35,59,.10);box-shadow:var(--surface-shadow);
