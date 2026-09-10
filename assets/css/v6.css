@@ -184,8 +184,8 @@ body.startup-active{overflow:hidden}
 
 /* Homepage amendment pass: keep the narrative focused on capability,
    method, and a useful first conversation. */
-.hero-console{height:100svh;min-height:100svh;max-height:100svh}
-.hero-console-grid{height:100%;min-height:0;align-items:center}
+.hero-console{height:auto;min-height:100svh;max-height:none}
+.hero-console-grid{height:auto;min-height:100svh;align-items:center}
 .decision-detail{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .25s ease}
 .decision-card.is-expanded .decision-detail{max-height:360px;opacity:1}
 .decision-toggle{display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
@@ -206,8 +206,8 @@ body.startup-active{overflow:hidden}
   .hc-activity{display:none}
 }
 @media(max-width:720px){
-  .hero-console{height:100svh!important;min-height:100svh!important;max-height:100svh!important;padding:88px 0 18px}
-  .hero-console-grid{height:100%;min-height:0;grid-template-rows:auto minmax(0,1fr);gap:10px}
+  .hero-console{height:auto!important;min-height:100svh!important;max-height:none!important;padding:88px 0 18px}
+  .hero-console-grid{height:auto;min-height:100svh;grid-template-rows:auto minmax(0,1fr);gap:10px}
   .hc-copy .hero-rotator{min-height:174px}
   .hc-copy h1{font-size:clamp(25px,8vw,34px);margin-bottom:8px}
   .hc-copy p.lead{font-size:12.5px;line-height:1.45;margin-bottom:12px;max-width:44ch}
