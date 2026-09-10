@@ -221,8 +221,65 @@
 </div>
 <a class="btn-text system-map-link" href="/services/ai">Explore AI agent capabilities →</a>
 </div>
-<div class="system-plot-card system-plot-card-reference reveal-right" id="system-plot-card">
-<img class="system-plot-reference" src="/assets/images/architecture-live-reference.jpg" alt="Architecture live diagram showing inputs, AI models, automation, data, orchestration, and connected operations.">
+<div class="system-plot-card architecture-plot-card reveal-right" id="system-plot-card">
+<svg aria-labelledby="plot-title plot-desc" class="architecture-svg" role="img" viewBox="0 0 620 882">
+<title id="plot-title">Architecture live diagram</title>
+<desc id="plot-desc">Inputs, AI models, automation, data, and connected operations flow through an intelligent orchestration core.</desc>
+<defs>
+<linearGradient id="architecture-bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#0c1729"></stop><stop offset=".52" stop-color="#10182d"></stop><stop offset="1" stop-color="#0a1a2a"></stop></linearGradient>
+<linearGradient id="architecture-orange" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ff7049"></stop><stop offset=".55" stop-color="#e13511"></stop><stop offset="1" stop-color="#a92513"></stop></linearGradient>
+<linearGradient id="architecture-blue" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#39567b"></stop><stop offset="1" stop-color="#142b49"></stop></linearGradient>
+<linearGradient id="architecture-side" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#183253"></stop><stop offset="1" stop-color="#0c1d35"></stop></linearGradient>
+<radialGradient id="architecture-glow"><stop offset="0" stop-color="#f15b37" stop-opacity=".42"></stop><stop offset="1" stop-color="#f15b37" stop-opacity="0"></stop></radialGradient>
+<filter id="architecture-shadow" x="-40%" y="-40%" width="180%" height="200%"><feDropShadow dx="0" dy="13" flood-color="#000" flood-opacity=".34" stdDeviation="10"></feDropShadow></filter>
+<filter id="architecture-soft-glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8"></feGaussianBlur></filter>
+</defs>
+<rect fill="url(#architecture-bg)" height="882" rx="30" width="620"></rect>
+<g class="architecture-header">
+<circle cx="38" cy="52" fill="#48d597" r="7"></circle><text class="architecture-kicker" x="60" y="58">ARCHITECTURE.LIVE</text>
+<text class="architecture-status" text-anchor="end" x="582" y="58">CONNECTED</text>
+</g>
+<g class="architecture-grid" opacity=".42">
+<path d="M30 230H590M30 278H590M30 326H590M30 374H590M30 422H590M30 470H590M30 518H590M30 566H590M30 614H590"></path>
+<path d="M30 230V614M77 230V614M124 230V614M171 230V614M218 230V614M265 230V614M312 230V614M359 230V614M406 230V614M453 230V614M500 230V614M547 230V614M590 230V614"></path>
+</g>
+<g class="architecture-plane" opacity=".6">
+<path d="M74 455L310 318L548 455L310 593Z"></path><path d="M115 478L310 365L507 478L310 592Z"></path><path d="M162 505L310 420L457 505L310 590Z"></path>
+</g>
+<g class="architecture-routes">
+<path d="M135 425C190 408 212 360 248 327"></path><path d="M148 456C201 460 218 460 242 460"></path><path d="M294 333C322 368 331 389 350 408"></path><path d="M286 467C315 450 329 435 350 423"></path><path d="M289 559C314 505 330 464 350 428"></path><path d="M401 419C438 404 462 402 497 421"></path><circle class="architecture-pulse" cx="199" cy="392" r="4"><animateMotion dur="4.2s" path="M0 0C55 -17 77 -65 113 -98" repeatCount="indefinite"></animateMotion></circle>
+<circle class="architecture-pulse" cx="416" cy="415" r="4"><animateMotion begin="-1.4s" dur="3.8s" path="M0 0C37 -15 61 -17 96 2" repeatCount="indefinite"></animateMotion></circle>
+</g>
+<g class="plot-node architecture-node" data-plot-node="" tabindex="0" role="img" aria-label="Inputs technology layer">
+<ellipse cx="106" cy="448" fill="url(#architecture-glow)" filter="url(#architecture-soft-glow)" rx="70" ry="58"></ellipse>
+<g filter="url(#architecture-shadow)"><polygon class="cube-top blue" points="57,407 106,378 155,407 106,436"></polygon><polygon class="cube-left blue-side" points="57,407 106,436 106,493 57,464"></polygon><polygon class="cube-right blue-side" points="155,407 106,436 106,493 155,464"></polygon></g>
+<text class="architecture-cube-kicker" text-anchor="middle" x="106" y="426">BUSINESS</text><text class="architecture-cube-title" text-anchor="middle" x="106" y="454">Inputs</text>
+</g>
+<g class="plot-node architecture-node" data-plot-node="" tabindex="0" role="img" aria-label="AI Models technology layer">
+<g filter="url(#architecture-shadow)"><polygon class="cube-top orange" points="203,304 252,275 301,304 252,333"></polygon><polygon class="cube-left orange-side" points="203,304 252,333 252,390 203,361"></polygon><polygon class="cube-right orange-side" points="301,304 252,333 252,390 301,361"></polygon></g>
+<text class="architecture-cube-kicker" text-anchor="middle" x="252" y="323">LAYER 01</text><text class="architecture-cube-title" text-anchor="middle" x="252" y="351">AI Models</text>
+</g>
+<g class="plot-node architecture-node" data-plot-node="" tabindex="0" role="img" aria-label="Automation technology layer">
+<g filter="url(#architecture-shadow)"><polygon class="cube-top blue" points="193,431 242,402 291,431 242,460"></polygon><polygon class="cube-left blue-side" points="193,431 242,460 242,517 193,488"></polygon><polygon class="cube-right blue-side" points="291,431 242,460 242,517 291,488"></polygon></g>
+<text class="architecture-cube-kicker" text-anchor="middle" x="242" y="450">LAYER 02</text><text class="architecture-cube-title" text-anchor="middle" x="242" y="478">Automation</text>
+</g>
+<g class="plot-node architecture-node" data-plot-node="" tabindex="0" role="img" aria-label="Data technology layer">
+<g filter="url(#architecture-shadow)"><polygon class="cube-top blue" points="200,548 249,519 298,548 249,577"></polygon><polygon class="cube-left blue-side" points="200,548 249,577 249,634 200,605"></polygon><polygon class="cube-right blue-side" points="298,548 249,577 249,634 298,605"></polygon></g>
+<text class="architecture-cube-kicker" text-anchor="middle" x="249" y="567">LAYER 03</text><text class="architecture-cube-title" text-anchor="middle" x="249" y="595">Data</text>
+</g>
+<g class="plot-node architecture-node architecture-core" data-plot-node="" tabindex="0" role="img" aria-label="Orchestrate intelligent core">
+<ellipse cx="363" cy="431" fill="url(#architecture-glow)" filter="url(#architecture-soft-glow)" rx="105" ry="90"></ellipse>
+<g filter="url(#architecture-shadow)"><polygon class="cube-top core" points="313,398 363,368 413,398 363,428"></polygon><polygon class="cube-left core-side" points="313,398 363,428 363,495 313,465"></polygon><polygon class="cube-right core-side" points="413,398 363,428 363,495 413,465"></polygon></g>
+<circle class="architecture-core-dot" cx="363" cy="406" r="8"></circle><text class="architecture-cube-kicker" text-anchor="middle" x="363" y="449">INTELLIGENT CORE</text><text class="architecture-cube-title" text-anchor="middle" x="363" y="473">Orchestrate</text>
+</g>
+<g class="plot-node architecture-node" data-plot-node="" tabindex="0" role="img" aria-label="Connected operations business outcome">
+<g filter="url(#architecture-shadow)"><polygon class="cube-top blue" points="473,407 522,378 571,407 522,436"></polygon><polygon class="cube-left blue-side" points="473,407 522,436 522,493 473,464"></polygon><polygon class="cube-right blue-side" points="571,407 522,436 522,493 571,464"></polygon></g>
+<text class="architecture-cube-kicker" text-anchor="middle" x="522" y="425">OUTCOME</text><text class="architecture-cube-title" text-anchor="middle" x="522" y="451">Connected</text><text class="architecture-cube-title" text-anchor="middle" x="522" y="469">Operations</text>
+</g>
+<g class="architecture-float architecture-status-float"><rect height="54" rx="15" width="144" x="402" y="278"></rect><text class="architecture-float-kicker" x="420" y="299">SYSTEM STATUS</text><circle cx="420" cy="318" fill="#48d597" r="4"></circle><text class="architecture-float-label" x="431" y="322">Synchronized</text></g>
+<g class="architecture-float architecture-flow-float"><rect height="54" rx="15" width="126" x="58" y="545"></rect><text class="architecture-float-kicker" x="76" y="566">DATA FLOW</text><text class="architecture-float-label" x="76" y="585">Real-time</text></g>
+<g class="architecture-footer"><text x="47" y="840">01 / CONNECT</text><text x="204" y="840">02 / ORCHESTRATE</text><text class="active" x="451" y="840">03 / IMPROVE</text></g>
+</svg>
 </div>
 </div>
 </section>
