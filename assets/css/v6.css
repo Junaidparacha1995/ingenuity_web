@@ -184,8 +184,8 @@ body.startup-active{overflow:hidden}
 
 /* Homepage amendment pass: keep the narrative focused on capability,
    method, and a useful first conversation. */
-.hero-console{height:auto;min-height:100svh;max-height:none}
-.hero-console-grid{height:auto;min-height:100svh;align-items:center}
+.hero-console{height:auto;min-height:0;max-height:none}
+.hero-console-grid{height:auto;min-height:0;align-items:center}
 .decision-detail{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .25s ease}
 .decision-card.is-expanded .decision-detail{max-height:360px;opacity:1}
 .decision-toggle{display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
@@ -206,16 +206,16 @@ body.startup-active{overflow:hidden}
   .hc-activity{display:none}
 }
 @media(max-width:720px){
-  .hero-console{height:auto!important;min-height:100svh!important;max-height:none!important;padding:88px 0 18px}
-  .hero-console-grid{height:auto;min-height:100svh;grid-template-rows:auto minmax(0,1fr);gap:10px}
+  .hero-console{height:auto!important;min-height:0!important;max-height:none!important;padding:88px 0 18px}
+  .hero-console-grid{height:auto;min-height:0;grid-template-rows:auto auto;gap:10px}
   .hc-copy .hero-rotator{min-height:174px}
   .hc-copy h1{font-size:clamp(25px,8vw,34px);margin-bottom:8px}
   .hc-copy p.lead{font-size:12.5px;line-height:1.45;margin-bottom:12px;max-width:44ch}
   .hc-copy .hero-actions{flex-direction:row;gap:8px}
   .hc-copy .hero-actions .btn{padding:10px 12px;font-size:10px}
   .hc-copy .hero-dots,.hero-trust-row,.hc-node-inspector,.hc-activity{display:none}
-  .hc-right{min-height:0;height:100%}
-  .hc-panel{height:100%!important;min-height:0!important;border-radius:22px}
+  .hc-right{min-height:0;height:auto}
+  .hc-panel{height:clamp(280px,72vw,420px)!important;min-height:0!important;border-radius:22px}
 }
 @media(min-width:721px) and (max-width:1079px) and (max-height:560px){
   .hero-console{padding:32px 0 20px}
