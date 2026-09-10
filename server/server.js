@@ -21,7 +21,7 @@ const requireContactDelivery=String(process.env.REQUIRE_CONTACT_DELIVERY||'false
 const calendly='https://calendly.com/junaidparacha-ingenuitysys';
 const allocatedBdEmail=process.env.CONTACT_BD_EMAIL||'info@ingenuitysys.com';
 const personalEmailDomains=new Set(['gmail.com','googlemail.com','yahoo.com','yahoo.co.uk','hotmail.com','outlook.com','live.com','msn.com','icloud.com','me.com','mac.com','aol.com','proton.me','protonmail.com','gmx.com','mail.com','yandex.com','zoho.com','fastmail.com','hey.com']);
-const assetVersion='6.10.22';
+const assetVersion='6.10.23';
 const runtimeDir=path.join(root,'.runtime');fs.mkdirSync(runtimeDir,{recursive:true});
 
 let ragState={};try{ragState=JSON.parse(fs.readFileSync(path.join(root,'.rag-store.json'),'utf8'));}catch{}

@@ -235,9 +235,16 @@
   /* ---------- Hero text rotator ---------- */
   const heroSlides = $$('.hero-slide');
   const heroDots = $('#hero-dots');
+  const heroRotator = $('.hc-copy .hero-rotator');
   let heroIndex = 0;
   let heroTimer;
   if (heroSlides.length && heroDots) {
+    const sizeHeroRotator = () => {
+      if (!heroRotator || !heroSlides[heroIndex]) return;
+      heroRotator.style.height = 'auto';
+      const targetHeight = Math.ceil(heroSlides[heroIndex].scrollHeight);
+      heroRotator.style.height = `${targetHeight}px`;
+    };
     heroSlides.forEach((_, i) => {
       const b = document.createElement('button');
       b.className = `hero-dot${i === 0 ? ' active' : ''}`;
@@ -250,12 +257,15 @@
       heroIndex = (i + heroSlides.length) % heroSlides.length;
       heroSlides.forEach((s, n) => s.classList.toggle('active', n === heroIndex));
       dots.forEach((d, n) => d.classList.toggle('active', n === heroIndex));
+      requestAnimationFrame(sizeHeroRotator);
       if (restart) startHero();
     }
     function startHero() {
       clearInterval(heroTimer);
       if (!reduceMotion) heroTimer = setInterval(() => showHero(heroIndex + 1), 6500);
     }
+    sizeHeroRotator();
+    window.addEventListener('resize', sizeHeroRotator, { passive: true });
     startHero();
     document.addEventListener('visibilitychange', () => { if (document.hidden) clearInterval(heroTimer); else startHero(); });
     $('#hero-console')?.addEventListener('mouseenter', () => clearInterval(heroTimer));

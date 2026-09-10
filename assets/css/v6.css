@@ -187,9 +187,11 @@ body.startup-active{overflow:hidden}
 .hero-console{height:auto;min-height:0;max-height:none}
 .hero-console-grid{height:auto;min-height:0;align-items:start}
 .hc-copy{min-width:0}
-.hc-copy .hero-rotator{display:grid;min-height:0}
-.hc-copy .hero-slide{grid-area:1 / 1;position:relative;inset:auto;visibility:hidden}
+.hc-copy .hero-rotator{display:grid;min-height:0;overflow:hidden;transition:height .45s ease}
+.hc-copy .hero-slide{grid-area:1 / 1;position:relative;inset:auto;align-self:start;visibility:hidden}
 .hc-copy .hero-slide.active{position:relative;visibility:visible}
+.hc-copy .hero-dots{margin-top:18px}
+.hero-trust-row{margin-top:18px}
 .decision-detail{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .25s ease}
 .decision-card.is-expanded .decision-detail{max-height:360px;opacity:1}
 .decision-toggle{display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
