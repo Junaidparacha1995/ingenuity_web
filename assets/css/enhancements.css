@@ -130,7 +130,7 @@ header.scrolled{box-shadow:0 20px 54px -24px rgba(8,15,26,.58),0 1px 0 rgba(255,
 .architecture-plot-card{min-height:0;width:min(100%,430px);justify-self:center;padding:0;overflow:hidden;border-radius:30px;background:#101b2d}
 .architecture-svg{display:block;width:100%;height:auto;aspect-ratio:620 / 882}
 .architecture-svg .architecture-header text,.architecture-svg .architecture-footer text{font-family:'Manrope',sans-serif;font-weight:800;letter-spacing:1.6px}
-.architecture-kicker{fill:rgba(255,255,255,.58);font-size:13px}
+.architecture-kicker{fill:rgba(255,255,255,.58);font-size:13px;letter-spacing:1.8px}
 .architecture-status{fill:#f39b8a;font-size:12px}
 .architecture-grid path{fill:none;stroke:rgba(79,128,179,.2);stroke-width:1}
 .architecture-plane path{fill:none;stroke:rgba(106,153,198,.42);stroke-width:1.5}
