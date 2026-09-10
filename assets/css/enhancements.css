@@ -127,7 +127,7 @@ header.scrolled{box-shadow:0 20px 54px -24px rgba(8,15,26,.58),0 1px 0 rgba(255,
 
 /* Deeper isometric SVG styling */
 .system-plot-card{min-height:560px;background:radial-gradient(75% 70% at 53% 44%,rgba(225,53,17,.12),transparent 63%),linear-gradient(145deg,#0b1525,#101f35 48%,#0b1628);box-shadow:0 44px 100px -38px rgba(20,35,59,.72),0 1px 0 rgba(255,255,255,.13) inset}
-.architecture-plot-card{min-height:0;width:min(100%,430px);justify-self:center;padding:0;overflow:hidden;border-radius:30px;background:#101b2d}
+.architecture-plot-card{min-height:0;width:100%;max-width:none;justify-self:stretch;padding:0;overflow:hidden;border-radius:30px;background:#101b2d}
 .architecture-svg{display:block;width:100%;height:auto;aspect-ratio:620 / 882}
 .architecture-svg .architecture-header text,.architecture-svg .architecture-footer text{font-family:'Manrope',sans-serif;font-weight:800;letter-spacing:1.6px}
 .architecture-kicker{fill:rgba(255,255,255,.58);font-size:13px;letter-spacing:1.8px}
