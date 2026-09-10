@@ -19,7 +19,7 @@ const contactWebhook=process.env.CONTACT_WEBHOOK_URL||'';
 const analyticsWebhook=process.env.ANALYTICS_WEBHOOK_URL||'';
 const requireContactDelivery=String(process.env.REQUIRE_CONTACT_DELIVERY||'false').toLowerCase()==='true';
 const calendly='https://calendly.com/ingenuitysystems';
-const assetVersion='6.10.8';
+const assetVersion='6.10.10';
 const runtimeDir=path.join(root,'.runtime');fs.mkdirSync(runtimeDir,{recursive:true});
 
 let ragState={};try{ragState=JSON.parse(fs.readFileSync(path.join(root,'.rag-store.json'),'utf8'));}catch{}

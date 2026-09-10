@@ -17,7 +17,7 @@ for (const file of files) {
   const source = fs.readFileSync(file, 'utf8');
   const normalized = source.replace(
     /\b(href|src)="((?:\/|\.\.\/)?assets\/(?:css|js)\/[^"?]+?)(?:\?v=[^"]*)?"/g,
-    '$1="$2?v=6.10.8"'
+    '$1="$2?v=6.10.10"'
   );
   if (normalized !== source) fs.writeFileSync(file, normalized);
 }
