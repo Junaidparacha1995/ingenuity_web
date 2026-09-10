@@ -436,3 +436,28 @@ textarea:focus,select:focus{
   .project-card,.home-project-card,.case-card{border-radius:var(--radius-sm)}
   .roi-card,.estimator-shell,.assessment-result{border-radius:var(--radius-sm)}
 }
+
+/* 6.10.8 visual correction pass: clearer brand scale and dark-hero contrast. */
+.brand img.logo-full{height:78px}
+header.scrolled .brand img.logo-full{height:70px}
+.resource-hero h1,.tool-hero h1{color:#fff}
+.resource-hero .eyebrow.on-dark,.tool-hero .eyebrow.on-dark{color:#ffb49d}
+.premium-stack-strip{padding:34px 0 42px}
+.stack-strip-title{margin:0 0 16px;font-size:11px}
+.marquee-brand{height:72px}
+.marquee-brand-icon{width:48px;height:48px}
+.marquee-brand-icon img{width:32px;height:32px}
+@media(max-width:1180px) and (min-width:981px){
+  .brand img.logo-full{height:72px}
+}
+@media(max-width:980px){
+  .brand img.logo-full{height:70px}
+}
+@media(max-width:720px){
+  .brand img.logo-full{height:68px}
+  .premium-stack-strip{padding:28px 0 34px}
+  .stack-strip-title{font-size:10px;letter-spacing:.08em}
+  .marquee-brand{height:66px;min-width:158px}
+  .marquee-brand-icon{width:42px;height:42px}
+  .marquee-brand-icon img{width:29px;height:29px}
+}
