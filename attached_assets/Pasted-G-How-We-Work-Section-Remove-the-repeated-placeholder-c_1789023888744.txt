@@ -1,0 +1,43 @@
+G. "How We Work" Section
+Remove the repeated placeholder content currently showing under this section (the duplicated "01. Discover..." blocks)”. Only keep the CTA button.
+
+
+Remove the ROI Calculator and "Inside the System" sections.
+
+
+Move the Solution Finder section to appear directly below the "How We Work" section.
+
+
+
+H. "Make the Decision Easier" Section
+Redesign this section to match the card style used in the Work/Projects/Case Studies section. Instead of an "Explore Our Approach" button that navigates to a separate page, make the card expandable in place; clicking it should reveal the approach and timeline in the card intself. Match the color, typeface, and font sizing to the rest of the site.
+
+I. "Engineering Evidence" Section
+Remove the "Recent Projects" and "Recent Case Studies" subsections. In their place, add two buttons: "Explore Projects" and "Explore Case Studies” in “Engineering Evidence” Section
+J. Services Page
+In the "How It Connects" section, redesign the nodes/blocks to match the pipeline illustration style used in the home page hero section.
+
+
+Add the Solution Finder section to the Services page as well, positioned at the end, just before the CTA.
+
+
+
+K. Work Page
+The hero section on the Work page should dynamically rotate between two headlines: (i) "Recent Engineering Projects," (ii) "Recent Engineering Case Studies."
+
+
+Recent project cards should all be equal in size and consistently navy in color. Remove the date currently shown in the top-right corner of each card.
+
+
+
+L. Company Page
+Remove the "Engineering Capabilities" section from the Company page.
+
+M. Card Design: Sitewide
+All cards across the site, regardless of size or shape, should follow the same design as the project cards (referenced in point 20), and should include a dynamic moving/glass-reflection hover effect and pulsating rage grid effect at right bottom corner.
+
+N. Interactive Tools
+The "AI Maturity Assessment" and "Build Your Own AI System" pages are not currently designed as proper pages, and should not appear under the Company tab. Either:
+Properly integrate them as functional pages within the Services section, or
+Remove them from the site entirely if proper integration isn't feasible.
+
