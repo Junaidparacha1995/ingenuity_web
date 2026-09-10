@@ -48,7 +48,18 @@
   const closeBooking=()=>{if(!bookingModal)return;bookingModal.classList.remove('open');document.body.style.overflow='';};
   document.addEventListener('click',e=>{
     const a=e.target.closest('a[href]'); if(!a)return;
-    if(a.href.startsWith(calendly) || a.hasAttribute('data-book-strategy')){e.preventDefault();openBooking();}
+    const isCalendlyLink=/calendly\.com\//i.test(a.href);
+    const isStrategyLink=a.hasAttribute('data-book-strategy')||/strategy call/i.test(a.textContent||'');
+    if(!isCalendlyLink&&!isStrategyLink)return;
+    e.preventDefault();
+    const contactPath='/pages/contact?subject=general&source=strategy-call';
+    if(location.pathname.replace(/\/+$/,'')==='/pages/contact'){
+      const form=$('#contact-form');
+      form?.scrollIntoView({behavior:'smooth',block:'center'});
+      $('#name',form||document)?.focus();
+    }else{
+      window.location.assign(contactPath);
+    }
   });
 
 
