@@ -142,7 +142,7 @@ header.scrolled .brand img.logo-full{height:62px}
 .assistant-launcher-icon svg{width:25px!important;height:25px!important;padding:0!important;background:none!important;box-shadow:none!important;fill:#fff!important;color:#fff}
 .assistant-launcher-copy{display:flex;flex-direction:column;justify-content:center;min-width:0}
 .assistant-launcher-copy strong{font:750 13.5px 'Manrope',sans-serif;color:#fff;letter-spacing:-.01em}
-.assistant-launcher-copy small{font:500 10px/1.4 'Inter',sans-serif;color:rgba(255,255,255,.48);margin-top:3px}
+.assistant-launcher-copy small{font:500 10px/1.4 'Manrope',sans-serif;color:rgba(255,255,255,.48);margin-top:3px}
 .assistant-launcher-arrow{width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.06);display:grid;place-items:center;color:rgba(255,255,255,.74);font-size:13px;align-self:center}
 .assistant-launcher-suggestions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
 .assistant-launcher-suggestions button{
