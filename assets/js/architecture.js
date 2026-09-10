@@ -48,7 +48,7 @@
     nodes.forEach((node, index) => {
       node.setAttribute('role', 'button');
       node.setAttribute('tabindex', '0');
-      node.setAttribute('aria-label', `${node.dataset.title || 'System node'} — ${node.dataset.kicker || 'view details'}`);
+      node.setAttribute('aria-label', `${node.dataset.title || 'System node'}: ${node.dataset.kicker || 'view details'}`);
       node.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();

@@ -28,7 +28,7 @@ Contact Ingenuity Systems | Start a Technology Project
  Careers 
  General Inquiry 
  Project stage Exploring options Ready to scope Replacing an existing system Need help urgently 
- Ideal timeline Not sure yet Within 4–8 weeks Within 2–4 months 4+ months 
+ Ideal timeline Not sure yet Within 4 to 8 weeks Within 2 to 4 months 4+ months
  What are you looking to solve? 
  Send Inquiry →
  Sent ✓

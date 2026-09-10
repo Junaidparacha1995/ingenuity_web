@@ -108,7 +108,7 @@
         const data=await res.json().catch(()=>({}));
         if(!res.ok) throw new Error(data.message||'Unable to send your inquiry.');
         contact.reset();
-        if(status){status.className='contact-status success';status.textContent='Thanks — your inquiry was received. We’ll follow up using the email you provided.';}
+        if(status){status.className='contact-status success';status.textContent='Thanks. Your inquiry was received. We’ll follow up using the email you provided.';}
         btn?.classList.add('success');track('contact_submit',{subject:values.subject||'general',projectStage:values.projectStage||''});
       }catch(err){
         const localHint=location.port && location.port!=='3000' ? ' Start the production server with npm start rather than Live Server to submit the form.' : '';

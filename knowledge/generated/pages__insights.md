@@ -24,7 +24,7 @@ AI & Automation Resources | Ingenuity Systems Skip to content
  AI Strategy Where AI agents actually create value
  Agents are most useful when a task combines information retrieval, decisions, tool use and repeatable actions. Start with a bounded workflow and clear escalation rules rather than trying to automate an entire department at once.
  AI Systems RAG vs. a generic chatbot
- RAG connects model responses to controlled knowledge sources. The important design questions are not only the model—they include document quality, access permissions, retrieval, citations, evaluation and update workflows.
+ RAG connects model responses to controlled knowledge sources. The important design questions are not only the model. They include document quality, access permissions, retrieval, citations, evaluation and update workflows.
  Automation When not to automate
  Do not automate a broken process simply because it is repetitive. First remove unnecessary steps, define exceptions and establish ownership. Automation should reduce complexity, not freeze it into code.
  Business Case How to think about automation ROI

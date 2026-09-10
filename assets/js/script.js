@@ -741,7 +741,7 @@
       },
       {
         keys: ['where to start','not sure','recommend','which service','need help','idea'],
-        html: `You do not need to choose a service before contacting us. Start with the <strong>business problem, bottleneck, or outcome</strong> you want to improve. Ingenuity can then determine whether the right solution is software, automation, AI, integration—or a combination. <a href="${siteHref('pages/contact.html')}">Tell us the challenge →</a>`
+        html: `You do not need to choose a service before contacting us. Start with the <strong>business problem, bottleneck, or outcome</strong> you want to improve. Ingenuity can then determine whether the right solution is software, automation, AI, integration, or a combination. <a href="${siteHref('pages/contact.html')}">Tell us the challenge →</a>`
       },
       {
         keys: ['contact','email','talk','meeting','conversation','reach'],
@@ -767,7 +767,7 @@
         if (s > score) { score = s; best = item; }
       });
       if (best && score >= 2) return best.html;
-      return `I can help with questions about <strong>AI, automation, software engineering, integrations &amp; data, industries, pricing approach, and our five-stage delivery process</strong>. If your question is specific to your business, describe the challenge and I’ll point you to the most relevant capability—or you can <a href="${siteHref('pages/contact.html')}">talk to the team →</a>`;
+      return `I can help with questions about <strong>AI, automation, software engineering, integrations &amp; data, industries, pricing approach, and our five-stage delivery process</strong>. If your question is specific to your business, describe the challenge and I’ll point you to the most relevant capability. You can <a href="${siteHref('pages/contact.html')}">talk to the team →</a>`;
     };
 
     const scrollBottom = () => { body.scrollTop = body.scrollHeight; };

@@ -342,11 +342,16 @@ body.startup-active{overflow:hidden}
 .decision-toggle{width:100%;text-align:left;border:0;background:none;color:inherit;padding:0;cursor:pointer}
 .decision-detail{max-height:0;overflow:hidden;opacity:0;transition:max-height .55s var(--ease),opacity .35s ease}
 .decision-card.is-expanded .decision-detail{max-height:300px;opacity:1}
-.hero-media.page-hero{min-height:clamp(560px,76svh,780px);align-items:flex-end;padding-bottom:clamp(54px,8vw,105px)}
-.hero-media.page-hero .hero-content{max-width:820px}
+.hero-media.page-hero{min-height:clamp(620px,78svh,820px);align-items:flex-end;padding-bottom:clamp(62px,8vw,108px)}
+.hero-media.page-hero .wrap{width:100%;max-width:1240px;padding-left:clamp(26px,4vw,52px);padding-right:clamp(26px,4vw,52px)}
+.hero-media.page-hero .hero-content{max-width:900px;margin-left:0}
+.hero-media.page-hero h1{font-size:clamp(42px,6vw,76px);font-weight:800;letter-spacing:-.045em;line-height:1.02}
+.hero-media.page-hero p.lead{font-size:17px;line-height:1.7;max-width:620px}
 @media(max-width:720px){
  .hero-media.page-hero{min-height:78svh;padding-top:130px;padding-bottom:42px}
+ .hero-media.page-hero .wrap{padding-left:22px;padding-right:22px}
  .hero-media.page-hero h1{font-size:clamp(36px,11vw,58px)}
+ .hero-media.page-hero p.lead{font-size:15px;line-height:1.55}
  .projects-grid .project-card{min-height:340px}
  .team-projects{grid-template-columns:1fr;margin-top:28px}
  .team-projects .project-card{min-height:0;padding:24px}

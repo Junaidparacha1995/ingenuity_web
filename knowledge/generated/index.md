@@ -34,7 +34,7 @@ pipeline.live
  System activity
  Connected by design
  See how your digital operation becomes one working system.
- We connect the tools, data, workflows, and intelligent capabilities your teams depend on—then engineer the experience around the business outcome.
+ We connect the tools, data, workflows, and intelligent capabilities your teams depend on, then engineer the experience around the business outcome.
  Discover
  Define
  Design & Build
@@ -472,7 +472,7 @@ pipeline.live
  View Recent Projects → 
  Real Case Studies
  Work we can actually show.
- Internal product work and public engineering systems with traceable scope—no invented client names or unsupported performance claims.
+ Internal product work and public engineering systems with traceable scope, with no invented client names or unsupported performance claims.
  Ingenuity Systems · Internal Product
  01 
  AI-Enabled Digital Platform

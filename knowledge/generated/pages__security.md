@@ -4,7 +4,7 @@ Source page: /pages/security
 
 Security & Responsible AI | Ingenuity Systems Skip to content 
  Security & Responsible AI
- Controls should be part of the architecture—not an afterthought.
+ Controls should be part of the architecture, not an afterthought.
  Our approach starts with the information, systems and decisions a solution touches, then applies controls appropriate to that environment. Specific compliance claims depend on the actual hosting, vendors, implementation and customer requirements.
  01
  Least-privilege access
