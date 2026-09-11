@@ -1,0 +1,358 @@
+Work ONLY on Amendment #22.
+
+Do not make any other website changes.
+
+AMENDMENT #22 — SITEWIDE CARD DESIGN CONSISTENCY
+
+Requirement:
+
+All major visible cards across the website should follow the same design language as the existing Work / Project cards.
+
+The site already has many cards that look correct.
+
+Do NOT redesign cards that are already matching the project-card style.
+
+Only identify the remaining inconsistent card components and bring their OUTER VISUAL DESIGN into the same design system.
+
+=========================================================
+FIRST — INSPECT THE EXISTING DESIGN SYSTEM
+=========================================================
+
+Before changing anything:
+
+1. Inspect the Work / Projects page.
+2. Identify the CSS used for the current project cards.
+3. Identify:
+   - navy background treatment
+   - border
+   - border radius
+   - glass effect
+   - reflection effect
+   - hover behavior
+   - orange glow
+   - pulsating grid effect
+   - spacing
+   - text colors
+
+Look for existing classes/animations such as:
+
+.project-card
+cardGridPulse
+glass
+reflection
+glow
+
+Do not assume exact class names.
+Inspect the current code first.
+
+=========================================================
+GOAL
+=========================================================
+
+The remaining inconsistent cards should visually belong to the same family as the project cards.
+
+Standardize their OUTER SURFACE only.
+
+The shared card design should include:
+
+- dark navy base
+- subtle navy gradient
+- semi-transparent/light border
+- rounded corners
+- liquid-glass appearance
+- subtle glass reflection
+- controlled hover effect
+- orange atmospheric glow
+- pulsating orange grid effect in the bottom-right
+- white/light text where appropriate
+- consistent spacing
+- same overall enterprise design language
+
+=========================================================
+IMPORTANT — DO NOT MAKE EVERY CARD IDENTICAL
+=========================================================
+
+The amendment requires visual consistency, not identical layouts.
+
+Cards may still have different:
+
+- sizes
+- content
+- charts
+- SVG diagrams
+- forms
+- buttons
+- internal layouts
+- data visualizations
+
+Only standardize the visual shell / outer surface.
+
+For example:
+
+A chart card can still contain a chart.
+An architecture card can still contain its SVG.
+A form card can still contain form fields.
+
+Do not remove functionality.
+
+=========================================================
+CHECK THESE KNOWN POSSIBLE EXCEPTIONS
+=========================================================
+
+Inspect components/classes such as:
+
+.im-card
+.system-plot-card
+.architecture-plot-card
+.error-card
+
+Also search the whole project for other visible card classes.
+
+Do NOT automatically change every div with "card" in its name.
+
+Only update actual user-facing card surfaces that clearly look inconsistent with the project-card design.
+
+=========================================================
+CREATE A REUSABLE BASE STYLE
+=========================================================
+
+Prefer one shared reusable visual class instead of copying CSS into many components.
+
+For example, conceptually:
+
+.glass-project-surface
+
+Use the project's existing CSS variables where possible.
+
+A possible structure is:
+
+.glass-project-surface {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+
+    background:
+        linear-gradient(
+            118deg,
+            transparent 24%,
+            rgba(255,255,255,.08) 44%,
+            transparent 62%
+        ) no-repeat,
+        linear-gradient(
+            145deg,
+            #17355e,
+            #102744 52%,
+            #0a1b33
+        );
+
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: var(--existing-radius, 20px);
+    color: #fff;
+}
+
+BUT:
+
+Do NOT blindly use these exact values.
+
+First inspect the current project-card CSS and reuse the existing:
+
+- colors
+- gradients
+- radius
+- border values
+- animation timing
+- CSS variables
+
+The goal is consistency with the CURRENT project cards, not a new design.
+
+=========================================================
+GLASS REFLECTION EFFECT
+=========================================================
+
+Reuse the existing project-card reflection effect if one already exists.
+
+Do NOT create another competing reflection animation.
+
+The reflection should:
+
+- be subtle
+- move smoothly
+- appear primarily on hover
+- not obscure content
+- not cause layout movement
+- not follow the mouse aggressively
+- not create distracting visual noise
+
+=========================================================
+PULSATING ORANGE GRID
+=========================================================
+
+Cards should use the same pulsating orange grid effect used by the existing project cards / Why Ingenuity cards.
+
+Search for:
+
+cardGridPulse
+
+or the current equivalent.
+
+Reuse that existing animation.
+
+Grid requirements:
+
+- bottom-right corner
+- subtle
+- orange
+- behind content
+- does not cover text
+- does not change card dimensions
+- does not block clicks
+
+=========================================================
+HOVER BEHAVIOR
+=========================================================
+
+Match the Work / Project cards.
+
+Hover should feel controlled and professional.
+
+Use subtle effects such as:
+
+- slight border brightness
+- small glow increase
+- reflection sweep
+- very small elevation if already used
+
+Do NOT add:
+
+- large scaling
+- strong rotation
+- cursor-following movement
+- large translations
+- excessive animation
+
+=========================================================
+ACCESSIBILITY
+=========================================================
+
+Make sure:
+
+- text contrast remains readable
+- buttons remain clickable
+- links remain accessible
+- hover effects do not hide content
+- interactive cards still work with keyboard where already supported
+
+Respect:
+
+prefers-reduced-motion
+
+if the current project already supports it.
+
+=========================================================
+RESPONSIVE TESTING
+=========================================================
+
+Test:
+
+1440px
+1280px
+768px
+390px
+
+Verify:
+
+- cards remain inside containers
+- no horizontal overflow
+- text does not clip
+- grid effect stays contained
+- hover effects do not change card dimensions
+- mobile cards stack correctly
+- charts/SVGs/forms remain usable
+
+=========================================================
+DO NOT CHANGE
+=========================================================
+
+Do NOT modify:
+
+- Home hero
+- Amendment #1 work
+- Value Proposition section from Amendment #10
+- What We Do images
+- Services pipeline from Amendment #17
+- navigation
+- dropdowns
+- page copy
+- page structure unless needed to apply a shared class
+- Solution Finder functionality
+- Work headline rotation
+- forms
+- footer
+- official logo
+
+Amendment #11 images are already complete.
+Do not touch them.
+
+=========================================================
+IMPORTANT IMPLEMENTATION RULE
+=========================================================
+
+Do not make major sitewide CSS changes blindly.
+
+Before applying a shared class globally:
+
+1. Identify the cards that are actually inconsistent.
+2. Update those specific components.
+3. Preserve existing card layouts.
+4. Test each affected page.
+
+Do not introduce broad selectors such as:
+
+div[class*="card"]
+
+or:
+
+.card *
+
+that could accidentally affect unrelated components.
+
+=========================================================
+TESTING
+=========================================================
+
+After changes:
+
+1. Run the website.
+2. Compare updated cards with the Work / Project cards.
+3. Verify glass reflection.
+4. Verify pulsating orange grid.
+5. Verify hover behavior.
+6. Test all affected interactive components.
+7. Check browser console.
+8. Check for CSS/layout regressions.
+9. Check for horizontal overflow.
+10. Run:
+
+npm run audit
+
+if available.
+
+=========================================================
+FINAL REPORT
+=========================================================
+
+When finished tell me:
+
+1. Which files you changed.
+2. Which card components were inconsistent.
+3. Which components you updated.
+4. Which project-card styles/effects you reused.
+5. Whether you created a shared reusable card-surface class.
+6. Whether the glass reflection works.
+7. Whether the orange grid pulse works.
+8. Whether any functional components were affected.
+9. Desktop/mobile result.
+10. Whether npm run audit passes.
+11. Whether there are any console errors.
+
+Do not work on any other amendment.
