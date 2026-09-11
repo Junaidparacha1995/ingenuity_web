@@ -1,0 +1,121 @@
+Work ONLY on Amendment #1.
+
+Do not make any other website changes.
+
+AMENDMENT #1 — HOME PAGE HERO HEIGHT
+
+Requirement:
+The Home page hero section must exactly fill the screen height when the website first opens.
+
+It should:
+- Not be taller than the viewport
+- Not be shorter than the viewport
+- Fill exactly one screen on desktop
+- Keep the current visual design
+- Keep all current animations and interactions
+- Keep the navigation working
+- Remain responsive on mobile
+
+FIRST:
+Inspect the current Home page hero HTML and CSS before making changes.
+
+Pay special attention to:
+
+assets/css/v6.css
+
+and any other stylesheet that affects:
+
+.hero-console
+.hero-console-grid
+
+There may currently be CSS similar to:
+
+.hero-console {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+}
+
+This prevents the hero from consistently filling exactly one viewport.
+
+For desktop, update the hero so its total height equals the viewport.
+
+Use the existing CSS architecture where possible.
+
+A suitable approach is:
+
+.hero-console {
+    height: 100svh;
+    min-height: 100svh;
+    max-height: 100svh;
+    box-sizing: border-box;
+}
+
+.hero-console-grid {
+    height: 100%;
+    min-height: 0;
+}
+
+IMPORTANT:
+Search ALL CSS files and media queries for later rules that may override this.
+
+Especially look for:
+
+height: auto !important;
+min-height
+max-height
+padding
+margin
+
+Do not simply add another CSS rule without checking why the existing rule is being overridden.
+
+The fixed navigation/header must be considered when calculating the layout.
+
+The hero content must remain vertically balanced and nothing should be clipped.
+
+Do NOT:
+- redesign the hero
+- change hero text
+- change pipeline design
+- change colors
+- change fonts
+- change animations
+- change navigation
+- change sections below the hero
+- modify any other amendment
+
+MOBILE:
+At mobile widths, make sure the content is not clipped.
+
+If strict 100svh causes content clipping on small screens, use an appropriate responsive override for mobile while still maintaining a full-screen opening appearance.
+
+TEST AT:
+
+1440px desktop
+1280px desktop
+768px tablet
+390px mobile
+
+Verify:
+1. Hero fills the first desktop viewport exactly.
+2. Next section begins immediately after the first viewport.
+3. No unnecessary vertical blank space.
+4. No content clipping.
+5. No horizontal scrolling.
+6. Navigation still works.
+7. Hero animations still work.
+8. No browser console errors.
+
+If npm run audit exists, run it after the change.
+
+When finished, tell me:
+
+- Which file(s) you changed
+- Which CSS rule was causing the issue
+- What you changed
+- Desktop result
+- Mobile result
+- Whether npm run audit passes
+- Whether there are any console errors
+
+Do not work on any other amendment.
