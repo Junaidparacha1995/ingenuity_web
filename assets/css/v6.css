@@ -339,12 +339,45 @@ body.startup-active{overflow:hidden}
 .role-card::before{animation:cardGridPulse 3.8s ease-in-out infinite}
 .service-pipeline{display:grid;grid-template-columns:190px 34px minmax(0,1fr) 34px 190px;gap:12px;align-items:center;margin-top:42px}
 .service-pipeline-core{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-.service-pipeline-node{position:relative;overflow:hidden;isolation:isolate;min-height:134px;padding:18px 15px;border-radius:20px;display:flex;flex-direction:column;justify-content:center;text-align:center;background:linear-gradient(145deg,rgba(31,58,92,.82),rgba(12,29,51,.9));border:1px solid rgba(255,255,255,.14);box-shadow:var(--glass-dark-shadow);backdrop-filter:blur(16px)}
-.service-pipeline-node::before{content:"";position:absolute;right:-18%;bottom:-24%;width:85%;height:70%;z-index:-1;background-image:linear-gradient(135deg,transparent 48%,rgba(255,113,76,.4) 49%,transparent 51%),linear-gradient(45deg,transparent 48%,rgba(255,113,76,.25) 49%,transparent 51%);background-size:16px 16px;mask-image:radial-gradient(circle at bottom right,#000,transparent 76%);animation:cardGridPulse 3.8s ease-in-out infinite}
+.service-pipeline-node{
+  position:relative;overflow:hidden;isolation:isolate;min-height:134px;padding:18px 15px;
+  border-radius:20px;display:flex;flex-direction:column;justify-content:center;text-align:center;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018) 38%,transparent 39%),
+    linear-gradient(145deg,rgba(23,53,94,.9),rgba(10,27,51,.96));
+  background-size:100% 100%,100% 100%;background-position:0 0,0 0;
+  border:1px solid rgba(255,255,255,.14);box-shadow:var(--glass-dark-shadow);
+  backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  transition:transform .22s ease,box-shadow .28s ease,border-color .22s ease,background-position .8s ease;
+}
+.service-pipeline-node::before{
+  content:"";position:absolute;right:-18%;bottom:-24%;width:85%;height:70%;z-index:-1;
+  background-image:linear-gradient(135deg,transparent 48%,rgba(255,113,76,.4) 49%,transparent 51%),linear-gradient(45deg,transparent 48%,rgba(255,113,76,.25) 49%,transparent 51%);
+  background-size:16px 16px;mask-image:radial-gradient(circle at bottom right,#000,transparent 76%);
+  -webkit-mask-image:radial-gradient(circle at bottom right,#000,transparent 76%);
+  animation:cardGridPulse 3.8s ease-in-out infinite;
+}
+.service-pipeline-node::after{
+  content:"";position:absolute;top:15px;right:15px;width:5px;height:5px;border-radius:50%;
+  background:#ff774f;box-shadow:0 0 0 3px rgba(255,119,79,.12),0 0 10px rgba(255,119,79,.72);
+  pointer-events:none;z-index:2;
+}
 .service-pipeline-node small{color:#f49a84;font:800 9px 'Manrope',sans-serif;letter-spacing:.11em;text-transform:uppercase;margin-bottom:8px}
-.service-pipeline-node strong{color:#fff;font:800 14px 'Manrope',sans-serif;line-height:1.25}
-.service-pipeline-node span{color:rgba(255,255,255,.52);font-size:9.5px;line-height:1.4;margin-top:7px}
-.service-pipeline-node.input,.service-pipeline-node.output{min-height:170px;border-color:rgba(225,53,17,.35);background:radial-gradient(110% 100% at 20% 0%,rgba(225,53,17,.28),transparent 62%),linear-gradient(145deg,#17355e,#0a1b33)}
+.service-pipeline-node strong{color:#fff;font:700 14px 'Manrope',sans-serif;line-height:1.25;letter-spacing:-.01em}
+.service-pipeline-node span{color:rgba(255,255,255,.52);font:500 9.5px/1.4 'Manrope',sans-serif;letter-spacing:.04em;margin-top:7px}
+.service-pipeline-node.input,.service-pipeline-node.output{
+  min-height:170px;border-color:rgba(225,53,17,.35);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.018) 38%,transparent 39%),
+    radial-gradient(110% 100% at 20% 0%,rgba(225,53,17,.28),transparent 62%),
+    linear-gradient(145deg,#17355e,#0a1b33);
+}
+.service-pipeline-node.output::after{background:#48d597;box-shadow:0 0 0 3px rgba(72,213,151,.12),0 0 10px rgba(72,213,151,.72)}
+.service-pipeline-node:hover{
+  transform:translateY(-4px);border-color:rgba(255,139,103,.58);
+  box-shadow:0 24px 55px rgba(3,10,21,.34),0 0 24px rgba(225,53,17,.14);
+  background-position:0 0,120% 120%;
+}
 .service-pipeline-link{display:block;height:2px;background:linear-gradient(90deg,rgba(255,255,255,.1),var(--orange),rgba(255,255,255,.1));box-shadow:0 0 12px rgba(225,53,17,.45);animation:pipelineLinkPulse 2.8s ease-in-out infinite}
 @keyframes pipelineLinkPulse{0%,100%{opacity:.35;transform:scaleX(.7)}50%{opacity:1;transform:scaleX(1)}}
 @media(max-width:1080px){
