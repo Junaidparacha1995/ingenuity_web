@@ -529,3 +529,88 @@ header.scrolled .brand img.logo-full{height:70px}
 .system-map-section{isolation:isolate;content-visibility:visible;contain-intrinsic-size:auto}
 .system-map-section + .premium-stack-strip{border-top:0}
 .system-map-link{display:inline-flex;align-items:center}
+
+/* Amendment #10 — value proposition interface */
+.value-interface{
+  padding:clamp(28px,4.2vw,54px)!important;
+  background:
+    radial-gradient(70% 90% at 92% 4%,rgba(225,53,17,.22),transparent 62%),
+    radial-gradient(80% 100% at 8% 100%,rgba(35,89,146,.22),transparent 64%),
+    linear-gradient(145deg,#142b4b,#0c1f39 58%,#09172d)!important;
+}
+.value-interface-head{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:28px;
+  position:relative;z-index:1;
+}
+.value-interface-copy{min-width:0}
+.value-interface .eyebrow{margin-bottom:12px;color:#f39a84}
+.value-interface h2{margin-bottom:14px;max-width:620px}
+.value-interface p.lead-p{max-width:680px;margin:0;color:rgba(255,255,255,.68);font-size:14px;line-height:1.65}
+.value-tabs{
+  display:flex;flex:0 1 430px;flex-wrap:wrap;justify-content:flex-end;gap:7px;
+  padding-bottom:3px;
+}
+.value-tab{
+  display:inline-flex;align-items:center;min-height:29px;padding:7px 10px;
+  border:1px solid rgba(255,255,255,.11);border-radius:999px;
+  background:rgba(255,255,255,.045);color:rgba(255,255,255,.56);
+  font:750 9px 'Manrope',sans-serif;letter-spacing:.02em;white-space:nowrap;
+}
+.value-tab.is-active{
+  color:#fff;background:rgba(225,53,17,.88);border-color:rgba(255,153,126,.5);
+  box-shadow:0 8px 20px rgba(225,53,17,.18);
+}
+.value-card-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+  margin-top:30px;position:relative;z-index:1;
+}
+.value-card{
+  min-height:176px!important;height:auto!important;padding:19px 19px 18px!important;
+  border-radius:18px!important;background:
+    linear-gradient(145deg,rgba(30,63,103,.82),rgba(10,29,53,.9))!important;
+  border-color:rgba(255,255,255,.13)!important;
+  box-shadow:0 16px 38px rgba(3,10,21,.16),inset 0 1px 0 rgba(255,255,255,.06)!important;
+  transition:transform .35s var(--ease-spring),box-shadow .35s ease,border-color .35s ease,background-position 1s ease!important;
+}
+.value-card:hover{
+  transform:translateY(-6px)!important;border-color:rgba(255,127,94,.36)!important;
+  box-shadow:0 24px 48px rgba(3,10,21,.28),0 0 24px rgba(225,53,17,.08)!important;
+}
+.value-card-top{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  position:relative;z-index:2;
+}
+.value-card-index{color:#f39a84;font:800 9px 'Manrope',sans-serif;letter-spacing:.12em}
+.value-status{
+  display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,.45);
+  font:750 8px 'Manrope',sans-serif;letter-spacing:.06em;text-transform:uppercase;
+}
+.value-status i{width:5px;height:5px;border-radius:50%;background:#48d597;box-shadow:0 0 9px rgba(72,213,151,.55)}
+.value-card h3{
+  margin:26px 0 8px!important;color:#fff!important;font-size:17px!important;
+  line-height:1.18!important;letter-spacing:-.02em;
+}
+.value-card p{
+  margin:0!important;color:rgba(255,255,255,.62)!important;font-size:11.5px!important;
+  line-height:1.55!important;max-width:30ch;
+}
+.value-proof-row{
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 26px;
+  margin-top:22px;padding-top:17px;border-top:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.5);font:700 9px 'Manrope',sans-serif;
+  position:relative;z-index:1;
+}
+.value-proof-row span{display:inline-flex;align-items:center;gap:7px}
+.value-proof-row strong{color:#ff7655;font:850 18px/1 'Manrope',sans-serif;letter-spacing:-.04em}
+@media(max-width:1079px){
+  .value-interface-head{display:block}
+  .value-tabs{justify-content:flex-start;max-width:none;margin-top:22px}
+  .value-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:720px){
+  .value-interface{padding:28px 20px!important}
+  .value-card-grid{grid-template-columns:1fr;gap:10px;margin-top:24px}
+  .value-card{min-height:150px!important}
+  .value-card h3{margin-top:22px!important}
+  .value-proof-row{display:grid;grid-template-columns:1fr;gap:11px;margin-top:18px}
+}

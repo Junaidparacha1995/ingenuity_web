@@ -1,0 +1,285 @@
+Work ONLY on Amendment #17.
+
+Do not make any other website changes.
+
+AMENDMENT #17 — SERVICES PAGE
+"HOW IT CONNECTS" SECTION
+
+Requirement:
+
+On the Services page, redesign the nodes/blocks inside the:
+
+"How It Connects"
+
+section so they visually match the pipeline illustration style used in the HOME PAGE HERO.
+
+IMPORTANT:
+Do not change the content or logic of the Services section.
+
+Only improve the visual design of the nodes/cards so they feel like the same component family as the Home hero pipeline.
+
+=========================================================
+FIRST — INSPECT EXISTING IMPLEMENTATION
+=========================================================
+
+Before changing anything:
+
+1. Inspect the Home page hero pipeline.
+2. Identify the HTML/SVG/CSS used for its nodes.
+3. Inspect the Services "How It Connects" section.
+4. Compare the two implementations.
+
+Look for Home pipeline classes similar to:
+
+.node-card
+.node-glass
+.node-dot
+.node-title
+.node-subtitle
+
+The Services section may currently use classes similar to:
+
+.service-pipeline-node
+
+Do not assume these exact names.
+Inspect the current files first.
+
+=========================================================
+GOAL
+=========================================================
+
+The Services "How It Connects" nodes should use the SAME visual language as the Home hero pipeline.
+
+Match:
+
+- background treatment
+- liquid-glass appearance
+- navy color
+- transparency
+- border
+- border radius
+- typography
+- font sizes
+- title weight
+- subtitle styling
+- padding
+- spacing
+- orange accent
+- status dots
+- glass reflection
+- glow
+- hover effect
+- general depth
+- visual hierarchy
+
+The goal is that a visitor immediately recognizes both as the same design system.
+
+=========================================================
+IMPORTANT
+=========================================================
+
+Do NOT copy the entire Home hero layout.
+
+The Services section can keep its current:
+
+- node arrangement
+- connections
+- labels
+- content
+- workflow logic
+
+Only make the NODE/CARD DESIGN consistent.
+
+Do not break connector lines or arrows.
+
+Do not change Services copy.
+
+=========================================================
+REUSABLE STYLING
+=========================================================
+
+Prefer creating shared reusable styles instead of maintaining two unrelated versions.
+
+If appropriate, create common base classes such as:
+
+.pipeline-glass-node
+.pipeline-node-dot
+.pipeline-node-title
+.pipeline-node-subtitle
+
+Then reuse those styles in both:
+
+Home hero pipeline
+Services "How It Connects"
+
+However:
+
+Do not perform a risky full refactor if it could break the Home hero SVG or animations.
+
+If the Home implementation is SVG-specific and the Services implementation is HTML-based, create shared visual design tokens rather than forcing both to use identical markup.
+
+For example, reuse existing CSS variables for:
+
+--navy
+--orange
+--glass-border
+--glass-bg
+--radius
+--glow
+
+Use existing project variables where available.
+
+Do not create unnecessary duplicate CSS.
+
+=========================================================
+NODE DESIGN
+=========================================================
+
+Each Services pipeline node should have:
+
+- dark navy/glass background
+- semi-transparent border
+- rounded corners
+- subtle internal gradient
+- centered text where appropriate
+- typography matching Home nodes
+- small status dot
+- orange accent where appropriate
+- subtle glass reflection
+- hover state
+- soft glow
+- premium enterprise appearance
+
+The design should NOT look like a generic white card.
+
+It should clearly resemble the Home hero pipeline nodes.
+
+=========================================================
+STATUS DOTS
+=========================================================
+
+If the Home hero pipeline uses orange or green status dots:
+
+Reuse the same size, color, glow, and positioning logic.
+
+Do not introduce different dot styles.
+
+If the Services section already has meaningful indicators, preserve their meaning while updating the visual style.
+
+=========================================================
+CONNECTOR LINES
+=========================================================
+
+Keep all Services pipeline connector lines/arrows working.
+
+Make sure lines:
+
+- remain visible
+- do not pass over text
+- do not appear disconnected
+- remain behind nodes
+- scale responsively
+- retain the existing orange/navy theme
+
+Do not redesign the whole diagram unless necessary for alignment.
+
+=========================================================
+HOVER / INTERACTION
+=========================================================
+
+If Home hero nodes use a hover reflection or glow effect:
+
+Apply the same visual treatment to Services nodes.
+
+Do not introduce large movement.
+
+Avoid cards shifting position significantly on hover.
+
+The interaction should feel premium and controlled.
+
+No excessive cursor-following movement.
+
+=========================================================
+RESPONSIVE TESTING
+=========================================================
+
+Test at:
+
+1440px
+1280px
+768px
+390px
+
+Check:
+
+- nodes remain readable
+- no overlap
+- connectors stay aligned
+- no horizontal overflow
+- text does not clip
+- mobile layout remains usable
+- hover effects do not break desktop layout
+
+If needed, stack or simplify the diagram on mobile while preserving the same visual design.
+
+=========================================================
+DO NOT CHANGE
+=========================================================
+
+Do NOT modify:
+
+- Home hero content
+- Home hero height
+- Value Proposition section
+- What We Do images
+- Navigation
+- Work dropdown
+- Company dropdown
+- Solution Finder
+- Work page
+- Company page
+- Contact page
+- Footer
+- Other Services sections
+
+Amendment #11 regarding images is already complete.
+
+Do not touch those images.
+
+=========================================================
+TESTING
+=========================================================
+
+After the change:
+
+1. Run the website.
+2. Compare Home pipeline nodes with Services nodes visually.
+3. Confirm they now feel like the same design system.
+4. Test connector alignment.
+5. Test hover effects.
+6. Test desktop/mobile responsiveness.
+7. Check browser console.
+8. Check for horizontal scrolling.
+9. Run:
+
+npm run audit
+
+if available.
+
+=========================================================
+FINAL REPORT
+=========================================================
+
+When finished tell me:
+
+1. Which file(s) you changed.
+2. Which existing Home pipeline styles you reused.
+3. Which Services styles were changed.
+4. Whether you created shared reusable styles.
+5. Whether connector lines still work.
+6. Desktop result.
+7. Mobile result.
+8. Whether npm run audit passes.
+9. Whether there are any console errors.
+
+Do not work on any other amendment.
