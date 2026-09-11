@@ -1,0 +1,305 @@
+Work ONLY on Amendment #10.
+
+Do not make any other website changes.
+
+AMENDMENT #10 — REDESIGN THE
+"BUILT TO DELIVER MEANINGFUL, LASTING VALUE" SECTION
+
+The section is on the HOME PAGE.
+
+Find the section with the heading:
+
+"Built to deliver meaningful, lasting value."
+
+FIRST:
+Inspect the current HTML/CSS/JS implementation before changing anything.
+
+The current section may be implemented using something similar to:
+
+<div class="why-block project-card featured">
+
+or another featured/project-card container.
+
+Do not assume the exact class name without inspecting the current code.
+
+=========================================================
+GOAL
+=========================================================
+
+Redesign ONLY this section so it visually matches the reference design from the website amendment document.
+
+The reference design has:
+
+- One large dark navy rounded container
+- Premium liquid-glass appearance
+- Subtle blue/navy gradients
+- Soft orange/red atmospheric glow
+- Category-style pill buttons/tabs across the top
+- A structured grid of cards underneath
+- 3 cards per row on desktop
+- 2 rows total
+- 6 cards total
+- Small status dots/indicators in card corners
+- Subtle glass/reflection animation
+- Clean modern spacing
+- Consistent typography
+- Same visual language as the existing Ingenuity Systems website
+
+IMPORTANT:
+The reference screenshot uses example technology labels such as OpenAI, Anthropic, RAG, etc.
+
+DO NOT copy those labels/content.
+
+We only want to copy the VISUAL DESIGN.
+
+This section must remain about Ingenuity Systems'
+VALUE PROPOSITION.
+
+=========================================================
+CONTENT
+=========================================================
+
+Keep the existing meaning/content of this section.
+
+Do not add unnecessary marketing paragraphs.
+
+Organize the existing value proposition into approximately 6 short cards.
+
+You may structure them around themes such as:
+
+Business Impact
+Scalable Architecture
+Operational Efficiency
+Engineering Quality
+Long-Term Value
+Reliable Delivery
+
+BUT:
+
+Before inventing new wording, inspect the current section content and reuse the existing language wherever possible.
+
+Keep text concise.
+
+Each card should contain:
+
+- short heading
+- one short supporting sentence
+- optional small icon if the website already has a consistent icon system
+
+Do not introduce a new icon library.
+
+=========================================================
+TOP CATEGORY PILLS
+=========================================================
+
+Create a row of small pill-style labels/buttons at the top of the main container similar to the reference design.
+
+They are primarily a visual navigation/filter treatment.
+
+Use relevant categories from the website, for example:
+
+All
+AI
+Automation
+Engineering
+Cloud & Data
+Business Systems
+
+However:
+
+If similar categories already exist elsewhere on the site, reuse the existing terminology.
+
+Do not create inconsistent naming.
+
+If making them interactive would require unnecessary complexity, they may remain visually styled pills.
+
+Do not build a complicated filtering system unless the current website architecture already supports it.
+
+=========================================================
+CARD DESIGN
+=========================================================
+
+Each value card should visually match the site's existing project-card / liquid-glass design language.
+
+Cards should include:
+
+- dark navy glass background
+- subtle transparency
+- thin semi-transparent border
+- rounded corners
+- slight internal gradient
+- soft hover elevation
+- liquid/glass reflection effect
+- small status indicator near the top-right
+- subtle orange glow
+- pulsating orange grid treatment in the bottom-right corner if the existing card system already supports it
+
+IMPORTANT:
+
+Reuse existing CSS effects wherever possible.
+
+Search for existing classes/animations such as:
+
+project-card
+cardGridPulse
+glass
+reflection
+hover
+grid
+glow
+
+Do NOT create duplicate versions of effects that already exist.
+
+=========================================================
+MAIN CONTAINER
+=========================================================
+
+The entire section should feel like one cohesive premium interface.
+
+Recommended visual structure:
+
+----------------------------------------
+[ All ] [ AI ] [ Automation ] [ Engineering ] [...]
+
+[ Card 1 ] [ Card 2 ] [ Card 3 ]
+
+[ Card 4 ] [ Card 5 ] [ Card 6 ]
+----------------------------------------
+
+Desktop:
+3 columns × 2 rows.
+
+Tablet:
+2 columns.
+
+Mobile:
+1 column.
+
+Keep spacing clean and consistent.
+
+=========================================================
+IMPORTANT DESIGN RULES
+=========================================================
+
+Use the site's existing:
+
+- colors
+- CSS variables
+- fonts
+- border radius system
+- shadows
+- orange accents
+- navy tones
+- animation timing
+
+Do NOT add random colors.
+
+Do NOT introduce another font.
+
+Do NOT make it look like a different website.
+
+Do NOT make cards overly bright.
+
+Do NOT use excessive gradients.
+
+Do NOT use oversized icons.
+
+Do NOT make the section cluttered.
+
+The result should look professional, enterprise-grade, and consistent with the rest of the website.
+
+=========================================================
+RESPONSIVE BEHAVIOR
+=========================================================
+
+Test:
+
+1440px
+1280px
+768px
+390px
+
+Desktop:
+3 cards per row.
+
+Tablet:
+2 cards per row where appropriate.
+
+Mobile:
+1 card per row.
+
+Make sure:
+
+- text does not overflow
+- pills wrap cleanly
+- cards maintain equal visual sizing where possible
+- no horizontal scrolling
+- no clipping
+- no overlapping effects
+
+=========================================================
+DO NOT CHANGE
+=========================================================
+
+Do NOT modify:
+
+- Home hero
+- hero height
+- navigation
+- Work dropdown
+- Company dropdown
+- Who We Are
+- Engineering Team
+- What We Do images
+- How We Work
+- Solution Finder
+- Make the Decision Easier
+- Engineering Evidence
+- footer
+- Services page
+- Industries page
+- Work page
+- Company/About page
+- Careers page
+- Contact page
+
+Amendment #11 regarding the What We Do images is already completed.
+
+DO NOT touch those images.
+
+=========================================================
+TESTING
+=========================================================
+
+After making the change:
+
+1. Run the website.
+2. Check the redesigned section visually.
+3. Check hover animations.
+4. Check mobile responsiveness.
+5. Check browser console.
+6. Check for horizontal overflow.
+7. Make sure all links/navigation still work.
+8. Run:
+
+npm run audit
+
+if the command exists.
+
+=========================================================
+FINAL REPORT
+=========================================================
+
+When finished tell me:
+
+1. Which files you changed.
+2. What the old implementation was.
+3. What you changed for Amendment #10.
+4. How the new section matches the reference design.
+5. Whether existing value-proposition content was preserved.
+6. Desktop layout result.
+7. Mobile layout result.
+8. Whether npm run audit passes.
+9. Whether there are any console errors.
+
+Do not work on any other amendment.
