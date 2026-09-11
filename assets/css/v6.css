@@ -184,8 +184,8 @@ body.startup-active{overflow:hidden}
 
 /* Homepage amendment pass: keep the narrative focused on capability,
    method, and a useful first conversation. */
-.hero-console{height:auto;min-height:0;max-height:none}
-.hero-console-grid{height:auto;min-height:0;align-items:start}
+.hero-console{height:100svh;min-height:100svh;max-height:100svh;box-sizing:border-box}
+.hero-console-grid{height:100%;min-height:0;align-items:start}
 .hc-copy{min-width:0}
 .hc-copy .hero-rotator{display:grid;min-height:0;overflow:hidden;transition:height .45s ease}
 .hc-copy .hero-slide{grid-area:1 / 1;position:relative;inset:auto;align-self:start;visibility:hidden}
@@ -228,7 +228,7 @@ body.startup-active{overflow:hidden}
   .hc-activity{display:none}
 }
 @media(max-width:720px){
-  .hero-console{height:auto!important;min-height:0!important;max-height:none!important;padding:88px 0 18px}
+  .hero-console{height:auto!important;min-height:100svh!important;max-height:none!important;padding:88px 0 18px}
   .hero-console-grid{height:auto;min-height:0;grid-template-rows:auto auto;gap:10px}
   .hc-copy .hero-rotator{min-height:0}
   .hc-copy h1{font-size:clamp(25px,8vw,34px);margin-bottom:8px}
@@ -256,6 +256,11 @@ body.startup-active{overflow:hidden}
   .hc-copy p.lead{display:none}
   .hc-copy .hero-dots{display:none}
   .hc-panel{height:165px}
+}
+@media(min-width:1080px) and (max-height:960px){
+  .hero-console{padding:clamp(96px,14svh,150px) 0 clamp(28px,8svh,76px)}
+  .hc-panel{height:min(500px,calc(100svh - 330px));min-height:0}
+  .hc-activity{display:none}
 }
 
 /* 6.10.0 amendment pass: deliberate shared project-card language */
