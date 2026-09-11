@@ -1,0 +1,434 @@
+Work ONLY on Amendment #25.
+
+Do not redesign the website.
+Do not change content unless needed for visual consistency.
+Do not undo any previously completed amendment.
+
+AMENDMENT #25 — GLOBAL DESIGN CONSISTENCY
+
+Requirement:
+
+All pages across the website must use a consistent:
+
+- color system
+- typography
+- font sizes
+- spacing
+- card treatment
+- border radius
+- button styling
+- hover behavior
+- section spacing
+- dark/navy theme
+- orange accent
+- glass effects
+- overall design philosophy
+
+The site is already mostly consistent.
+
+This task is a FINAL VISUAL CONSISTENCY PASS.
+
+Do not create a new design system.
+Use the design system that already exists.
+
+=========================================================
+FIRST — INSPECT THE CURRENT WEBSITE
+=========================================================
+
+Before changing anything:
+
+1. Inspect the global CSS files.
+2. Inspect the Home page.
+3. Inspect the Work / Projects page.
+4. Identify the site's strongest existing design patterns.
+
+Use those as the reference for the rest of the site.
+
+Pay attention to existing CSS variables for:
+
+- navy colors
+- orange accents
+- text colors
+- borders
+- glass backgrounds
+- spacing
+- border radius
+- shadows
+- heading sizes
+
+Do not introduce duplicate variables if suitable ones already exist.
+
+=========================================================
+PAGES TO CHECK
+=========================================================
+
+Review at minimum:
+
+Home
+Services
+Industries
+Projects
+Case Studies
+About / Company
+Careers
+Contact
+
+Also inspect any important supporting pages such as:
+
+AI Maturity Assessment
+Build Your Own AI System
+
+if they are active parts of the current site.
+
+=========================================================
+1. TYPOGRAPHY CONSISTENCY
+=========================================================
+
+Check all pages for inconsistent typography.
+
+The website should continue using its current font system.
+
+Reuse the existing Manrope / Inter implementation where already configured.
+
+Check:
+
+- H1
+- H2
+- H3
+- body text
+- eyebrow labels
+- buttons
+- navigation
+- cards
+- captions
+- form labels
+
+Make sure similar components use similar font sizes and weights.
+
+Do NOT randomly change font sizes across the whole website.
+
+Use existing typography classes/tokens wherever possible.
+
+=========================================================
+2. PAGE HERO CONSISTENCY
+=========================================================
+
+Do not redesign page heroes.
+
+They have already been updated previously.
+
+Only verify that hero sections across:
+
+Services
+Industries
+Company/About
+Careers
+Projects/Work
+
+use the same visual family.
+
+Check:
+
+- title size
+- title weight
+- left alignment
+- vertical positioning
+- section height
+- spacing
+- eyebrow treatment
+- background style
+
+Fix only obvious inconsistencies.
+
+Do not change the Home hero implementation from Amendment #1.
+
+=========================================================
+3. COLOR CONSISTENCY
+=========================================================
+
+Search for random colors that do not belong to the current theme.
+
+The site should primarily use its existing:
+
+- deep navy
+- dark blue
+- white/light text
+- orange accent
+- subtle green status indicators where already meaningful
+- glass transparency
+
+Do not introduce new random:
+
+- purple
+- bright blue
+- pink
+- yellow
+- unrelated grays
+
+If hardcoded colors exist that are visually equivalent to current CSS variables, replace them with the appropriate existing variable where safe.
+
+Do not perform blind global replacements.
+
+=========================================================
+4. SECTION SPACING
+=========================================================
+
+Compare spacing between sections across pages.
+
+Check:
+
+- top padding
+- bottom padding
+- container widths
+- heading-to-content spacing
+- card grid gaps
+
+Similar sections should feel consistent.
+
+Do not make every section the exact same height.
+
+Only remove obvious spacing inconsistencies such as:
+
+- one section having excessive empty space
+- headings being too close to cards
+- unusually large gaps
+- inconsistent left/right container padding
+
+Use existing spacing variables/utilities where possible.
+
+=========================================================
+5. BUTTON CONSISTENCY
+=========================================================
+
+Review:
+
+Primary buttons
+Secondary buttons
+CTA buttons
+Outline buttons
+Navigation CTA buttons
+
+Make sure they use the same:
+
+- font
+- height
+- radius
+- padding
+- border
+- hover behavior
+- orange/navy visual language
+
+Do not change button text.
+
+Do not break links.
+
+Do not force every button to have the exact same appearance if the site already has intentional primary/secondary variants.
+
+=========================================================
+6. CARD CONSISTENCY
+=========================================================
+
+Amendment #22 has already been handled separately.
+
+Do NOT redo that work.
+
+Only verify that the card updates remain consistent across all pages.
+
+Check:
+
+- navy surfaces
+- borders
+- radius
+- reflections
+- grid pulse
+- text contrast
+
+Only fix obvious remaining inconsistencies.
+
+Do not rework card layouts.
+
+=========================================================
+7. FORMS
+=========================================================
+
+Inspect forms such as Contact or assessment pages.
+
+Make sure:
+
+- input heights are consistent
+- labels use the same typography
+- borders match the theme
+- focus states are consistent
+- buttons match the main site
+- inputs do not suddenly use unrelated colors
+
+Do not change form logic or validation.
+
+=========================================================
+8. NAVIGATION + FOOTER
+=========================================================
+
+Do not redesign navigation or footer.
+
+Only verify visual consistency.
+
+Check:
+
+- font
+- text color
+- hover state
+- spacing
+- logo sizing
+- CTA styling
+
+The official logo implementation must remain unchanged.
+
+=========================================================
+9. ANIMATIONS
+=========================================================
+
+Make sure animation behavior feels consistent.
+
+Keep existing:
+
+- glass reflection
+- subtle hover
+- orange grid pulse
+- pipeline animations
+- marquee
+- Work headline rotation
+
+Do not add unnecessary new animations.
+
+Avoid:
+
+- excessive scaling
+- cursor-following movement
+- strong rotation
+- distracting motion
+
+If the site already supports:
+
+prefers-reduced-motion
+
+preserve it.
+
+=========================================================
+10. REMOVE DUPLICATE / CONFLICTING CSS
+=========================================================
+
+While performing this pass, look for duplicate or conflicting styles introduced through multiple amendment rounds.
+
+Examples:
+
+- same component styled differently in several CSS files
+- later !important overrides
+- repeated hardcoded colors
+- duplicate radius values
+- duplicate button definitions
+
+ONLY clean these up where it is safe.
+
+Do not perform a large CSS refactor.
+
+The priority is stability.
+
+=========================================================
+DO NOT CHANGE
+=========================================================
+
+Do NOT change:
+
+- Home hero design
+- Amendment #1 hero sizing
+- Amendment #10 value proposition redesign
+- What We Do images
+- Amendment #17 Services pipeline
+- Amendment #22 card work
+- page copy
+- navigation structure
+- Work dropdown
+- Company dropdown
+- Solution Finder logic
+- expandable Decision cards
+- Work headline rotation
+- forms/functionality
+- official logo
+- favicon
+
+Amendment #11 images are already complete.
+
+Do not touch them.
+
+=========================================================
+VISUAL TESTING
+=========================================================
+
+Check every major page at:
+
+1440px
+1280px
+768px
+390px
+
+Compare pages side by side.
+
+Specifically check:
+
+- H1 consistency
+- section headings
+- body text
+- buttons
+- card surfaces
+- margins
+- padding
+- container widths
+- footer
+- navigation
+- hero alignment
+
+Look for anything that visually feels like it belongs to a different website.
+
+=========================================================
+TECHNICAL TESTING
+=========================================================
+
+After making changes:
+
+1. Run the website.
+2. Test all major pages.
+3. Check for broken layouts.
+4. Check browser console.
+5. Check horizontal overflow.
+6. Check images.
+7. Check navigation.
+8. Check buttons.
+9. Check forms.
+10. Run:
+
+npm run audit
+
+if available.
+
+=========================================================
+FINAL REPORT
+=========================================================
+
+When finished tell me:
+
+1. Which files you changed.
+2. Which visual inconsistencies you found.
+3. Which typography issues you fixed.
+4. Which spacing issues you fixed.
+5. Which color inconsistencies you fixed.
+6. Which button inconsistencies you fixed.
+7. Whether any conflicting CSS was cleaned up.
+8. Whether all major pages now feel visually consistent.
+9. Desktop result.
+10. Mobile result.
+11. Whether npm run audit passes.
+12. Whether there are any console errors.
+
+Do not work on Amendment #26 yet.
+
+Do not make unrelated changes.

@@ -558,6 +558,145 @@ header.scrolled .brand img.logo-full{height:70px}
   .marquee-brand-icon img{width:29px;height:29px}
 }
 
+/* =========================================================
+   AMENDMENT #22 — CONSISTENT PROJECT-STYLE CARD SURFACES
+   Keep card internals intact while bringing visibly light
+   content cards into the approved navy/orange system.
+   ========================================================= */
+.glass-project-surface,
+.security-principles article,
+.story-panel,
+.maturity-q,
+.assessment-result{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:
+    linear-gradient(115deg,transparent 28%,rgba(255,255,255,.11) 46%,transparent 64%) no-repeat,
+    linear-gradient(145deg,#14233b,#101d31 72%);
+  background-size:280% 280%,100% 100%;
+  background-position:-120% -120%,0 0;
+  border:1px solid var(--glass-dark-border);
+  border-radius:var(--radius-md);
+  box-shadow:var(--glass-dark-shadow);
+  color:var(--text-on-dark);
+  transition:transform .4s var(--ease-spring),box-shadow .4s ease,background-position 1s var(--ease),border-color .3s ease;
+}
+
+.glass-project-surface::before,
+.security-principles article::before,
+.story-panel::before,
+.maturity-q::before,
+.assessment-result::before{
+  content:"";
+  position:absolute;
+  right:-4%;
+  bottom:-8%;
+  width:58%;
+  height:62%;
+  z-index:-1;
+  pointer-events:none;
+  background-image:
+    linear-gradient(135deg,transparent 48%,rgba(255,113,76,.42) 49%,transparent 51%),
+    linear-gradient(45deg,transparent 48%,rgba(255,113,76,.28) 49%,transparent 51%);
+  background-size:18px 18px;
+  -webkit-mask-image:radial-gradient(circle at bottom right,#000,transparent 75%);
+  mask-image:radial-gradient(circle at bottom right,#000,transparent 75%);
+  opacity:.34;
+  animation:cardGridPulse 3.8s ease-in-out infinite;
+}
+
+.glass-project-surface::after,
+.security-principles article::after,
+.story-panel::after,
+.maturity-q::after,
+.assessment-result::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(118deg,transparent 24%,rgba(255,255,255,.055) 43%,transparent 61%);
+  transform:translateX(-100%);
+  transition:transform .9s var(--ease);
+}
+
+.glass-project-surface:hover,
+.security-principles article:hover,
+.story-panel:hover,
+.maturity-q:hover,
+.assessment-result:hover{
+  transform:translateY(-6px);
+  background-position:120% 120%,0 0;
+  border-color:rgba(225,53,17,.35);
+  box-shadow:var(--glass-dark-shadow-hover);
+}
+
+.glass-project-surface:hover::after,
+.security-principles article:hover::after,
+.story-panel:hover::after,
+.maturity-q:hover::after,
+.assessment-result:hover::after{
+  transform:translateX(100%);
+}
+
+.glass-project-surface > *,
+.security-principles article > *,
+.story-panel > *,
+.maturity-q > *,
+.assessment-result > *{
+  position:relative;
+  z-index:1;
+}
+
+.security-principles article h3,
+.story-panel h3,
+.maturity-q h3{
+  color:var(--text-on-dark);
+}
+
+.security-principles article p,
+.story-panel p{
+  color:var(--text-on-dark-soft);
+}
+
+.maturity-q button{
+  position:relative;
+  z-index:2;
+}
+
+/* Image cards retain their photo treatment, but use the same
+   measured elevation and border language as the Work cards. */
+.im-card{
+  border:1px solid var(--glass-dark-border);
+  border-top:3px solid var(--orange);
+  box-shadow:var(--glass-dark-shadow);
+  transition:transform .4s var(--ease-spring),box-shadow .4s ease,border-color .3s ease;
+}
+
+.im-card:hover{
+  transform:translateY(-6px) scale(1.02);
+  border-color:rgba(225,53,17,.42);
+  box-shadow:var(--glass-dark-shadow-hover);
+}
+
+@media(prefers-reduced-motion:reduce){
+  .glass-project-surface::after,
+  .security-principles article::after,
+  .story-panel::after,
+  .maturity-q::after,
+  .assessment-result::after{
+    transition:none;
+  }
+  .glass-project-surface::before,
+  .security-principles article::before,
+  .story-panel::before,
+  .maturity-q::before,
+  .assessment-result::before{
+    animation:none;
+  }
+}
+
 /* 6.11: the homepage hero is exactly one viewport tall at every breakpoint. */
 .system-map-section{isolation:isolate;content-visibility:visible;contain-intrinsic-size:auto}
 .system-map-section + .premium-stack-strip{border-top:0}
