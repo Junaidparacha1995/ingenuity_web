@@ -1,0 +1,297 @@
+Work ONLY on Amendment #26.
+
+Do not make any design changes.
+Do not change layout.
+Do not change functionality.
+Do not rewrite website content unnecessarily.
+
+AMENDMENT #26 — REMOVE AI-CREATED DASHES FROM WEBSITE CONTENT
+
+Requirement:
+
+Remove obvious AI-style dash usage from all VISIBLE website content.
+
+The amendment specifically says:
+
+"Remove All AI created '-' in content"
+
+Interpret this carefully.
+
+The main target is AI-style sentence punctuation such as:
+
+—
+–
+
+and standalone decorative dash usage such as:
+
+ - 
+
+Do NOT blindly remove legitimate hyphens inside normal compound words.
+
+=========================================================
+FIRST — SEARCH THE WHOLE PROJECT
+=========================================================
+
+Search all user-facing content files.
+
+Check:
+
+- all HTML files
+- visible text inside JavaScript
+- dynamically generated content
+- form options
+- FAQs
+- headings
+- paragraphs
+- buttons
+- CTA text
+- card copy
+- pricing/budget ranges
+- case study text
+- project text
+- Services content
+- About content
+- Careers content
+- Contact content
+
+Search specifically for:
+
+—
+–
+
+Also search for standalone:
+
+ - 
+
+Do NOT only check index.html.
+
+=========================================================
+WHAT TO CHANGE
+=========================================================
+
+Replace AI-style punctuation naturally.
+
+Examples:
+
+BEFORE:
+
+We design systems that scale — without unnecessary complexity.
+
+AFTER:
+
+We design systems that scale without unnecessary complexity.
+
+Or:
+
+We design systems that scale, without unnecessary complexity.
+
+Choose whichever reads naturally.
+
+--------------------------------------------
+
+BEFORE:
+
+Strategy – Engineering – Deployment
+
+AFTER:
+
+Strategy • Engineering • Deployment
+
+or
+
+Strategy, Engineering, Deployment
+
+Use whatever matches the existing website design.
+
+--------------------------------------------
+
+BEFORE:
+
+$1,000 – $5,000
+
+AFTER:
+
+$1,000 to $5,000
+
+--------------------------------------------
+
+BEFORE:
+
+$5,000 – $25,000
+
+AFTER:
+
+$5,000 to $25,000
+
+=========================================================
+IMPORTANT — KEEP VALID HYPHENATED WORDS
+=========================================================
+
+Do NOT automatically remove valid English compound-word hyphens.
+
+Examples that should normally remain:
+
+business-first
+enterprise-grade
+full-stack
+long-term
+real-time
+end-to-end
+AI-powered
+cloud-native
+
+These are legitimate compound terms and are not the AI-style punctuation we are trying to remove.
+
+Only rewrite them if the wording is grammatically incorrect.
+
+=========================================================
+DO NOT BLINDLY REPLACE "-"
+=========================================================
+
+Do NOT perform a global replacement of the normal hyphen character:
+
+-
+
+because this can break:
+
+- CSS class names
+- HTML attributes
+- file paths
+- JavaScript
+- URLs
+- IDs
+- CSS variables
+- legitimate words
+- code
+
+Only edit visible human-readable website content.
+
+Do not modify code syntax.
+
+=========================================================
+SPECIAL ATTENTION — CONTACT PAGE
+=========================================================
+
+Check the Contact page carefully.
+
+There were previously visible budget ranges such as:
+
+$1,000 – $5,000
+
+$5,000 – $25,000
+
+Change those to:
+
+$1,000 to $5,000
+
+$5,000 to $25,000
+
+Check for any other similar ranges.
+
+=========================================================
+CONTENT QUALITY
+=========================================================
+
+When removing a dash, make sure the resulting sentence still reads naturally.
+
+Do not leave awkward wording.
+
+For example:
+
+BAD:
+
+"We build systems, designed for scale."
+
+if the comma makes the sentence worse.
+
+Rewrite minimally where needed.
+
+The goal is:
+
+- natural human writing
+- concise sentences
+- no obvious AI-style em-dash construction
+- no unnecessary rewriting
+
+=========================================================
+DO NOT CHANGE
+=========================================================
+
+Do NOT change:
+
+- design
+- CSS styling
+- animations
+- Home hero
+- Amendment #1
+- Amendment #10
+- What We Do images
+- Amendment #17
+- Amendment #22
+- Amendment #25
+- navigation
+- dropdowns
+- forms
+- page structure
+- logo
+- favicon
+- URLs
+- file names
+- CSS classes
+- JavaScript identifiers
+
+Only modify visible website copy where required.
+
+=========================================================
+VERIFY AFTER CHANGES
+=========================================================
+
+After editing:
+
+Search the entire project again for:
+
+—
+–
+
+For every remaining occurrence, determine whether it is:
+
+1. visible content that should be removed
+2. code/non-visible content that should remain
+3. a legitimate special case
+
+Do not claim the amendment is finished until all visible AI-style dash punctuation has been reviewed.
+
+=========================================================
+TESTING
+=========================================================
+
+After the text changes:
+
+1. Run the website.
+2. Check all major pages.
+3. Confirm sentences still read naturally.
+4. Confirm buttons and navigation still work.
+5. Confirm no HTML/code was accidentally broken.
+6. Check browser console.
+7. Run:
+
+npm run audit
+
+if available.
+
+=========================================================
+FINAL REPORT
+=========================================================
+
+When finished tell me:
+
+1. Which files were changed.
+2. Every visible em dash / en dash occurrence you changed.
+3. What each occurrence was changed to.
+4. Whether any dash characters remain in visible content.
+5. If any remain, explain why.
+6. Confirm legitimate compound-word hyphens were preserved.
+7. Whether npm run audit passes.
+8. Whether there are any console errors.
+
+Do not work on any other amendment.
