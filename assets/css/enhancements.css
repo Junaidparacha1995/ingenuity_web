@@ -169,7 +169,7 @@ header.scrolled{box-shadow:0 20px 54px -24px rgba(8,15,26,.58),0 1px 0 rgba(255,
 @media(max-width:680px){
   .tech-card{min-height:112px}
   .tech-logo{width:40px;height:40px;border-radius:12px}.tech-logo img,.tech-logo-custom svg{width:21px;height:21px}
-  .system-plot-card{min-height:480px}.architecture-plot-card{min-height:0}.system-plot-3d{inset:48px 0 44px;width:100%;height:calc(100% - 92px)}
+  .system-plot-card{min-height:480px}.architecture-plot-card{min-height:0;width:100%;min-width:0}.system-map-grid,.system-map-copy{min-width:0}.system-plot-3d{inset:48px 0 44px;width:100%;height:calc(100% - 92px)}
 }
 @media(min-width:681px) and (max-width:980px){
   .architecture-plot-card{width:100%;max-width:720px;justify-self:center}
