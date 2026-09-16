@@ -1,3 +1,28 @@
+// Keep public URLs clean even when an old static link or bookmarked .html path is used.
+const cleanInternalHref = (value) => String(value || '')
+  .replace(/(^|\/)index\.html(?=([?#]|$))/g, '$1')
+  .replace(/\.html(?=([?#]|$))/g, '');
+const cleanPublicPath = (value) => {
+  const path = cleanInternalHref(value);
+  return path === '' ? '/' : path;
+};
+(function normalizePublicRoutes() {
+  const currentPath = cleanPublicPath(window.location.pathname);
+  if (currentPath !== window.location.pathname) {
+    window.history.replaceState({}, document.title, `${currentPath}${window.location.search}${window.location.hash}`);
+  }
+  document.querySelectorAll('a[href]').forEach((anchor) => {
+    try {
+      const url = new URL(anchor.getAttribute('href'), window.location.href);
+      if (url.origin !== window.location.origin) return;
+      const path = cleanPublicPath(url.pathname);
+      if (path !== url.pathname) anchor.setAttribute('href', `${path}${url.search}${url.hash}`);
+    } catch (error) {
+      // Ignore malformed or intentionally non-URL links.
+    }
+  });
+})();
+
 // Header shadow + floating pill morph on scroll — activates only after the hero section
 const header = document.querySelector('header');
 if (header) {
@@ -340,7 +365,11 @@ if (revealTargets.length) {
   if (document.querySelector('.site-assistant')) return;
   const CHAT_ENDPOINT = String(window.INGENUITY_CHAT_ENDPOINT || '/api/chat').trim();
   const siteBase = /\/(pages|projects|case-studies)(\/|$)/.test(window.location.pathname) ? '../' : '';
-  const siteHref = (href) => String(href || '').startsWith('/') ? href : siteBase + href;
+  const siteHref = (href) => {
+    const cleaned = cleanInternalHref(href);
+    if (String(href || '').startsWith('/')) return cleanPublicPath(cleaned);
+    return siteBase + cleaned;
+  };
   const knowledge = [
     { title: 'AI & Intelligent Systems', keys: 'ai intelligent systems agentic copilots rag knowledge document intelligence', text: 'We design agentic AI systems, AI copilots, knowledge and RAG systems, and document intelligence workflows around how your team actually operates.', href: 'services-ai.html' },
     { title: 'Business Process Automation', keys: 'business process automation workflow finance accounting crm sales customer service', text: 'Automation services cover workflow automation, finance and accounting, CRM and sales automation, and customer service operations.', href: 'services-automation.html' },
