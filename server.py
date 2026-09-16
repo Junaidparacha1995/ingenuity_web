@@ -283,10 +283,19 @@ class SiteHandler(SimpleHTTPRequestHandler):
             return str(ROOT / "__missing__")
 
         if candidate.is_file():
+            if (
+                candidate.suffix.lower() in {".jpg", ".jpeg", ".png"}
+                and "image/webp" in self.headers.get("Accept", "")
+            ):
+                webp_candidate = candidate.with_suffix(".webp")
+                if webp_candidate.is_file():
+                    candidate = webp_candidate
+            self._served_path = candidate
             return str(candidate)
         if candidate.is_dir():
             index_candidate = candidate / "index.html"
             if index_candidate.is_file():
+                self._served_path = index_candidate
                 return str(index_candidate)
             return str(candidate)
         if not parsed.path.endswith(".html"):
@@ -296,12 +305,20 @@ class SiteHandler(SimpleHTTPRequestHandler):
             except ValueError:
                 return str(ROOT / "__missing__")
             if html_candidate.is_file():
+                self._served_path = html_candidate
                 return str(html_candidate)
         return str(candidate)
 
     def end_headers(self) -> None:
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+        served_path = Path(getattr(self, "_served_path", ""))
+        if served_path.is_file() and served_path.is_relative_to(ROOT / "assets"):
+            if served_path.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp", ".svg"}:
+                self.send_header("Cache-Control", "public, max-age=2592000")
+                self.send_header("Vary", "Accept")
+            elif served_path.suffix.lower() in {".css", ".js"}:
+                self.send_header("Cache-Control", "public, max-age=86400")
         super().end_headers()
 
     def do_GET(self) -> None:
