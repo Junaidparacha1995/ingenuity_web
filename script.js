@@ -338,7 +338,7 @@ if (revealTargets.length) {
 // Global site-memory RAG assistant. Keep the OpenAI key server-side: set only a secure proxy URL here later.
 (function initGlobalAssistant() {
   if (document.querySelector('.site-assistant')) return;
-  const CHAT_ENDPOINT = String(window.INGENUITY_CHAT_ENDPOINT || '').trim();
+  const CHAT_ENDPOINT = String(window.INGENUITY_CHAT_ENDPOINT || '/api/chat').trim();
   const siteBase = /\/(pages|projects|case-studies)(\/|$)/.test(window.location.pathname) ? '../' : '';
   const siteHref = (href) => siteBase + href;
   const knowledge = [
@@ -415,21 +415,25 @@ if (revealTargets.length) {
     const lead = docs[0];
     return { text: `${lead.title}: ${lead.text} What would you like to explore next?`, docs };
   };
-  const requestModel = async (query, docs) => {
+  const requestModel = async (query, docs, history) => {
     if (!CHAT_ENDPOINT) return null;
     try {
-      const response = await fetch(CHAT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: 'ingenuity-systems-rag-chat', question: query, page: window.location.href, context: docs.map((doc) => ({ title: doc.title, text: doc.text, href: doc.href })) }) });
+      const response = await fetch(CHAT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: 'ingenuity-systems-rag-chat', question: query, page: window.location.href, history, context: docs.map((doc) => ({ title: doc.title, text: doc.text, href: doc.href })) }) });
       if (!response.ok) return null;
       const data = await response.json();
-      return String(data.answer || data.response || data.message || data.output_text || '').trim() || null;
+      const text = String(data.answer || data.response || data.message || data.output_text || '').trim();
+      return text ? { text, docs: Array.isArray(data.sources) ? data.sources : [] } : null;
     } catch (error) { return null; }
   };
+  const history = [];
   const ask = async (query) => {
     const clean = String(query || '').trim(); if (!clean) return;
     addMessage(clean, true); input.value = '';
     const docs = retrieve(clean); const pending = typing();
-    const modelAnswer = await requestModel(clean, docs); pending.remove();
+    const modelAnswer = await requestModel(clean, docs, history); pending.remove();
     const local = renderLocalAnswer(clean, docs); addMessage(modelAnswer || local.text); addSources(modelAnswer ? docs : local.docs.filter(Boolean));
+    history.push({ role: 'user', content: clean });
+    history.push({ role: 'assistant', content: modelAnswer || local.text });
   };
   const suggestions = document.createElement('div'); suggestions.className = 'assistant-suggestions';
   ['Recommend a solution', 'Automation ideas', 'Recent projects', 'Book a call'].forEach((label) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.addEventListener('click', () => ask(label)); suggestions.appendChild(button); });
