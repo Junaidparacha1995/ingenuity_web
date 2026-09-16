@@ -1,0 +1,53 @@
+Stock image assets
+
+These images are downloaded from Unsplash and used under the Unsplash License:
+https://unsplash.com/license
+
+Local asset -> Unsplash image source
+ecommerce.jpg -> https://images.unsplash.com/photo-1556742049-0cfed4f6a45d
+office.jpg -> https://images.unsplash.com/photo-1560264280-88b68371db39
+realestate.jpg -> https://images.unsplash.com/photo-1698414392304-8f7ebef200a6
+financial.jpg -> https://images.unsplash.com/photo-1774112168796-69c896af2730
+healthcare.jpg -> https://images.unsplash.com/photo-1648224394432-8830fec15349
+manufacturing.jpg -> https://images.unsplash.com/photo-1496247749665-49cf5b1022e9
+technology.jpg -> https://images.unsplash.com/photo-1519389950473-47ba0277781c
+network.jpg -> https://images.unsplash.com/photo-1451187580459-43490279c0fa
+ai.jpg -> https://images.unsplash.com/photo-1620712943543-bcc4688e7485
+portrait-male.jpg -> https://images.unsplash.com/photo-1500648767791-00dcc994a43e
+portrait-female.jpg -> https://images.unsplash.com/photo-1494790108377-be9c29b29330
+
+Section-specific stock assets (Unsplash)
+home-team.jpg -> https://images.unsplash.com/photo-1522071820081-009f0129c71c
+home-ai.jpg -> https://images.unsplash.com/photo-1518770660439-4636190af475
+home-automation.jpg -> https://images.unsplash.com/photo-1553877522-43269d4ea984
+home-software.jpg -> https://images.unsplash.com/photo-1498050108023-c5249f4df085
+home-integration.jpg -> https://images.unsplash.com/photo-1558494949-ef010cbdcc31
+spot-healthcare.jpg -> https://images.unsplash.com/photo-1576091160399-112ba8d25d1d
+spot-financial.jpg -> https://images.unsplash.com/photo-1707157284454-553ef0a4ed0d
+spot-manufacturing.jpg -> https://images.unsplash.com/photo-1581091226825-a6a2a5aee158
+spot-realestate.jpg -> https://images.unsplash.com/photo-1780733065157-70a37896326f
+spot-retail.jpg -> https://images.unsplash.com/photo-1556740749-887f6717d7e4
+spot-technology.jpg -> https://images.unsplash.com/photo-1516321318423-f06f85e504b3
+about-hero.jpg -> https://images.unsplash.com/photo-1497366811353-6870744d04b2
+about-team.jpg -> https://images.unsplash.com/photo-1521737604893-d14cc237f11d
+careers.jpg -> https://images.unsplash.com/photo-1524758631624-e2822e304c36
+industries-hero.jpg -> https://images.unsplash.com/photo-1461749280684-dccba630e2f6
+listing-ecommerce.jpg -> https://images.unsplash.com/photo-1523275335684-37898b6baf30
+listing-professional.jpg -> https://images.unsplash.com/photo-1497366754035-f200968a6e72
+listing-realestate.jpg -> https://images.unsplash.com/photo-1600585154340-be6161a56a0c
+listing-financial.jpg -> https://images.unsplash.com/photo-1559526324-593bc073d938
+listing-healthcare.jpg -> https://images.unsplash.com/photo-1579684385127-1ef15d508118
+listing-manufacturing.jpg -> https://images.unsplash.com/photo-1565610222536-ef125c59da2e
+listing-technology.jpg -> https://images.unsplash.com/photo-1550751827-4bd374c3f58b
+detail-ecommerce.jpg -> https://images.unsplash.com/photo-1512436991641-6745cdb1723f
+detail-professional.jpg -> https://images.unsplash.com/photo-1504384308090-c894fdcc538d
+detail-realestate.jpg -> https://images.unsplash.com/photo-1494526585095-c41746248156
+detail-financial.jpg -> https://images.unsplash.com/photo-1444653614773-995cb1ef9efa
+detail-healthcare.jpg -> https://images.unsplash.com/photo-1538108149393-fbbd81895907
+detail-manufacturing.jpg -> https://images.unsplash.com/photo-1610891015188-5369212db097
+detail-technology.jpg -> https://images.unsplash.com/photo-1597852074816-d933c7d2b988
+services-overview.jpg -> https://images.unsplash.com/photo-1497366216548-37526070297c
+services-ai.jpg -> https://images.unsplash.com/photo-1677442136019-21780ecad995
+services-automation.jpg -> https://images.unsplash.com/photo-1517245386807-bb43f82c33c4
+services-integration.jpg -> https://images.unsplash.com/photo-1516321165247-4aa89a48be28
+services-software.jpg -> https://images.unsplash.com/photo-1517694712202-14dd9538aa97
