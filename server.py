@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parent
 PORT = int(os.environ.get("PORT", "5000"))
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "").strip()
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini").strip()
+CONTACT_WEBHOOK_URL = os.environ.get("CONTACT_WEBHOOK_URL", "").strip()
 MAX_BODY_BYTES = 16_000
 RATE_LIMIT_WINDOW = 10 * 60
 RATE_LIMIT_MAX = 20
@@ -215,6 +216,23 @@ def openai_answer(
         return None
 
 
+def forward_contact(payload: dict) -> tuple[bool, bool]:
+    """Forward a contact payload to Make when CONTACT_WEBHOOK_URL is configured."""
+    if not CONTACT_WEBHOOK_URL:
+        return False, False
+    request = Request(
+        CONTACT_WEBHOOK_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urlopen(request, timeout=15) as response:
+            return 200 <= response.status < 300, True
+    except (HTTPError, URLError, TimeoutError, ValueError):
+        return False, True
+
+
 def allowed(ip: str) -> bool:
     now = time.time()
     with RATE_LOCK:
@@ -307,6 +325,9 @@ class SiteHandler(SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_POST(self) -> None:
+        if self.path.rstrip("/") == "/api/contact":
+            self.handle_contact()
+            return
         if self.path.rstrip("/") != "/api/chat":
             json_response(self, 404, {"error": "Not found"})
             return
@@ -340,6 +361,28 @@ class SiteHandler(SimpleHTTPRequestHandler):
             "answer": answer,
             "sources": sources,
             "model": OPENAI_MODEL if model_used else "local-fallback",
+        })
+
+    def handle_contact(self) -> None:
+        if not allowed(self.client_address[0]):
+            json_response(self, 429, {"ok": False, "error": "Please wait a moment before trying again."})
+            return
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if length <= 0 or length > MAX_BODY_BYTES:
+                raise ValueError("invalid body")
+            payload = json.loads(self.rfile.read(length).decode("utf-8"))
+            if not isinstance(payload, dict) or not payload.get("name") or not payload.get("email"):
+                raise ValueError("missing contact details")
+        except (ValueError, TypeError, json.JSONDecodeError, UnicodeDecodeError):
+            json_response(self, 400, {"ok": False, "error": "Name and email are required."})
+            return
+
+        delivered, configured = forward_contact(payload)
+        json_response(self, 200, {
+            "ok": delivered,
+            "configured": configured,
+            "delivered": delivered,
         })
 
 

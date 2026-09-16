@@ -942,8 +942,9 @@ const contactStatus = document.getElementById('contact-status');
 if (contactForm && submitBtn) {
   const bdEmail = 'info@ingenuitysys.com';
   const calendlyUrl = 'https://calendly.com/junaidparacha-ingenuitysys';
-  // Paste the Make.com custom webhook URL in contact.html.
-  const contactWebhookUrl = String(window.INGENUITY_CONTACT_WEBHOOK_URL || '').trim();
+  // Keep the Make URL server-side in CONTACT_WEBHOOK_URL. The window override is
+  // available only when a direct browser webhook is intentionally configured.
+  const contactWebhookUrl = String(window.INGENUITY_CONTACT_WEBHOOK_URL || '/api/contact').trim();
   const personalEmailDomains = new Set([
     'gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com',
     'icloud.com', 'me.com', 'mac.com', 'proton.me', 'protonmail.com',
@@ -958,7 +959,13 @@ if (contactForm && submitBtn) {
         body: JSON.stringify(payload),
         keepalive: true
       });
-      if (response.ok) return true;
+      if (response.ok) {
+        if (contactWebhookUrl === '/api/contact') {
+          const result = await response.json().catch(() => null);
+          return Boolean(result?.delivered);
+        }
+        return true;
+      }
     } catch (error) {
       // Make webhooks may not expose CORS headers. Try one simple no-cors POST.
     }
@@ -989,6 +996,7 @@ if (contactForm && submitBtn) {
     const isPersonalQuickStart = Boolean(!company && !isBusinessEmail && isLowBudget);
     const budgetLabel = document.getElementById('budget').selectedOptions[0]?.textContent || budget;
     const route = qualifiesForCalendly ? 'calendly' : (isPersonalQuickStart ? 'bd-email-quick-start' : 'bd-email');
+    const routingDecision = qualifiesForCalendly ? 'calendly' : 'email';
     const automatedMessage = isPersonalQuickStart
       ? 'Thanks for reaching out. Our business development team will review your quick-start inquiry and reply by email.'
       : 'Thanks for reaching out. Our team will review your details and follow up with the right next step.';
@@ -1013,6 +1021,7 @@ if (contactForm && submitBtn) {
       estimatedBudgetLabel: budgetLabel,
       message,
       route,
+      routingDecision,
       allocatedBdEmail: bdEmail,
       calendlyUrl,
       automatedMessage,
