@@ -6,7 +6,7 @@ const cleanPublicPath = (value) => {
   const path = cleanInternalHref(value);
   return path === '' ? '/' : path;
 };
-(function normalizePublicRoutes() {
+const normalizePublicRoutes = () => {
   const currentPath = cleanPublicPath(window.location.pathname);
   if (currentPath !== window.location.pathname) {
     window.history.replaceState({}, document.title, `${currentPath}${window.location.search}${window.location.hash}`);
@@ -21,7 +21,8 @@ const cleanPublicPath = (value) => {
       // Ignore malformed or intentionally non-URL links.
     }
   });
-})();
+};
+normalizePublicRoutes();
 
 // Header shadow + floating pill morph on scroll — activates only after the hero section
 const header = document.querySelector('header');
@@ -1238,3 +1239,6 @@ if (indMorph) {
   panel.addEventListener('mouseenter', open);
   panel.addEventListener('mouseleave', close);
 })();
+
+// Navigation and the advisor can add links after the initial page scan.
+normalizePublicRoutes();
