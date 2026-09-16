@@ -11,6 +11,7 @@ from html.parser import HTMLParser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Lock
+from urllib.parse import unquote, urlsplit
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -242,12 +243,55 @@ class SiteHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
+    @staticmethod
+    def clean_html_url(path: str) -> str | None:
+        """Return the public URL for an HTML file, or None if already clean."""
+        if path == "/index.html":
+            return "/"
+        if path.endswith("/index.html"):
+            return path[:-len("/index.html")] or "/"
+        if path.endswith(".html"):
+            return path[:-len(".html")] or "/"
+        return None
+
+    def translate_path(self, request_path: str) -> str:
+        """Serve clean extensionless routes from their existing HTML files."""
+        parsed = urlsplit(request_path)
+        relative = unquote(parsed.path).lstrip("/")
+        candidate = (ROOT / relative).resolve()
+        try:
+            candidate.relative_to(ROOT)
+        except ValueError:
+            return str(ROOT / "__missing__")
+
+        if candidate.is_file() or candidate.is_dir():
+            return str(candidate)
+        if not parsed.path.endswith(".html"):
+            html_candidate = (ROOT / f"{relative}.html").resolve()
+            try:
+                html_candidate.relative_to(ROOT)
+            except ValueError:
+                return str(ROOT / "__missing__")
+            if html_candidate.is_file():
+                return str(html_candidate)
+        return str(candidate)
+
     def end_headers(self) -> None:
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
         super().end_headers()
 
     def do_GET(self) -> None:
+        parsed = urlsplit(self.path)
+        clean_url = self.clean_html_url(parsed.path)
+        if clean_url:
+            if parsed.query:
+                clean_url = f"{clean_url}?{parsed.query}"
+            self.send_response(301)
+            self.send_header("Location", clean_url)
+            self.send_header("Cache-Control", "public, max-age=3600")
+            self.end_headers()
+            return
         if self.path.rstrip("/") == "/api/health":
             json_response(self, 200, {
                 "ok": True,
