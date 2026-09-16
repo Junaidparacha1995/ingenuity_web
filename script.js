@@ -340,7 +340,7 @@ if (revealTargets.length) {
   if (document.querySelector('.site-assistant')) return;
   const CHAT_ENDPOINT = String(window.INGENUITY_CHAT_ENDPOINT || '/api/chat').trim();
   const siteBase = /\/(pages|projects|case-studies)(\/|$)/.test(window.location.pathname) ? '../' : '';
-  const siteHref = (href) => siteBase + href;
+  const siteHref = (href) => String(href || '').startsWith('/') ? href : siteBase + href;
   const knowledge = [
     { title: 'AI & Intelligent Systems', keys: 'ai intelligent systems agentic copilots rag knowledge document intelligence', text: 'We design agentic AI systems, AI copilots, knowledge and RAG systems, and document intelligence workflows around how your team actually operates.', href: 'services-ai.html' },
     { title: 'Business Process Automation', keys: 'business process automation workflow finance accounting crm sales customer service', text: 'Automation services cover workflow automation, finance and accounting, CRM and sales automation, and customer service operations.', href: 'services-automation.html' },
@@ -431,9 +431,12 @@ if (revealTargets.length) {
     addMessage(clean, true); input.value = '';
     const docs = retrieve(clean); const pending = typing();
     const modelAnswer = await requestModel(clean, docs, history); pending.remove();
-    const local = renderLocalAnswer(clean, docs); addMessage(modelAnswer || local.text); addSources(modelAnswer ? docs : local.docs.filter(Boolean));
+    const local = renderLocalAnswer(clean, docs);
+    const answerText = modelAnswer?.text || local.text;
+    addMessage(answerText);
+    addSources(modelAnswer ? (modelAnswer.docs.length ? modelAnswer.docs : docs) : local.docs.filter(Boolean));
     history.push({ role: 'user', content: clean });
-    history.push({ role: 'assistant', content: modelAnswer || local.text });
+    history.push({ role: 'assistant', content: answerText });
   };
   const suggestions = document.createElement('div'); suggestions.className = 'assistant-suggestions';
   ['Recommend a solution', 'Automation ideas', 'Recent projects', 'Book a call'].forEach((label) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.addEventListener('click', () => ask(label)); suggestions.appendChild(button); });
