@@ -264,7 +264,12 @@ class SiteHandler(SimpleHTTPRequestHandler):
         except ValueError:
             return str(ROOT / "__missing__")
 
-        if candidate.is_file() or candidate.is_dir():
+        if candidate.is_file():
+            return str(candidate)
+        if candidate.is_dir():
+            index_candidate = candidate / "index.html"
+            if index_candidate.is_file():
+                return str(index_candidate)
             return str(candidate)
         if not parsed.path.endswith(".html"):
             html_candidate = (ROOT / f"{relative}.html").resolve()
