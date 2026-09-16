@@ -1,29 +1,3 @@
-// Keep public URLs clean even when an old static link or bookmarked .html path is used.
-const cleanInternalHref = (value) => String(value || '')
-  .replace(/(^|\/)index\.html(?=([?#]|$))/g, '$1')
-  .replace(/\.html(?=([?#]|$))/g, '');
-const cleanPublicPath = (value) => {
-  const path = cleanInternalHref(value);
-  return path === '' ? '/' : path;
-};
-const normalizePublicRoutes = () => {
-  const currentPath = cleanPublicPath(window.location.pathname);
-  if (currentPath !== window.location.pathname) {
-    window.history.replaceState({}, document.title, `${currentPath}${window.location.search}${window.location.hash}`);
-  }
-  document.querySelectorAll('a[href]').forEach((anchor) => {
-    try {
-      const url = new URL(anchor.getAttribute('href'), window.location.href);
-      if (url.origin !== window.location.origin) return;
-      const path = cleanPublicPath(url.pathname);
-      if (path !== url.pathname) anchor.setAttribute('href', `${path}${url.search}${url.hash}`);
-    } catch (error) {
-      // Ignore malformed or intentionally non-URL links.
-    }
-  });
-};
-normalizePublicRoutes();
-
 // Header shadow + floating pill morph on scroll — activates only after the hero section
 const header = document.querySelector('header');
 if (header) {
@@ -364,13 +338,9 @@ if (revealTargets.length) {
 // Global site-memory RAG assistant. Keep the OpenAI key server-side: set only a secure proxy URL here later.
 (function initGlobalAssistant() {
   if (document.querySelector('.site-assistant')) return;
-  const CHAT_ENDPOINT = String(window.INGENUITY_CHAT_ENDPOINT || '/api/chat').trim();
+  const CHAT_ENDPOINT = String(window.INGENUITY_CHAT_ENDPOINT || '').trim();
   const siteBase = /\/(pages|projects|case-studies)(\/|$)/.test(window.location.pathname) ? '../' : '';
-  const siteHref = (href) => {
-    const cleaned = cleanInternalHref(href);
-    if (String(href || '').startsWith('/')) return cleanPublicPath(cleaned);
-    return siteBase + cleaned;
-  };
+  const siteHref = (href) => siteBase + href;
   const knowledge = [
     { title: 'AI & Intelligent Systems', keys: 'ai intelligent systems agentic copilots rag knowledge document intelligence', text: 'We design agentic AI systems, AI copilots, knowledge and RAG systems, and document intelligence workflows around how your team actually operates.', href: 'services-ai.html' },
     { title: 'Business Process Automation', keys: 'business process automation workflow finance accounting crm sales customer service', text: 'Automation services cover workflow automation, finance and accounting, CRM and sales automation, and customer service operations.', href: 'services-automation.html' },
@@ -445,28 +415,21 @@ if (revealTargets.length) {
     const lead = docs[0];
     return { text: `${lead.title}: ${lead.text} What would you like to explore next?`, docs };
   };
-  const requestModel = async (query, docs, history) => {
+  const requestModel = async (query, docs) => {
     if (!CHAT_ENDPOINT) return null;
     try {
-      const response = await fetch(CHAT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: 'ingenuity-systems-rag-chat', question: query, page: window.location.href, history, context: docs.map((doc) => ({ title: doc.title, text: doc.text, href: doc.href })) }) });
+      const response = await fetch(CHAT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ source: 'ingenuity-systems-rag-chat', question: query, page: window.location.href, context: docs.map((doc) => ({ title: doc.title, text: doc.text, href: doc.href })) }) });
       if (!response.ok) return null;
       const data = await response.json();
-      const text = String(data.answer || data.response || data.message || data.output_text || '').trim();
-      return text ? { text, docs: Array.isArray(data.sources) ? data.sources : [] } : null;
+      return String(data.answer || data.response || data.message || data.output_text || '').trim() || null;
     } catch (error) { return null; }
   };
-  const history = [];
   const ask = async (query) => {
     const clean = String(query || '').trim(); if (!clean) return;
     addMessage(clean, true); input.value = '';
     const docs = retrieve(clean); const pending = typing();
-    const modelAnswer = await requestModel(clean, docs, history); pending.remove();
-    const local = renderLocalAnswer(clean, docs);
-    const answerText = modelAnswer?.text || local.text;
-    addMessage(answerText);
-    addSources(modelAnswer ? (modelAnswer.docs.length ? modelAnswer.docs : docs) : local.docs.filter(Boolean));
-    history.push({ role: 'user', content: clean });
-    history.push({ role: 'assistant', content: answerText });
+    const modelAnswer = await requestModel(clean, docs); pending.remove();
+    const local = renderLocalAnswer(clean, docs); addMessage(modelAnswer || local.text); addSources(modelAnswer ? docs : local.docs.filter(Boolean));
   };
   const suggestions = document.createElement('div'); suggestions.className = 'assistant-suggestions';
   ['Recommend a solution', 'Automation ideas', 'Recent projects', 'Book a call'].forEach((label) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.addEventListener('click', () => ask(label)); suggestions.appendChild(button); });
@@ -972,9 +935,8 @@ const contactStatus = document.getElementById('contact-status');
 if (contactForm && submitBtn) {
   const bdEmail = 'info@ingenuitysys.com';
   const calendlyUrl = 'https://calendly.com/junaidparacha-ingenuitysys';
-  // Keep the Make URL server-side in CONTACT_WEBHOOK_URL. The window override is
-  // available only when a direct browser webhook is intentionally configured.
-  const contactWebhookUrl = String(window.INGENUITY_CONTACT_WEBHOOK_URL || '/api/contact').trim();
+  // Paste the Make.com custom webhook URL in contact.html.
+  const contactWebhookUrl = String(window.INGENUITY_CONTACT_WEBHOOK_URL || '').trim();
   const personalEmailDomains = new Set([
     'gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com',
     'icloud.com', 'me.com', 'mac.com', 'proton.me', 'protonmail.com',
@@ -989,13 +951,7 @@ if (contactForm && submitBtn) {
         body: JSON.stringify(payload),
         keepalive: true
       });
-      if (response.ok) {
-        if (contactWebhookUrl === '/api/contact') {
-          const result = await response.json().catch(() => null);
-          return Boolean(result?.delivered);
-        }
-        return true;
-      }
+      if (response.ok) return true;
     } catch (error) {
       // Make webhooks may not expose CORS headers. Try one simple no-cors POST.
     }
@@ -1026,7 +982,6 @@ if (contactForm && submitBtn) {
     const isPersonalQuickStart = Boolean(!company && !isBusinessEmail && isLowBudget);
     const budgetLabel = document.getElementById('budget').selectedOptions[0]?.textContent || budget;
     const route = qualifiesForCalendly ? 'calendly' : (isPersonalQuickStart ? 'bd-email-quick-start' : 'bd-email');
-    const routingDecision = qualifiesForCalendly ? 'calendly' : 'email';
     const automatedMessage = isPersonalQuickStart
       ? 'Thanks for reaching out. Our business development team will review your quick-start inquiry and reply by email.'
       : 'Thanks for reaching out. Our team will review your details and follow up with the right next step.';
@@ -1051,7 +1006,6 @@ if (contactForm && submitBtn) {
       estimatedBudgetLabel: budgetLabel,
       message,
       route,
-      routingDecision,
       allocatedBdEmail: bdEmail,
       calendlyUrl,
       automatedMessage,
@@ -1239,6 +1193,3 @@ if (indMorph) {
   panel.addEventListener('mouseenter', open);
   panel.addEventListener('mouseleave', close);
 })();
-
-// Navigation and the advisor can add links after the initial page scan.
-normalizePublicRoutes();
