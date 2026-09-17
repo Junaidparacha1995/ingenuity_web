@@ -126,3 +126,17 @@ mtime_ms = 1789658274336
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/f2916e93-3168-4122-9a20-d1366c6cc1a9/12e85471-39ce-426c-8556-f4786398be30"
 storage_version_token = "1789658284832354"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "R_YBUziFj69nUPDBfwzfY"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v41.zip"
+type = "unspecified"
+title = "Ingenuity Systems v41 mobile services menu"
+description = "Mobile navigation now separates Services overview, the four core service headings, and their preserved sub-service links with clearer spacing and hierarchy."
+logical_id = "a4cf1f75-936e-4515-824d-e8836c875916"
+content_hash = "sha256:01cfe267b1063a44235fc0e3ccf607a2717d4dcb207900ceeb2e62438cdab222"
+size = 9939065
+mtime_ms = 1789658505347
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/a4cf1f75-936e-4515-824d-e8836c875916/977c3cd2-5a29-470b-8cd1-b77c13e65994"
+storage_version_token = "1789658548521470"
+content_type = "application/octet-stream"
