@@ -11,6 +11,10 @@
 }
 
 @media (max-width: 1040px) {
+  .service-page .services-connect-section {
+    display: none !important;
+  }
+
   :root {
     --responsive-gutter: 24px;
     --responsive-section: 76px;

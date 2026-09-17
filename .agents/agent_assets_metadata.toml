@@ -154,3 +154,17 @@ mtime_ms = 1789658706215
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/3c385629-b892-4971-8040-c2e50206769e/794b66e9-fd76-4488-9a1a-243fdaf633c8"
 storage_version_token = "1789658723064756"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "-hiW-ONkUzJSXq_4puIm5"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v43.zip"
+type = "unspecified"
+title = "Ingenuity Systems v43 mobile section cleanup"
+description = "Removes the How It Connects section on mobile and tablet widths while keeping it available on desktop screens."
+logical_id = "ba7563b9-5f29-48b4-9cda-d17bf08b84d0"
+content_hash = "sha256:278311db77c39209927e4c1c2eb8f386098ec6fce37cead7826c82a66e1233ef"
+size = 9939231
+mtime_ms = 1789659950055
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/ba7563b9-5f29-48b4-9cda-d17bf08b84d0/07de8ec7-7f38-4614-a34d-a85dc612a5a3"
+storage_version_token = "1789659959884207"
+content_type = "application/octet-stream"
