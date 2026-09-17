@@ -583,8 +583,8 @@
 /* Touch devices receive explicit tap states and do not depend on hover. */
 @media (max-width: 1040px) and (hover: none),
        (max-width: 1040px) and (pointer: coarse) {
-  /* Touch cards use a stable tap-to-reveal state instead of showing both
-     sides at once or relying on a hover-only 3D flip. */
+  /* Touch cards use the same 3D reveal as desktop, with the state controlled
+     by a deliberate tap instead of relying on hover. */
   .flip-card .flip-inner {
     min-height: 220px;
     transform: none !important;
@@ -595,17 +595,26 @@
     position: absolute;
     inset: 0;
     backface-visibility: hidden;
-    transform: none !important;
+    -webkit-backface-visibility: hidden;
   }
 
-  .flip-back {display:none;}
-  .flip-card.is-flipped .flip-front {display:none;}
-  .flip-card.is-flipped .flip-back {
-    display:flex;
-    padding:22px;
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:14px;
-    background:rgba(255,255,255,.045);
+  .flip-card.is-flipped .flip-inner {
+    transform: rotateY(180deg) !important;
+  }
+
+  .flip-back {
+    justify-content:center;
+    padding:26px 22px;
+  }
+
+  .flip-card {
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .flip-card:focus-visible {
+    outline:2px solid rgba(255,174,151,.9);
+    outline-offset:4px;
   }
 
   .cap-card:hover,

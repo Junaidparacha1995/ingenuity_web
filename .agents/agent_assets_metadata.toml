@@ -42,3 +42,17 @@ mtime_ms = 1789655295468
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/27227243-bead-4f9b-8ac5-2ccde36a950a/184ddff5-3e97-4025-8225-69eb4977d83f"
 storage_version_token = "1789655311617976"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "C9PNemYM_ukEXfhceEsrH"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v34.zip"
+type = "unspecified"
+title = "Ingenuity Systems v34 mobile interaction update"
+description = "Updated project with true 3D touch card flips and reliable vector arrow marks on solution buttons, while preserving the desktop hover behavior and existing integrations."
+logical_id = "1605c69d-8633-4582-adb5-3ef42adb291a"
+content_hash = "sha256:8f69d9a172222f8bada566655790561f51ba60717610fedf6b5a23bb7e1d4b7c"
+size = 11243460
+mtime_ms = 1789655815048
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/1605c69d-8633-4582-adb5-3ef42adb291a/7e25e7ce-46b2-48dd-bf4f-7d8d09a9488d"
+storage_version_token = "1789655825717882"
+content_type = "application/octet-stream"
