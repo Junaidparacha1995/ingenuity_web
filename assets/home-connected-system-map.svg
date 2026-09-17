@@ -55,6 +55,27 @@
     
   </defs>
 
+  <rect width="1440" height="680" fill="url(#bg)"/>
+  <ellipse cx="720" cy="382" rx="470" ry="295" fill="url(#ambientA)"/>
+  <ellipse cx="1080" cy="260" rx="340" ry="260" fill="url(#ambientB)"/>
+
+  
+  <g opacity=".45">
+    <circle cx="76" cy="108" r="3" fill="#f4431a"/>
+    <circle cx="162" cy="178" r="2" fill="#6b86c7"/>
+    <circle cx="283" cy="68" r="3" fill="#ff9a78"/>
+    <circle cx="430" cy="132" r="2" fill="#22bfc4"/>
+    <circle cx="605" cy="74" r="2" fill="#f4431a"/>
+    <circle cx="842" cy="96" r="3" fill="#7288cb"/>
+    <circle cx="1128" cy="70" r="2" fill="#22bfc4"/>
+    <circle cx="1322" cy="130" r="3" fill="#f4431a"/>
+    <circle cx="103" cy="595" r="2" fill="#6e87c6"/>
+    <circle cx="335" cy="620" r="3" fill="#f4431a"/>
+    <circle cx="1112" cy="606" r="3" fill="#ff8462"/>
+    <circle cx="1358" cy="565" r="2" fill="#21bdc3"/>
+  </g>
+
+  
   <g>
     <path id="path-request-context" d="M260 438 H285" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
     <path id="path-context-agent" d="M585 438 H610" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
@@ -77,6 +98,20 @@
     <path d="M725 331 L720 390" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
   </g>
 
+  
+  <g>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+  </g>
+
+  
   <g>
     <rect x="250" y="90" width="260" height="96" rx="24" fill="url(&quot;#cardFill&quot;)" stroke="url(&quot;#cardStroke&quot;)" stroke-width="1.5"/>
     <rect x="270" y="110" width="56" height="56" rx="16" fill="url(&quot;#iconFill&quot;)"/>
@@ -161,4 +196,9 @@
     <text x="1312" y="453" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">OUTCOME</text>
   </g>
 
+  <g>
+    <rect x="548" y="573" width="344" height="42" rx="21" fill="#0f1c30" stroke="#2b3b53"/>
+    <circle cx="575" cy="594" r="5" fill="#f4431a"/>
+    <text x="720" y="599" text-anchor="middle" fill="#aeb9c9" font-family="Inter,Arial,Helvetica,sans-serif" font-size="11" font-weight="700" letter-spacing="2.3">CONNECTED FROM REQUEST TO OUTCOME</text>
+  </g>
 </svg>
