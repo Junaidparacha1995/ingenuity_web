@@ -1704,3 +1704,53 @@ header .mega-dropdown {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+
+/* Final interaction normalization. Keep the native pointer visible and use
+   one rounded hover treatment for the mega-menu titles and Work tabs. */
+#cursor-dot {
+  display: none !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  *,
+  *::before,
+  *::after {
+    cursor: auto !important;
+  }
+
+  a,
+  button,
+  summary,
+  [role="button"] {
+    cursor: pointer !important;
+  }
+
+  input,
+  textarea {
+    cursor: text !important;
+  }
+
+  select {
+    cursor: pointer !important;
+  }
+}
+
+.mega-wrap .mega-col-title,
+.mega-wrap .mega-col ul a.mega-col-title {
+  display: block !important;
+  margin: 0 -10px 6px !important;
+  padding: 8px 10px !important;
+  border-radius: 10px !important;
+  transition: background .25s ease, color .25s ease, transform .25s ease !important;
+}
+
+.mega-wrap .mega-col-title:hover,
+.mega-wrap .mega-col-title:focus-visible,
+.mega-wrap .mega-col ul a.mega-col-title:hover,
+.mega-wrap .mega-col ul a.mega-col-title:focus-visible,
+.work-tabs .work-tab:not(.is-active):hover,
+.work-tabs .work-tab:not(.is-active):focus-visible {
+  background: rgba(225, 53, 17, .18) !important;
+  color: var(--orange) !important;
+  transform: translateY(-1px) !important;
+}
