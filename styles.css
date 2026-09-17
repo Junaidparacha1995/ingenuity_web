@@ -249,8 +249,9 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 .mega-col:first-child{border-left:none; padding-left:0;}
 .mega-col-title{display:block; font-family:'Manrope',sans-serif; font-weight:800; font-size:14.5px; color:var(--white); margin-bottom:14px;}
 .mega-col ul a.mega-col-title{font-family:'Manrope',sans-serif;font-weight:800;font-size:14.5px;color:var(--white);padding:0;margin:0 0 14px;border-radius:0}
-.mega-wrap .mega-col-title,.mega-wrap .mega-col ul a.mega-col-title{font-family:'Inter',sans-serif;font-weight:500;font-size:13.5px;color:var(--text-on-dark-soft)}
+.mega-wrap .mega-col-title,.mega-wrap .mega-col ul a.mega-col-title{font-family:'Inter',sans-serif;font-weight:500;font-size:13.5px;color:var(--text-on-dark-soft);display:block;position:relative;margin:0 -10px 6px;padding:8px 10px;border-radius:10px;transition:background .25s ease,color .25s ease,transform .25s ease}
 .mega-wrap[data-active="services"] .mega-col-title,.mega-wrap[data-active="services"] .mega-col ul a.mega-col-title{font-family:'Manrope',sans-serif;font-weight:800;font-size:14.5px;color:var(--white)}
+.mega-wrap .mega-col-title:hover,.mega-wrap .mega-col-title:focus-visible,.mega-wrap .mega-col ul a.mega-col-title:hover,.mega-wrap .mega-col ul a.mega-col-title:focus-visible{background:rgba(225,53,17,.18);color:var(--orange);transform:translateY(-1px)}
 .mega-col ul{display:flex; flex-direction:column; gap:2px;}
 .mega-col ul a{display:block; padding:8px 10px; margin:0 -10px; border-radius:10px; font-size:13.5px; color:var(--text-on-dark-soft); font-family:'Inter',sans-serif; font-weight:500; transition:background .2s ease, color .2s ease, transform .2s ease;}
 .mega-col ul a:hover{background:rgba(225,53,17,0.18); color:var(--orange); transform:translateX(3px);}
@@ -706,27 +707,6 @@ footer > .wrap{position:relative; z-index:1;}
   .discovery-band{padding:36px;}
   .about-philosophy-copy{max-width:100%;margin-bottom:42px;}
   .about-philosophy-pills{gap:10px;}
-}
-
-@media (hover:hover) and (pointer:fine){
-  *{cursor:none !important;}
-
-  .cursor-dot{
-    position:fixed; top:0; left:0; width:11px; height:11px; border-radius:50%;
-    background:var(--orange); pointer-events:none; z-index:9999;
-    box-shadow:0 0 10px rgba(225,53,17,0.5);
-    transform:translate(-50%,-50%); opacity:0;
-    transition:opacity .3s ease, width .25s var(--ease-spring), height .25s var(--ease-spring), background-color .25s ease, box-shadow .25s ease;
-  }
-  body.cursor-active .cursor-dot{opacity:1;}
-
-  body.cursor-hover .cursor-dot{
-    width:20px; height:20px;
-    background:var(--orange);
-    box-shadow:0 0 18px rgba(225,53,17,0.75);
-  }
-
-  body.cursor-down .cursor-dot{width:8px; height:8px;}
 }
 
 /* Node-graph diagram — "How It Connects" */
