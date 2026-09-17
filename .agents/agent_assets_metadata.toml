@@ -112,3 +112,17 @@ mtime_ms = 1789657953492
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/62aa1cc8-6ec3-4d44-9e7d-859009a3a348/df8ab913-ba4f-45c7-a9ce-831a904c9553"
 storage_version_token = "1789657975087384"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "dMYzDKfpSzGqLZAjobt9m"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v40.zip"
+type = "unspecified"
+title = "Ingenuity Systems v40 reference-spacing graph"
+description = "Uses the newest supplied graph reference for exact node spacing and routing, keeps the individual card logos and clickable details, and removes all automatic animation so changes happen only on click."
+logical_id = "f2916e93-3168-4122-9a20-d1366c6cc1a9"
+content_hash = "sha256:e2cc79a7cd1ab756e654a8fae5503bcccd299071c1510e75bd5e35a68f064569"
+size = 9938957
+mtime_ms = 1789658274336
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/f2916e93-3168-4122-9a20-d1366c6cc1a9/12e85471-39ce-426c-8556-f4786398be30"
+storage_version_token = "1789658284832354"
+content_type = "application/octet-stream"
