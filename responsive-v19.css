@@ -705,6 +705,37 @@
     min-width: 220px !important;
   }
 
+  /* Fold inner screens/tablets: center the home hero copy while retaining
+     the desktop two-column behavior above this breakpoint. */
+  .home-page .hc-copy {
+    text-align: center;
+  }
+
+  .home-page .hc-copy .hero-rotator {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .home-page .hc-copy h1,
+  .home-page .hc-copy p.lead {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .home-page .hc-copy p.lead {
+    max-width: 720px;
+  }
+
+  .home-page .hc-copy .hero-actions {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-page .hc-copy .hero-dots {
+    justify-content: center;
+  }
+
   .solution-finder {
     grid-template-columns: minmax(270px,.72fr) minmax(0,1fr) !important;
     min-height: 480px;

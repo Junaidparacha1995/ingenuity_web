@@ -140,3 +140,17 @@ mtime_ms = 1789658505347
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/a4cf1f75-936e-4515-824d-e8836c875916/977c3cd2-5a29-470b-8cd1-b77c13e65994"
 storage_version_token = "1789658548521470"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "75AZ0oLvzeVBNLiw_-e0D"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v42.zip"
+type = "unspecified"
+title = "Ingenuity Systems v42 Fold inner-screen alignment"
+description = "Centers the homepage hero headings, supporting copy, CTA group, and pagination dots on Fold inner screens and tablets, while preserving the existing left-aligned desktop layout."
+logical_id = "3c385629-b892-4971-8040-c2e50206769e"
+content_hash = "sha256:a05398640c76ea4383e35bf7f243c3bb4c866cb8863c740cb30fe898fe002d3d"
+size = 9939225
+mtime_ms = 1789658706215
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/3c385629-b892-4971-8040-c2e50206769e/794b66e9-fd76-4488-9a1a-243fdaf633c8"
+storage_version_token = "1789658723064756"
+content_type = "application/octet-stream"
