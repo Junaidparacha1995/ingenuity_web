@@ -78,6 +78,18 @@
     <path d="M725 331 L720 390" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
   </g>
 
+  <g aria-hidden="true" pointer-events="none">
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="6s" repeatCount="indefinite" path="M150 438 H435 H720 H1015 H1310"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="4.5s" begin="-1.5s" repeatCount="indefinite" path="M380 138 L725 283 L720 438"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="4.5s" begin="-3s" repeatCount="indefinite" path="M1060 138 L725 283 L720 438"/>
+    </circle>
+  </g>
+
   
   <g>
     <rect x="250" y="90" width="260" height="96" rx="24" fill="url(&quot;#cardFill&quot;)" stroke="url(&quot;#cardStroke&quot;)" stroke-width="1.5"/>
@@ -161,18 +173,6 @@
     <path d="M1254 438l9 9 20-23" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="1312" y="433" fill="rgb(255, 255, 255)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="18px" font-weight="750" letter-spacing="-0.3px">System</text>
     <text x="1312" y="453" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">OUTCOME</text>
-  </g>
-
-  <g aria-hidden="true" pointer-events="none">
-    <circle r="5" fill="#ff6a46">
-      <animateMotion dur="6s" repeatCount="indefinite" path="M150 438 H435 H720 H1015 H1310"/>
-    </circle>
-    <circle r="5" fill="#ff6a46">
-      <animateMotion dur="4.5s" begin="-1.5s" repeatCount="indefinite" path="M380 138 L725 283 L720 438"/>
-    </circle>
-    <circle r="5" fill="#ff6a46">
-      <animateMotion dur="4.5s" begin="-3s" repeatCount="indefinite" path="M1060 138 L725 283 L720 438"/>
-    </circle>
   </g>
 
 </svg>
