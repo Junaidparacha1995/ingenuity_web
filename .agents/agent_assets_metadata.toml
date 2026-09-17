@@ -84,3 +84,17 @@ mtime_ms = 1789657282929
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/93aff127-7871-407b-9236-ea271da3c6c6/e227c6cb-38d0-4aba-bd35-a857c9810a54"
 storage_version_token = "1789657293874148"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "tUVLafF4ry7NezV868Zye"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v37.zip"
+type = "unspecified"
+title = "Ingenuity Systems v37 linked graph update"
+description = "Static graph with individual node logos, restored original-style connector links between cards, removed decision-card grid texture, and preserved prior performance optimizations."
+logical_id = "b2ab4686-ab63-481b-a45b-defda26a3282"
+content_hash = "sha256:03959d3044815d697869969096436fd808623624699bb65b030098779edeb30e"
+size = 10001182
+mtime_ms = 1789657461509
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/b2ab4686-ab63-481b-a45b-defda26a3282/ff58f50b-0ad1-4b64-9644-6cb55c9546e6"
+storage_version_token = "1789657471556765"
+content_type = "application/octet-stream"
