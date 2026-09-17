@@ -80,13 +80,31 @@
 
   <g aria-hidden="true" pointer-events="none">
     <circle r="5" fill="#ff6a46">
-      <animateMotion dur="6s" repeatCount="indefinite" path="M150 438 H435 H720 H1015 H1310"/>
+      <animateMotion dur="1.2s" repeatCount="indefinite" path="M260 438 H285"/>
     </circle>
     <circle r="5" fill="#ff6a46">
-      <animateMotion dur="4.5s" begin="-1.5s" repeatCount="indefinite" path="M380 138 L725 283 L720 438"/>
+      <animateMotion dur="1.2s" begin="-0.3s" repeatCount="indefinite" path="M585 438 H610"/>
     </circle>
     <circle r="5" fill="#ff6a46">
-      <animateMotion dur="4.5s" begin="-3s" repeatCount="indefinite" path="M1060 138 L725 283 L720 438"/>
+      <animateMotion dur="1.2s" begin="-0.6s" repeatCount="indefinite" path="M830 438 H855"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="1.4s" begin="-0.9s" repeatCount="indefinite" path="M1175 438 H1220"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="2.8s" begin="-1.2s" repeatCount="indefinite" path="M380 186 C460 214 548 255 635 278"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="3.2s" begin="-2.1s" repeatCount="indefinite" path="M380 186 C465 278 535 344 660 390"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="2.8s" begin="-1.8s" repeatCount="indefinite" path="M1060 186 C966 219 897 254 815 278"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="3.2s" begin="-2.7s" repeatCount="indefinite" path="M1060 186 C974 276 891 346 780 390"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="1.3s" begin="-0.5s" repeatCount="indefinite" path="M725 331 L720 390"/>
     </circle>
   </g>
 
