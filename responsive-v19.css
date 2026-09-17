@@ -1346,12 +1346,6 @@
     gap: 18px !important;
   }
 
-  /* The live systems graph is a desktop enhancement. On phones and tablets
-     it consumes most of the first viewport and competes with the message. */
-  .home-page .hc-right {
-    display: none !important;
-  }
-
   .home-page .hc-copy .hero-rotator {
     min-height: 228px;
   }
@@ -1591,19 +1585,6 @@
     height: min(650px, calc(100dvh - var(--site-header-height) - 24px));
     border-radius: 22px;
   }
-
-  .home-page .hc-copy .hero-actions {
-    display: flex !important;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 8px;
-  }
-
-  .home-page .hc-copy .hero-actions .btn {
-    width: 100% !important;
-    min-width: 0;
-  }
 }
 
 @media (max-width: 430px) {
@@ -1616,7 +1597,7 @@
   }
 
   .home-page .hc-copy .hero-rotator {
-    min-height: 300px;
+    min-height: 238px;
   }
 
   .solution-finder::before {
@@ -1640,7 +1621,7 @@
   }
 
   .home-page .hc-copy .hero-rotator {
-    min-height: 300px;
+    min-height: 284px;
   }
 
   .solution-options button {
