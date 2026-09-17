@@ -1801,4 +1801,47 @@ header .mega-dropdown {
     opacity: 0;
     pointer-events: none;
   }
+
+  /* Keep the first two industry choices readable together. The remaining
+     choices continue horizontally, but the active tab never needs to clip its
+     label against the card edge. */
+  .ind-tabs {
+    gap: 4px;
+    padding: 10px;
+    scroll-padding-inline: 10px;
+  }
+
+  .ind-tab {
+    gap: 8px;
+    padding: 11px 10px;
+    font-size: 12px;
+  }
+
+  .ind-tab-ic {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 9px;
+  }
+}
+
+@media (max-width: 379px) {
+  .ind-tabs {
+    gap: 3px;
+    padding: 8px 6px;
+  }
+
+  .ind-tab {
+    gap: 5px;
+    padding: 9px 6px;
+    font-size: 11.5px;
+  }
+
+  .ind-tab-ic {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    font-size: 10px;
+  }
 }

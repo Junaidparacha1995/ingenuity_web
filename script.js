@@ -1514,6 +1514,27 @@ const indMorph = document.getElementById('ind-morph');
 if (indMorph) {
   const tabs = indMorph.querySelectorAll('.ind-tab');
   const panels = indMorph.querySelectorAll('.ind-scene-panel');
+  const tabScroller = indMorph.querySelector('.ind-tabs');
+
+  function keepActiveTabVisible(tab) {
+    if (!tabScroller || window.innerWidth > 1080) return;
+    const edgePadding = 12;
+    const tabStart = tab.offsetLeft;
+    const tabEnd = tabStart + tab.offsetWidth;
+    const visibleStart = tabScroller.scrollLeft;
+    const visibleEnd = visibleStart + tabScroller.clientWidth;
+    let nextScroll = visibleStart;
+
+    if (tabStart < visibleStart + edgePadding) {
+      nextScroll = Math.max(0, tabStart - edgePadding);
+    } else if (tabEnd > visibleEnd - edgePadding) {
+      nextScroll = tabEnd - tabScroller.clientWidth + edgePadding;
+    }
+
+    if (Math.abs(nextScroll - visibleStart) > 1) {
+      tabScroller.scrollTo({ left: nextScroll, behavior: 'smooth' });
+    }
+  }
 
   function animateStats(panel) {
     panel.querySelectorAll('.ind-stat-num').forEach(el => {
@@ -1542,6 +1563,7 @@ if (indMorph) {
         p.classList.toggle('active', match);
         if (match) animateStats(p);
       });
+      keepActiveTabVisible(tab);
     });
   });
 
