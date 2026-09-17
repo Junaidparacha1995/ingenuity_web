@@ -1454,8 +1454,12 @@ if (contactForm && submitBtn) {
     submitBtn.disabled = true;
     const webhookSent = await sendToRouter(webhookPayload);
     submitBtn.disabled = false;
-    if (webhookSent && qualifiesForCalendly) {
-      if (contactStatus) contactStatus.textContent = 'Thanks — your details qualify for a strategy conversation. Opening Calendly…';
+    if (qualifiesForCalendly) {
+      if (contactStatus) {
+        contactStatus.textContent = webhookSent
+          ? 'Thanks — your details qualify for a strategy conversation. Opening Calendly…'
+          : 'Your details qualify for a strategy conversation. Opening Calendly…';
+      }
       setTimeout(() => { window.location.href = calendlyUrl; }, 850);
     } else if (webhookSent && isPersonalQuickStart) {
       if (contactStatus) contactStatus.textContent = automatedMessage;
@@ -1463,9 +1467,6 @@ if (contactForm && submitBtn) {
     } else if (webhookSent) {
       if (contactStatus) contactStatus.textContent = 'Thanks — your inquiry was sent to our business development team.';
       setTimeout(() => { submitBtn.classList.remove('success'); contactForm.reset(); }, 3200);
-    } else if (qualifiesForCalendly && !contactWebhookUrl) {
-      if (contactStatus) contactStatus.textContent = 'Thanks — your details qualify for a strategy conversation. Opening Calendly…';
-      setTimeout(() => { window.location.href = calendlyUrl; }, 850);
     } else {
       if (contactStatus) {
         contactStatus.textContent = isPersonalQuickStart
