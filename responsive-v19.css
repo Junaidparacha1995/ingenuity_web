@@ -1548,7 +1548,9 @@
 
   .solution-options button::after {
     right: 12px;
-    font-size: 15px;
+    width: 18px;
+    height: 18px;
+    background-size: 15px 15px;
   }
 
   .solution-back {
