@@ -28,3 +28,17 @@ mtime_ms = 1789655126972
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/67f46800-25ff-4f2d-b6b9-0c96bdd88844/270b0f45-c4e5-41b1-96a6-5ebad5e7ff7c"
 storage_version_token = "1789655158672978"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "XHuIEMZJ6QgXo0SihlsVk"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v33.zip"
+type = "unspecified"
+title = "Ingenuity Systems v33 chatbox and founder update"
+description = "Updated v30-based project with a centered mobile assistant panel and the uploaded Junaid Paracha portrait added to the founder section."
+logical_id = "27227243-bead-4f9b-8ac5-2ccde36a950a"
+content_hash = "sha256:e7b9602cea9b32119fb32506d32628561f70bda7d4e9957ba35a9cf817a1d941"
+size = 11243217
+mtime_ms = 1789655295468
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/27227243-bead-4f9b-8ac5-2ccde36a950a/184ddff5-3e97-4025-8225-69eb4977d83f"
+storage_version_token = "1789655311617976"
+content_type = "application/octet-stream"

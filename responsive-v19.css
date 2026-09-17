@@ -1598,13 +1598,19 @@
   .assistant-panel {
     position:fixed;
     top:auto;
-    right:10px;
+    left:50%;
+    right:auto;
     bottom:66px;
-    width:calc(100vw - 20px);
+    width:min(420px,calc(100vw - 56px));
     height:calc(100dvh - 86px);
     max-height:650px;
     border-radius:22px;
-    transform-origin:bottom right;
+    transform:translateX(-50%) translateY(14px) scale(.97);
+    transform-origin:bottom center;
+  }
+
+  .site-assistant.is-open .assistant-panel {
+    transform:translateX(-50%);
   }
 
   body.mobile-nav-open .site-assistant {
