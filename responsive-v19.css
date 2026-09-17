@@ -1591,6 +1591,19 @@
     height: min(650px, calc(100dvh - var(--site-header-height) - 24px));
     border-radius: 22px;
   }
+
+  .home-page .hc-copy .hero-actions {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .home-page .hc-copy .hero-actions .btn {
+    width: 100% !important;
+    min-width: 0;
+  }
 }
 
 @media (max-width: 430px) {
@@ -1603,7 +1616,7 @@
   }
 
   .home-page .hc-copy .hero-rotator {
-    min-height: 238px;
+    min-height: 300px;
   }
 
   .solution-finder::before {
@@ -1627,7 +1640,7 @@
   }
 
   .home-page .hc-copy .hero-rotator {
-    min-height: 284px;
+    min-height: 300px;
   }
 
   .solution-options button {
