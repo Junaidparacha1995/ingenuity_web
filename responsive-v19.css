@@ -1754,3 +1754,51 @@ header .mega-dropdown {
   color: var(--orange) !important;
   transform: translateY(-1px) !important;
 }
+
+/* Mobile assistant: keep the launcher inside the header instead of covering
+   cards, hero nodes, headings, or form controls while the page scrolls. */
+@media (max-width: 767px) {
+  .site-assistant,
+  .site-assistant.is-content-safe:not(.is-open) {
+    top: calc(10px + env(safe-area-inset-top)) !important;
+    right: 62px !important;
+    bottom: auto !important;
+    transform: none;
+    transition: opacity .2s ease, transform .2s ease !important;
+  }
+
+  .assistant-launcher {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    padding: 4px !important;
+    border-radius: 15px !important;
+    box-shadow: 0 8px 20px rgba(7, 18, 34, .28), 0 0 0 2px rgba(255,255,255,.08) !important;
+  }
+
+  .assistant-launcher-icon {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 11px !important;
+    font-size: 18px !important;
+    box-shadow: 0 5px 14px rgba(225, 53, 17, .26) !important;
+  }
+
+  .assistant-panel {
+    position: fixed !important;
+    top: calc(var(--site-header-height) + 8px + env(safe-area-inset-top)) !important;
+    right: 8px !important;
+    bottom: auto !important;
+    width: calc(100vw - 16px) !important;
+    max-width: none !important;
+    height: calc(100dvh - var(--site-header-height) - 16px - env(safe-area-inset-top)) !important;
+    max-height: 680px;
+    border-radius: 20px !important;
+    transform-origin: top right !important;
+  }
+
+  body.mobile-nav-open .site-assistant:not(.is-open) {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
