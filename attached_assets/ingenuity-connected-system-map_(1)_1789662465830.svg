@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 680">
+  <title>Ingenuity Systems connected AI process</title>
+  <desc id="description">A professional connected process diagram showing Request, Context Retrieval, an AI Agent, Response Generator, and Working System, supported by Tool Call, Router, and RAG Lookup nodes. Animated orange signals travel along every connection.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#142943"/>
+      <stop offset=".5" stop-color="#101f36"/>
+      <stop offset="1" stop-color="#0a1526"/>
+    </linearGradient>
+    <radialGradient id="ambientA" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#f4431a" stop-opacity=".13"/>
+      <stop offset=".52" stop-color="#f4431a" stop-opacity=".035"/>
+      <stop offset="1" stop-color="#f4431a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ambientB" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#4078ba" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#4078ba" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cardFill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#263247" stop-opacity=".96"/>
+      <stop offset="1" stop-color="#182337" stop-opacity=".98"/>
+    </linearGradient>
+    <linearGradient id="cardStroke" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#7c8ca3" stop-opacity=".7"/>
+      <stop offset="1" stop-color="#34445c" stop-opacity=".75"/>
+    </linearGradient>
+    <linearGradient id="agentFill" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#ff6540"/>
+      <stop offset="1" stop-color="#ec3413"/>
+    </linearGradient>
+    <linearGradient id="iconFill" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#ff613b"/>
+      <stop offset="1" stop-color="#ee3514"/>
+    </linearGradient>
+    <linearGradient id="powerStroke" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#f4431a" stop-opacity=".28"/>
+      <stop offset=".48" stop-color="#ff8c68" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#f4431a" stop-opacity=".28"/>
+    </linearGradient>
+    
+      
+    
+    
+      
+    
+    
+      
+      
+        
+        
+      
+    
+    
+    
+  </defs>
+
+  <rect width="1440" height="680" fill="url(#bg)"/>
+  <ellipse cx="720" cy="382" rx="470" ry="295" fill="url(#ambientA)"/>
+  <ellipse cx="1080" cy="260" rx="340" ry="260" fill="url(#ambientB)"/>
+
+  
+  <g opacity=".45">
+    <circle cx="76" cy="108" r="3" fill="#f4431a"/>
+    <circle cx="162" cy="178" r="2" fill="#6b86c7"/>
+    <circle cx="283" cy="68" r="3" fill="#ff9a78"/>
+    <circle cx="430" cy="132" r="2" fill="#22bfc4"/>
+    <circle cx="605" cy="74" r="2" fill="#f4431a"/>
+    <circle cx="842" cy="96" r="3" fill="#7288cb"/>
+    <circle cx="1128" cy="70" r="2" fill="#22bfc4"/>
+    <circle cx="1322" cy="130" r="3" fill="#f4431a"/>
+    <circle cx="103" cy="595" r="2" fill="#6e87c6"/>
+    <circle cx="335" cy="620" r="3" fill="#f4431a"/>
+    <circle cx="1112" cy="606" r="3" fill="#ff8462"/>
+    <circle cx="1358" cy="565" r="2" fill="#21bdc3"/>
+  </g>
+
+  
+  <g>
+    <path id="path-request-context" d="M260 438 H285" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path id="path-context-agent" d="M585 438 H610" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path id="path-agent-response" d="M830 438 H855" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path id="path-response-system" d="M1175 438 H1220" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path id="path-tool-router" d="M380 186 C460 214 548 255 635 278" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path id="path-tool-agent" d="M380 186 C465 278 535 344 660 390" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path id="path-rag-router" d="M1060 186 C966 219 897 254 815 278" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path id="path-rag-agent" d="M1060 186 C974 276 891 346 780 390" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path id="path-router-agent" d="M725 331 L720 390" fill="none" stroke="rgb(113, 128, 151)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+
+    <path d="M260 438 H285" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
+    <path d="M585 438 H610" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
+    <path d="M830 438 H855" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
+    <path d="M1175 438 H1220" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
+    <path d="M380 186 C460 214 548 255 635 278" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
+    <path d="M380 186 C465 278 535 344 660 390" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
+    <path d="M1060 186 C966 219 897 254 815 278" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
+    <path d="M1060 186 C974 276 891 346 780 390" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
+    <path d="M725 331 L720 390" fill="none" stroke="url(&quot;#powerStroke&quot;)" stroke-width="2" stroke-linecap="round" stroke-dasharray="3, 13" opacity="0.65"/>
+  </g>
+
+  
+  <g>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+    <circle r="5" fill="rgb(255, 117, 81)"/>
+  </g>
+
+  
+  <g>
+    <rect x="250" y="90" width="260" height="96" rx="24" fill="url(&quot;#cardFill&quot;)" stroke="url(&quot;#cardStroke&quot;)" stroke-width="1.5"/>
+    <rect x="270" y="110" width="56" height="56" rx="16" fill="url(&quot;#iconFill&quot;)"/>
+    <path d="M286 126l8-8m-4 4 15 15m6-6-8 8m-17 4 7-7 9 9-7 7h-9z" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="346" y="133" fill="rgb(255, 255, 255)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="20px" font-weight="750" letter-spacing="-0.3px">Tool Call</text>
+    <text x="346" y="153" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">ACTION LAYER</text>
+  </g>
+
+  
+  <g>
+    <rect x="635" y="235" width="180" height="96" rx="24" fill="url(&quot;#cardFill&quot;)" stroke="url(&quot;#cardStroke&quot;)" stroke-width="1.5"/>
+    <rect x="655" y="255" width="56" height="56" rx="16" fill="url(&quot;#iconFill&quot;)"/>
+    <circle cx="672" cy="283" r="3.5" fill="rgb(255, 255, 255)"/>
+    <circle cx="694" cy="270" r="3.5" fill="rgb(255, 255, 255)"/>
+    <circle cx="694" cy="296" r="3.5" fill="rgb(255, 255, 255)"/>
+    <path d="M676 283h7c7 0 5-13 11-13m-11 13c7 0 5 13 11 13" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="728" y="278" fill="rgb(255, 255, 255)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="20px" font-weight="750" letter-spacing="-0.3px">Router</text>
+    <text x="728" y="298" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">DECISION</text>
+  </g>
+
+  
+  <g>
+    <rect x="930" y="90" width="260" height="96" rx="24" fill="url(&quot;#cardFill&quot;)" stroke="url(&quot;#cardStroke&quot;)" stroke-width="1.5"/>
+    <rect x="950" y="110" width="56" height="56" rx="16" fill="url(&quot;#iconFill&quot;)"/>
+    <path d="M964 124h17a7 7 0 0 1 7 7v14h-17a7 7 0 0 0-7 7zm24 0h4a7 7 0 0 1 7 7v21h-4a7 7 0 0 0-7 4z" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="993" cy="147" r="7" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M998 152l7 7" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1026" y="133" fill="rgb(255, 255, 255)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="20px" font-weight="750" letter-spacing="-0.3px">RAG Lookup</text>
+    <text x="1026" y="153" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">KNOWLEDGE LAYER</text>
+  </g>
+
+  
+  <g>
+    <rect x="40" y="390" width="220" height="96" rx="24" fill="url(&quot;#cardFill&quot;)" stroke="url(&quot;#cardStroke&quot;)" stroke-width="1.5"/>
+    <rect x="60" y="410" width="56" height="56" rx="16" fill="url(&quot;#iconFill&quot;)"/>
+    <path d="M74 424h28v19H87l-9 8v-8h-4z" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M81 432h14m-14 6h10" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="136" y="433" fill="rgb(255, 255, 255)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="20px" font-weight="750" letter-spacing="-0.3px">Request</text>
+    <text x="136" y="453" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">INPUT LAYER</text>
+  </g>
+
+  
+  <g>
+    <rect x="285" y="390" width="300" height="96" rx="24" fill="url(&quot;#cardFill&quot;)" stroke="url(&quot;#cardStroke&quot;)" stroke-width="1.5"/>
+    <rect x="305" y="410" width="56" height="56" rx="16" fill="url(&quot;#iconFill&quot;)"/>
+    <ellipse cx="333" cy="425" rx="13" ry="6" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M320 425v24c0 8 26 8 26 0v-24m-26 12c0 8 26 8 26 0" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="381" y="433" fill="rgb(255, 255, 255)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="18px" font-weight="750" letter-spacing="-0.3px">Context Retrieval</text>
+    <text x="381" y="453" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">CONTEXT LAYER</text>
+  </g>
+
+  
+  <g>
+    <rect x="610" y="390" width="220" height="96" rx="24" fill="url(#agentFill)" stroke="#ffb09a" stroke-width="2.5"/>
+    <rect x="630" y="410" width="56" height="56" rx="16" fill="#ff8264"/>
+    <circle cx="658" cy="438" r="5" fill="rgb(255, 255, 255)"/>
+    <circle cx="643" cy="426" r="3" fill="rgb(255, 255, 255)"/>
+    <circle cx="673" cy="426" r="3" fill="rgb(255, 255, 255)"/>
+    <circle cx="643" cy="450" r="3" fill="rgb(255, 255, 255)"/>
+    <circle cx="673" cy="450" r="3" fill="rgb(255, 255, 255)"/>
+    <path d="M646 428l9 7m15-7-9 7m-15 13 9-7m15 7-9-7" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="704" y="433" fill="rgb(255, 255, 255)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="21px" font-weight="800">AI Agent</text>
+    <text x="704" y="453" fill="rgb(255, 225, 217)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9px" font-weight="750" letter-spacing="1.35px">INTELLIGENCE</text>
+  </g>
+
+  
+  <g>
+    <rect x="855" y="390" width="320" height="96" rx="24" fill="url(&quot;#cardFill&quot;)" stroke="url(&quot;#cardStroke&quot;)" stroke-width="1.5"/>
+    <rect x="875" y="410" width="56" height="56" rx="16" fill="url(&quot;#iconFill&quot;)"/>
+    <path d="M891 421h16l9 9v24h-25z" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M907 421v10h9m-18 8h12m-12 7h12" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="951" y="433" fill="rgb(255, 255, 255)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="18px" font-weight="750" letter-spacing="-0.3px">Response Generator</text>
+    <text x="951" y="453" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">OUTPUT LAYER</text>
+  </g>
+
+  
+  <g>
+    <rect x="1220" y="390" width="180" height="96" rx="24" fill="url(&quot;#cardFill&quot;)" stroke="url(&quot;#cardStroke&quot;)" stroke-width="1.5"/>
+    <rect x="1240" y="410" width="56" height="56" rx="16" fill="url(&quot;#iconFill&quot;)"/>
+    <path d="M1254 438l9 9 20-23" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1312" y="433" fill="rgb(255, 255, 255)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="18px" font-weight="750" letter-spacing="-0.3px">System</text>
+    <text x="1312" y="453" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">OUTCOME</text>
+  </g>
+
+</svg>
