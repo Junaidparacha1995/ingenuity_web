@@ -1081,7 +1081,7 @@ document.body?.classList.add('header-ready');
   let index = 0, timer;
   const rotator = scope.querySelector('.hero-rotator');
   const responsiveHero = window.matchMedia('(max-width: 1040px)');
-  const syncRotatorHeight = (animate = true) => {
+  const syncRotatorHeight = () => {
     if (!rotator) return;
     if (!responsiveHero.matches) {
       rotator.style.removeProperty('height');
@@ -1090,15 +1090,7 @@ document.body?.classList.add('header-ready');
     const activeSlide = slides[index];
     const targetHeight = Math.ceil(activeSlide.getBoundingClientRect().height);
     if (!targetHeight) return;
-    const currentHeight = rotator.getBoundingClientRect().height;
-    if (!animate || !currentHeight) {
-      rotator.style.height = `${targetHeight}px`;
-      return;
-    }
-    rotator.style.height = `${currentHeight}px`;
-    requestAnimationFrame(() => {
-      rotator.style.height = `${targetHeight}px`;
-    });
+    rotator.style.height = `${targetHeight}px`;
   };
   slides.forEach((_, i) => {
     const dot = document.createElement('button');
@@ -1114,18 +1106,18 @@ document.body?.classList.add('header-ready');
     index = (i + slides.length) % slides.length;
     slides[index].classList.add('active');
     dots[index].classList.add('active');
-    syncRotatorHeight();
+    requestAnimationFrame(syncRotatorHeight);
   }
   function restart() {
     clearInterval(timer);
     timer = setInterval(() => goTo(index + 1), 5500);
   }
   restart();
-  syncRotatorHeight(false);
-  requestAnimationFrame(() => syncRotatorHeight(false));
-  window.addEventListener('load', () => syncRotatorHeight(false), { once: true });
+  syncRotatorHeight();
+  requestAnimationFrame(syncRotatorHeight);
+  window.addEventListener('load', syncRotatorHeight, { once: true });
   if (responsiveHero.addEventListener) {
-    responsiveHero.addEventListener('change', () => syncRotatorHeight(false));
+    responsiveHero.addEventListener('change', syncRotatorHeight);
   }
 })();
 

@@ -1354,7 +1354,14 @@
 
   .home-page .hc-copy .hero-rotator {
     min-height: 0;
-    transition: height .7s var(--ease);
+  }
+
+  .home-page .hero-slide {
+    transition: none;
+  }
+
+  .home-page .hero-slide.active {
+    inset: auto;
   }
 
   .home-page .hc-copy h1 {
