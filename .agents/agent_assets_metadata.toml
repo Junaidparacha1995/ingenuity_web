@@ -70,3 +70,17 @@ mtime_ms = 1789656397664
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/7ee5546a-e837-48f2-82e4-95e218ccd467/e59f6c2d-f4a6-479d-b5a0-d4a27dd0481d"
 storage_version_token = "1789656420407881"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "q-hZV4T6p3QfOWWbajhI9"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v36.zip"
+type = "unspecified"
+title = "Ingenuity Systems v36 static graph update"
+description = "Static supplied graph artwork with distinct vector logos for every node card, decision-card grid texture removed, cache-busted routes, and preserved performance optimizations."
+logical_id = "93aff127-7871-407b-9236-ea271da3c6c6"
+content_hash = "sha256:a706f110f29886e5f1a683a9de90ee5414a3ae4fd138e1581601543d9b52087c"
+size = 10000969
+mtime_ms = 1789657282929
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/93aff127-7871-407b-9236-ea271da3c6c6/e227c6cb-38d0-4aba-bd35-a857c9810a54"
+storage_version_token = "1789657293874148"
+content_type = "application/octet-stream"
