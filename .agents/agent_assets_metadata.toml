@@ -98,3 +98,17 @@ mtime_ms = 1789657461509
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/b2ab4686-ab63-481b-a45b-defda26a3282/ff58f50b-0ad1-4b64-9644-6cb55c9546e6"
 storage_version_token = "1789657471556765"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "oJiUzxFJXVTFfBlAZLZqK"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v39.zip"
+type = "unspecified"
+title = "Ingenuity Systems v39 clickable live graph"
+description = "Reference-format live graph with individual node logos, animated flow points, accessible clickable node hit areas, and a detail panel that updates below the graph."
+logical_id = "62aa1cc8-6ec3-4d44-9e7d-859009a3a348"
+content_hash = "sha256:1b7306d11ddaabf62fced8547b475a4870a61c52cdbc1d7378b4178ec2795832"
+size = 9999338
+mtime_ms = 1789657953492
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/62aa1cc8-6ec3-4d44-9e7d-859009a3a348/df8ab913-ba4f-45c7-a9ce-831a904c9553"
+storage_version_token = "1789657975087384"
+content_type = "application/octet-stream"

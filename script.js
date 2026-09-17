@@ -601,6 +601,59 @@ if (revealTargets.length) {
   startGraphAnimation();
 })();
 
+// Static hero graph controls — the SVG stays visual-only while accessible hit
+// areas update the detail panel underneath it.
+(function initStaticHeroNodes() {
+  const layer = document.querySelector('.hc-node-hit-layer');
+  const detail = document.getElementById('hc-node-detail');
+  if (!layer || !detail) return;
+  const kicker = document.getElementById('hc-node-kicker');
+  const title = document.getElementById('hc-node-title');
+  const status = document.getElementById('hc-node-status');
+  const description = document.getElementById('hc-node-description');
+  const trace = document.getElementById('hc-node-trace');
+  const nodeDetails = {
+    in: { label: 'Request', kicker: 'INPUT LAYER', description: 'Captures the business request and turns the starting intent into a clear system input.', trace: ['Business request', 'Context', 'System input'] },
+    context: { label: 'Context Retrieval', kicker: 'CONTEXT LAYER', description: 'Brings relevant knowledge, records, and operating context into the workflow before action is taken.', trace: ['Request', 'Context retrieval', 'Grounded input'] },
+    agent: { label: 'Agent', kicker: 'INTELLIGENT CORE', description: 'Coordinates AI, rules, data, and workflows across connected systems with observability and human oversight.', trace: ['Request', 'Reasoning', 'Action'] },
+    responsegen: { label: 'Response Generator', kicker: 'OUTPUT LAYER', description: 'Turns the completed workflow state into a clear response, handoff, or next step.', trace: ['System state', 'Response generation', 'Clear outcome'] },
+    out: { label: 'Response', kicker: 'DELIVERY LAYER', description: 'Delivers the result to the right destination, whether that is a person, application, CRM, or downstream workflow.', trace: ['Response', 'Delivery', 'Outcome'] },
+    router: { label: 'Router', kicker: 'DECISION LAYER', description: 'Evaluates intent, policy, and available paths so each request reaches the right capability.', trace: ['Incoming signal', 'Policy routing', 'Best path'] },
+    tool: { label: 'Tool Call', kicker: 'ACTION LAYER', description: 'Connects the system to real tools and business applications so the workflow can perform useful work beyond conversation.', trace: ['Agent decision', 'Tool call', 'System update'] },
+    rag: { label: 'RAG Lookup', kicker: 'KNOWLEDGE LAYER', description: 'Retrieves grounded information from connected knowledge sources so responses and actions are based on the right evidence.', trace: ['Query', 'Knowledge retrieval', 'Grounded evidence'] }
+  };
+  const buttons = [...layer.querySelectorAll('[data-hc-node]')];
+  const update = (id, moveToDetail = false) => {
+    const info = nodeDetails[id] || nodeDetails.agent;
+    buttons.forEach((button) => button.classList.toggle('is-selected', button.dataset.hcNode === id));
+    if (kicker) kicker.textContent = info.kicker;
+    if (title) title.textContent = info.label;
+    if (status) status.textContent = 'Selected · ' + info.label;
+    if (description) description.textContent = info.description;
+    if (trace) {
+      trace.replaceChildren();
+      info.trace.forEach((item, index) => {
+        if (index) {
+          const arrow = document.createElement('i');
+          arrow.textContent = '→';
+          trace.appendChild(arrow);
+        }
+        const chip = document.createElement('span');
+        chip.textContent = item;
+        trace.appendChild(chip);
+      });
+    }
+    detail.classList.remove('is-changing');
+    void detail.offsetWidth;
+    detail.classList.add('is-changing');
+    if (moveToDetail && window.matchMedia('(max-width:720px)').matches) {
+      detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  };
+  buttons.forEach((button) => button.addEventListener('click', () => update(button.dataset.hcNode, true)));
+  update('agent');
+})();
+
 // Global site-memory RAG assistant. Keep the OpenAI key server-side: set only a secure proxy URL here later.
 (function initGlobalAssistant() {
   if (document.querySelector('.site-assistant')) return;

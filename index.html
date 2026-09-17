@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="styles.css?v=25" rel="stylesheet"/>
+<link href="styles.css?v=26" rel="stylesheet"/>
 <link href="responsive-v18.css?v=19" rel="stylesheet"/>
 <link href="responsive-v19.css?v=26" rel="stylesheet"/>
 </head>
@@ -167,6 +167,16 @@
 <div class="hc-right">
 <div class="hc-panel" id="hc-panel">
 <img class="hc-static-graph" src="assets/home-system-graph.svg?v=5" alt="Connected intelligent systems graph"/>
+<div class="hc-node-hit-layer" aria-label="Interactive system graph">
+<button class="hc-node-hit is-selected" type="button" data-hc-node="tool" aria-label="Inspect Tool Call node" style="left:18.4%;top:8.1%;width:13.6%;height:12.1%"></button>
+<button class="hc-node-hit" type="button" data-hc-node="rag" aria-label="Inspect RAG Lookup node" style="left:62.7%;top:8.1%;width:15.8%;height:12.1%"></button>
+<button class="hc-node-hit" type="button" data-hc-node="router" aria-label="Inspect Router node" style="left:42%;top:39.3%;width:13%;height:12.1%"></button>
+<button class="hc-node-hit" type="button" data-hc-node="in" aria-label="Inspect Request node" style="left:3.8%;top:74.3%;width:13.4%;height:12.5%"></button>
+<button class="hc-node-hit" type="button" data-hc-node="context" aria-label="Inspect Context Retrieval node" style="left:18.4%;top:74.3%;width:20.8%;height:12.5%"></button>
+<button class="hc-node-hit" type="button" data-hc-node="agent" aria-label="Inspect Agent node" style="left:41.9%;top:73%;width:13.8%;height:15.2%"></button>
+<button class="hc-node-hit" type="button" data-hc-node="responsegen" aria-label="Inspect Response Generator node" style="left:58%;top:74.3%;width:22.6%;height:12.5%"></button>
+<button class="hc-node-hit" type="button" data-hc-node="out" aria-label="Inspect Response node" style="left:81.7%;top:74.3%;width:15.4%;height:12.5%"></button>
+</div>
 </div>
 <div class="hc-node-detail" id="hc-node-detail" aria-live="polite">
 <div class="hc-node-detail-top"><div><span class="hc-node-detail-kicker" id="hc-node-kicker">INTELLIGENT CORE</span><strong id="hc-node-title">Agent</strong></div><span class="hc-node-detail-status" id="hc-node-status">Selected · Agent</span></div>
@@ -647,6 +657,6 @@
 </div>
 </div>
 </footer>
-<script src="script.js?v=30"></script><script src="orange-ambient.js?v=3"></script>
+<script src="script.js?v=31"></script><script src="orange-ambient.js?v=3"></script>
 </body>
 </html>
