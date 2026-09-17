@@ -16,6 +16,7 @@ import time
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -44,6 +45,35 @@ PERSONAL_EMAIL_DOMAINS = {
     "yandex.com",
     "msn.com",
 }
+
+# Clean public URLs. The underlying files remain in their current layout so
+# existing relative asset paths and old bookmarks continue to work.
+CLEAN_ROUTES = {
+    "/": "/index.html",
+    "/about": "/about.html",
+    "/careers": "/careers.html",
+    "/contact": "/contact.html",
+    "/industries": "/industries.html",
+    "/industries-ecommerce": "/industries-ecommerce.html",
+    "/industries-financial": "/industries-financial.html",
+    "/industries-healthcare": "/industries-healthcare.html",
+    "/industries-manufacturing": "/industries-manufacturing.html",
+    "/industries-professional": "/industries-professional.html",
+    "/industries-realestate": "/industries-realestate.html",
+    "/industries-technology": "/industries-technology.html",
+    "/services": "/services.html",
+    "/services-ai": "/services-ai.html",
+    "/services-automation": "/services-automation.html",
+    "/services-integration": "/services-integration.html",
+    "/services-software": "/services-software.html",
+    "/work": "/work.html",
+    "/projects": "/projects/index.html",
+    "/case-studies": "/case-studies/index.html",
+    "/ai-maturity": "/pages/ai-maturity.html",
+    "/build-your-system": "/pages/build-your-system.html",
+}
+CLEAN_REDIRECTS = {target: route for route, target in CLEAN_ROUTES.items() if route != "/"}
+CLEAN_REDIRECTS["/index.html"] = "/"
 
 
 def json_bytes(value: object) -> bytes:
@@ -255,6 +285,46 @@ class RouterHandler(SimpleHTTPRequestHandler):
         else:
             self.send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Route not found"})
 
+    def do_GET(self) -> None:
+        parsed = urlsplit(self.path)
+        path = parsed.path
+
+        # Keep legacy .html URLs functional, but make the clean route canonical
+        # in the browser address bar.
+        canonical = CLEAN_REDIRECTS.get(path)
+        if canonical:
+            location = urlunsplit(("", "", canonical, parsed.query, parsed.fragment))
+            self.send_response(HTTPStatus.PERMANENT_REDIRECT)
+            self.send_header("Location", location)
+            self.send_header("Cache-Control", "public, max-age=86400")
+            self.end_headers()
+            return
+
+        if path in CLEAN_ROUTES and path != "/":
+            target = CLEAN_ROUTES[path]
+            self.path = target + (f"?{parsed.query}" if parsed.query else "")
+            super().do_GET()
+            return
+
+        if path == "/api/health":
+            self.send_json(
+                HTTPStatus.OK,
+                {
+                    "ok": True,
+                    "service": "ingenuity-systems-router",
+                    "openaiConfigured": bool(os.environ.get("OPENAI_API_KEY", "").strip()),
+                    "routerWebhookConfigured": bool(
+                        os.environ.get("INGENUITY_ROUTER_WEBHOOK_URL", "").strip()
+                        or os.environ.get("MAKE_WEBHOOK_URL", "").strip()
+                    ),
+                    "calendlySigningKeyConfigured": bool(
+                        os.environ.get("CALENDLY_WEBHOOK_SIGNING_KEY", "").strip()
+                    ),
+                },
+            )
+            return
+        super().do_GET()
+
     def handle_chat(self) -> None:
         if not allow_chat(client_address(self)):
             self.send_json(HTTPStatus.TOO_MANY_REQUESTS, {"ok": False, "error": "Please try again shortly."})
@@ -321,27 +391,6 @@ class RouterHandler(SimpleHTTPRequestHandler):
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Expected a JSON object"})
             return
         self.forward_router_event("calendly", payload)
-
-    def do_GET(self) -> None:
-        if self.path == "/api/health":
-            self.send_json(
-                HTTPStatus.OK,
-                {
-                    "ok": True,
-                    "service": "ingenuity-systems-router",
-                    "openaiConfigured": bool(os.environ.get("OPENAI_API_KEY", "").strip()),
-                    "routerWebhookConfigured": bool(
-                        os.environ.get("INGENUITY_ROUTER_WEBHOOK_URL", "").strip()
-                        or os.environ.get("MAKE_WEBHOOK_URL", "").strip()
-                    ),
-                    "calendlySigningKeyConfigured": bool(
-                        os.environ.get("CALENDLY_WEBHOOK_SIGNING_KEY", "").strip()
-                    ),
-                },
-            )
-            return
-        super().do_GET()
-
 
 def main() -> None:
     server = ThreadingHTTPServer((HOST, PORT), RouterHandler)
