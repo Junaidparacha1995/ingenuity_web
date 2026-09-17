@@ -163,4 +163,16 @@
     <text x="1312" y="453" fill="rgb(174, 185, 201)" font-family="Inter, Arial, Helvetica, sans-serif" font-size="9.5px" font-weight="700" letter-spacing="1.45px">OUTCOME</text>
   </g>
 
+  <g aria-hidden="true" pointer-events="none">
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="6s" repeatCount="indefinite" path="M150 438 H435 H720 H1015 H1310"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="4.5s" begin="-1.5s" repeatCount="indefinite" path="M380 138 L725 283 L720 438"/>
+    </circle>
+    <circle r="5" fill="#ff6a46">
+      <animateMotion dur="4.5s" begin="-3s" repeatCount="indefinite" path="M1060 138 L725 283 L720 438"/>
+    </circle>
+  </g>
+
 </svg>
