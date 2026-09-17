@@ -581,8 +581,6 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 .marquee-logo-n8n{font-size:10px; color:#ea4b71; letter-spacing:-.13em;}
 .marquee-logo-make{font-size:15px; color:#6d28d9; background:rgba(109,40,217,.08);}
 .marquee-logo-zapier{font-size:14px; color:#ff4f00; background:rgba(255,79,0,.08);}
-.marquee-logo-gumloop{font-size:15px; color:#0f766e; background:rgba(15,118,110,.08);}
-.marquee-logo-manus{font-size:14px; color:#4f46e5; background:rgba(79,70,229,.08);}
 .marquee-logo-cursor{font-size:20px; color:#111827; font-family:Georgia,serif;}
 .marquee-logo-postgresql{font-size:9px; color:#336791; background:rgba(51,103,145,.08); letter-spacing:-.08em;}
 @keyframes marqueeScroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
@@ -1090,8 +1088,6 @@ footer > .wrap{position:relative; z-index:1;}
 .tech-marquee .marquee-logo-n8n{font-size:16px;}
 .tech-marquee .marquee-logo-make{font-size:27px;}
 .tech-marquee .marquee-logo-zapier{font-size:25px;}
-.tech-marquee .marquee-logo-gumloop{font-size:27px;}
-.tech-marquee .marquee-logo-manus{font-size:26px;}
 .tech-marquee .marquee-logo-cursor{font-size:33px;}
 .tech-marquee .marquee-logo-postgresql{font-size:13px;}
 @media(max-width:900px){.decision-grid{grid-template-columns:1fr 1fr;}.decision-card{min-height:350px;}}
@@ -1124,8 +1120,6 @@ footer > .wrap{position:relative; z-index:1;}
 .tech-marquee .marquee-logo-hubspot{font-size:19px;}
 .tech-marquee .marquee-logo-cursor{font-size:24px;}
 .tech-marquee .marquee-logo-make{font-size:20px;}
-.tech-marquee .marquee-logo-gumloop{font-size:20px;}
-.tech-marquee .marquee-logo-manus{font-size:20px;}
 .tech-marquee .marquee-logo>img{display:block;width:72%;height:72%;object-fit:contain;}
 @media(max-width:900px){.who-image{aspect-ratio:auto;}}
 @media(max-width:620px){.tech-marquee .marquee-item{min-width:160px;height:58px;padding-right:11px;font-size:12px;}.tech-marquee .marquee-logo{width:36px;height:36px;flex-basis:36px;}}

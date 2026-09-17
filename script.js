@@ -560,13 +560,6 @@ if (revealTargets.length) {
   if (cells.length) setInterval(pushActivityLine, reduceMotion ? 3600 : 2000);
 })();
 
-// Keep the branded Gumloop and Manus tiles readable when a remote brand asset is unavailable.
-(function bindBrandLogoFallbacks() {
-  document.querySelectorAll('.marquee-logo img[src*="cdn.brandfetch.io"]').forEach((img) => {
-    img.addEventListener('error', () => { img.style.display = 'none'; }, { once: true });
-  });
-})();
-
 // Global site-memory RAG assistant. Keep the OpenAI key server-side: set only a secure proxy URL here later.
 (function initGlobalAssistant() {
   if (document.querySelector('.site-assistant')) return;
