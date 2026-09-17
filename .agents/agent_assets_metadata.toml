@@ -168,3 +168,17 @@ mtime_ms = 1789659950055
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/ba7563b9-5f29-48b4-9cda-d17bf08b84d0/07de8ec7-7f38-4614-a34d-a85dc612a5a3"
 storage_version_token = "1789659959884207"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "i9zVGdGfZQnVUhRwpFzC0"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v44.zip"
+type = "unspecified"
+title = "Ingenuity Systems v44 centered work tabs"
+description = "Centers and aligns the Projects / Case Studies switcher on phone, Fold inner-screen, and tablet layouts with equal-width tabs and consistent spacing."
+logical_id = "5be9674b-b1e0-484c-9316-51134af5f387"
+content_hash = "sha256:dc268c52dde2d643a0e69fc7f835de39df832f298b2147501b1414f20283b1cd"
+size = 9939371
+mtime_ms = 1789660127927
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/5be9674b-b1e0-484c-9316-51134af5f387/2db02fe2-8d86-4af6-9954-734780418fb4"
+storage_version_token = "1789660158245763"
+content_type = "application/octet-stream"
