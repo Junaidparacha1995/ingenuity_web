@@ -1031,16 +1031,23 @@ if (revealTargets.length) {
     submenu.className = 'mobile-submenu';
     const submenuInner = document.createElement('div');
     submenuInner.className = 'mobile-submenu-inner';
-    const candidates = [mobileOverview[name], ...menu.columns.flat()];
+    const candidates = [
+      { label: mobileOverview[name][0], href: mobileOverview[name][1], kind: 'overview' },
+      ...menu.columns.flatMap((column) => column.map(([label, href], index) => ({
+        label,
+        href,
+        kind: index === 0 ? 'core' : 'sub'
+      })))
+    ];
     const seen = new Set();
-    candidates.forEach(([label, href], index) => {
+    candidates.forEach(({ label, href, kind }) => {
       const resolvedHref = siteBase + href;
       if (seen.has(resolvedHref)) return;
       seen.add(resolvedHref);
       const sublink = document.createElement('a');
       sublink.href = resolvedHref;
       sublink.textContent = label;
-      if (index === 0) sublink.classList.add('mobile-overview-link');
+      sublink.classList.add('mobile-' + kind + '-link');
       if (isCurrentHref(href)) {
         sublink.classList.add('is-current');
         sublink.setAttribute('aria-current', 'page');

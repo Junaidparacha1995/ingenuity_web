@@ -281,6 +281,28 @@
     font-weight: 800;
   }
 
+  .mobile-submenu .mobile-core-link {
+    min-height: 48px;
+    margin-top: 12px;
+    padding: 14px 12px;
+    border-left-color: rgba(255,157,132,.72);
+    color: #fff;
+    background: rgba(255,255,255,.035);
+    font: 800 13.5px/1.35 'Manrope', sans-serif;
+    letter-spacing: -.01em;
+  }
+
+  .mobile-submenu .mobile-overview-link + .mobile-core-link {
+    margin-top: 6px;
+  }
+
+  .mobile-submenu .mobile-sub-link {
+    padding-left: 26px;
+    border-left-color: rgba(255,255,255,.1);
+    color: rgba(255,255,255,.62);
+    font-weight: 600;
+  }
+
   .mega-wrap {
     display: none !important;
   }
