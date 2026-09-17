@@ -27,6 +27,23 @@ MAX_BODY_BYTES = 256 * 1024
 CHAT_WINDOW_SECONDS = 600
 CHAT_LIMIT_PER_WINDOW = 20
 chat_requests: dict[str, list[float]] = {}
+PERSONAL_EMAIL_DOMAINS = {
+    "gmail.com",
+    "yahoo.com",
+    "outlook.com",
+    "hotmail.com",
+    "live.com",
+    "icloud.com",
+    "me.com",
+    "mac.com",
+    "proton.me",
+    "protonmail.com",
+    "aol.com",
+    "gmx.com",
+    "mail.com",
+    "yandex.com",
+    "msn.com",
+}
 
 
 def json_bytes(value: object) -> bytes:
@@ -88,6 +105,40 @@ def calendly_signature_is_valid(raw_body: bytes, signature: str, signing_key: st
     signed_payload = f"{timestamp}.{raw_body.decode('utf-8')}".encode("utf-8")
     expected = hmac.new(signing_key.encode("utf-8"), signed_payload, hashlib.sha256).hexdigest()
     return hmac.compare_digest(expected, supplied)
+
+
+def classify_lead(payload: dict) -> dict:
+    """Apply the shared qualification logic on the trusted server boundary."""
+    normalized = dict(payload)
+    email = str(normalized.get("email", "")).strip().lower()
+    company = str(normalized.get("companyName", normalized.get("company", ""))).strip()
+    budget = str(normalized.get("estimatedBudgetTier", normalized.get("budget", ""))).strip()
+    domain = email.rsplit("@", 1)[-1] if "@" in email else ""
+    is_business_email = bool(domain and domain not in PERSONAL_EMAIL_DOMAINS)
+    is_low_budget = budget == "under-1000"
+    is_personal_quick_start = bool(not company and not is_business_email and is_low_budget)
+    qualifies_for_calendly = bool(company and is_business_email and is_low_budget)
+
+    normalized["companyName"] = company
+    normalized["emailType"] = "business" if is_business_email else "personal"
+    normalized["route"] = (
+        "calendly"
+        if qualifies_for_calendly
+        else "bd-email-quick-start"
+        if is_personal_quick_start
+        else "bd-email"
+    )
+    normalized["qualifiesForCalendly"] = qualifies_for_calendly
+    normalized["isPersonalQuickStart"] = is_personal_quick_start
+    normalized["allocatedBdEmail"] = "info@ingenuitysys.com"
+    normalized["calendlyUrl"] = "https://calendly.com/junaidparacha-ingenuitysys"
+    normalized["automatedMessage"] = (
+        "Thanks for reaching out. Our business development team will review your "
+        "quick-start inquiry and reply by email."
+        if is_personal_quick_start
+        else "Thanks for reaching out. Our team will review your details and follow up with the right next step."
+    )
+    return normalized
 
 
 def openai_answer(question: str, context: list[dict[str, str]], page: str) -> str:
@@ -257,7 +308,7 @@ class RouterHandler(SimpleHTTPRequestHandler):
         if not str(payload.get("email", "")).strip() or not str(payload.get("name", "")).strip():
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Name and email are required"})
             return
-        self.forward_router_event(event_type, payload)
+        self.forward_router_event(event_type, classify_lead(payload))
 
     def handle_calendly(self) -> None:
         payload, raw_body = self.read_json()
