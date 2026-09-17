@@ -9,9 +9,32 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="anonymous" href="https://fonts.googleapis.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="../styles.css" rel="stylesheet"/>
+<link href="../styles.css?v=17" rel="stylesheet"/>
+<link href="../work-hero-centered-v16.css" rel="stylesheet"/>
+<link href="../responsive-v18.css" rel="stylesheet"/>
+<link href="../responsive-v19.css" rel="stylesheet"/>
 </head>
 <body>
+<script>
+(() => {
+  if (location.hash || !/\/case-studies(?:\/|$)/i.test(location.pathname)) return;
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const reset = () => {
+    if (location.hash) return;
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, 0);
+    root.style.scrollBehavior = previousBehavior;
+  };
+  reset();
+  window.addEventListener('DOMContentLoaded', reset);
+  window.addEventListener('load', reset);
+  window.addEventListener('pageshow', reset);
+  window.requestAnimationFrame(() => window.requestAnimationFrame(reset));
+  [0, 120, 320, 800].forEach((delay) => window.setTimeout(reset, delay));
+})();
+</script>
 <div class="scroll-progress" id="scroll-progress"></div><div class="cursor-dot" id="cursor-dot"></div>
 <div class="liquid-bg"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
 <header><div class="nav">
@@ -29,7 +52,7 @@
 </div><div class="mega-wrap"></div></header>
 
 <main class="work-page-shell case-study-page">
-<section class="work-hero hero-console">
+<section class="work-hero centered-work-hero hero-console">
 <div class="hc-bg"><div class="hc-blob hc-blob-a"></div><div class="hc-blob hc-blob-b"></div></div>
 <div class="wrap work-hero-content">
 <h1 class="case-study-hero-title">Recent Engineering Case Studies.</h1>
@@ -71,7 +94,7 @@
 </main>
 
 <footer><img alt="" aria-hidden="true" class="footer-watermark" src="../assets/logo-icon.png"/><div class="wrap"><div class="footer-top"><div><div class="footer-logo brand"><img alt="Ingenuity Systems" class="logo-full" src="../assets/logo-light.png"/></div><p style="font-family:'Manrope',sans-serif;font-weight:700;color:#fff;font-size:14px;margin-bottom:8px">Intelligent Systems. Powerful Outcomes.</p><p>We design, build, integrate, and automate digital systems that help businesses operate smarter and evolve with confidence.</p><div class="footer-location">Lahore, Pakistan · Wyoming, USA</div></div><div class="footer-col"><h5>Company</h5><ul><li><a href="../index.html">Home</a></li><li><a href="../work.html">Work</a></li><li><a href="../about.html">About</a></li><li><a href="../contact.html">Contact</a></li></ul></div><div class="footer-col"><h5>Services</h5><ul><li><a href="../services-ai.html">AI &amp; Intelligent Systems</a></li><li><a href="../services-automation.html">Business Process Automation</a></li><li><a href="../services-software.html">Software &amp; Digital Engineering</a></li><li><a href="../services-integration.html">Systems Integration &amp; Data</a></li></ul></div><div class="footer-col"><h5>Industries</h5><ul><li><a href="../industries.html">Explore Industries</a></li><li><a href="../industries-technology.html">Technology &amp; SaaS</a></li><li><a href="../industries-professional.html">Professional Services</a></li></ul></div></div><div class="flow-line on-dark" style="margin-bottom:28px"></div><div class="footer-bottom"><span>© 2026 Ingenuity Systems. All rights reserved. | Lahore, Pakistan · Wyoming, USA</span><div class="legal-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div></div></footer>
-<script src="../script.js"></script><script src="../orange-ambient.js"></script>
+<script src="../script.js?v=22"></script><script src="../orange-ambient.js"></script>
 <script>
 (() => {
   document.querySelectorAll('details.work-card').forEach((card) => card.removeAttribute('open'));
@@ -84,14 +107,14 @@
     if (card.open) workCards.forEach((other) => { if (other !== card) other.open = false; });
   }));
   projectPanel.dataset.workPanel = 'projects';
-  const select = (target) => {
+  const select = (target, {updateHash = true} = {}) => {
     tabs.forEach((tab) => { const selected = tab.dataset.workTab === target; tab.classList.toggle('is-active', selected); tab.setAttribute('aria-selected', String(selected)); });
     panels.forEach((panel) => { panel.hidden = panel.dataset.workPanel !== target; });
-    history.replaceState(null, '', '#' + target);
+    if (updateHash) history.replaceState(null, '', '#' + target);
   };
-  tabs.forEach((tab) => tab.addEventListener('click', () => select(tab.dataset.workTab)));
+  tabs.forEach((tab) => tab.addEventListener('click', () => select(tab.dataset.workTab, {updateHash: true})));
   const initialTarget = location.hash === '#case-studies' || /case-studies/.test(location.pathname) ? 'case-studies' : 'projects';
-  select(initialTarget);
+  select(initialTarget, {updateHash: false});
 
   const caseCards = [...document.querySelectorAll('.case-study-card')];
   caseCards.forEach((card) => {

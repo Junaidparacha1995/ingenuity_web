@@ -227,4 +227,13 @@
 .tool-hero-grid>div:first-child{text-align:center;}
 .tool-hero-grid>div:first-child h1,.tool-hero-grid>div:first-child p{margin-left:auto;margin-right:auto;}
 .tool-hero-grid>div:first-child .hero-actions{justify-content:center;}
-.tool-hero h1{font-size:clamp(38px,5vw,60px);line-height:1.08;letter-spacing:-.02em;}
+.tool-hero h1{font-size:var(--page-hero-title-size);line-height:1.08;letter-spacing:-.02em;}
+
+/* Keep tool pages on the same header-to-hero rhythm as the image-based pages. */
+.tool-page .tool-hero{height:var(--page-hero-height);min-height:520px;max-height:620px;margin-top:var(--site-header-height);padding:0;display:flex;align-items:stretch;}
+.tool-page .tool-hero>.wrap{width:100%;height:100%;display:flex;align-items:center;}
+.tool-page .tool-hero p{font-size:15.5px;line-height:1.7;}
+@media(max-width:720px){
+  .tool-page .tool-hero{height:var(--page-hero-height);min-height:0;max-height:none;margin-top:var(--site-header-height);}
+  .tool-page .tool-hero>.wrap{padding-left:18px;padding-right:18px;}
+}

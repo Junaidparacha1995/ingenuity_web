@@ -1,7 +1,7 @@
 // Header shadow + floating pill morph on scroll — activates only after the hero section
 const header = document.querySelector('header');
 if (header) {
-  const heroEl = document.querySelector('.hero-media') || document.getElementById('hero-console');
+  const heroEl = document.querySelector('.hero-media, .work-hero, .tool-hero') || document.getElementById('hero-console');
   const getThreshold = () => heroEl ? Math.max(heroEl.offsetHeight - 80, 120) : 120;
   let threshold = getThreshold();
   window.addEventListener('resize', () => { threshold = getThreshold(); }, { passive: true });
@@ -10,31 +10,87 @@ if (header) {
   }, { passive: true });
 }
 
-// Mega-menu: header itself expands to reveal the active panel (single seamless shape, no separate floating box)
-if (header) {
-  const megaWrap = header.querySelector('.mega-wrap');
-  const triggers = header.querySelectorAll('.has-dropdown[data-menu]');
-  let closeTimer = null;
+// Service capability links keep their descriptive hashes, but land at the
+// capability heading instead of pushing an individual card under the header.
+(function normalizeServiceAnchorLanding() {
+  if (!document.body?.classList.contains('service-page')) return;
 
-  const openMenu = (menu) => {
-    clearTimeout(closeTimer);
-    if (megaWrap) megaWrap.setAttribute('data-active', menu);
-    header.classList.add('menu-open');
+  const capabilityHashes = new Set([
+    'agentic', 'copilots', 'rag', 'docint',
+    'workflow', 'finance', 'crm', 'cs',
+    'custom', 'web', 'tools', 'api',
+    'sysapi', 'crmerp', 'data', 'bi'
+  ]);
+  const hashName = (value) => {
+    try { return decodeURIComponent(String(value || '').replace(/^#/, '')).toLowerCase(); }
+    catch { return String(value || '').replace(/^#/, '').toLowerCase(); }
   };
-  const scheduleClose = () => {
-    clearTimeout(closeTimer);
-    closeTimer = setTimeout(() => header.classList.remove('menu-open'), 140);
+  const resolveLanding = (hash) => {
+    const name = hashName(hash);
+    if (!capabilityHashes.has(name)) return null;
+    const card = document.getElementById(name);
+    const section = card?.closest('section');
+    return section?.querySelector('.section-head') || null;
+  };
+  const layoutTop = (element) => {
+    let top = 0;
+    let node = element;
+    while (node) {
+      top += node.offsetTop || 0;
+      node = node.offsetParent;
+    }
+    return top;
+  };
+  const headerOffset = () => {
+    const rootStyles = getComputedStyle(document.documentElement);
+    const baseHeight = parseFloat(rootStyles.getPropertyValue('--site-header-height')) || 104;
+    const headerTop = Math.max(0, parseFloat(getComputedStyle(document.querySelector('header')).top) || 0);
+    return baseHeight + headerTop + (window.innerWidth <= 760 ? 20 : 28);
+  };
+  const landAtHeading = (hash, smooth = false) => {
+    const heading = resolveLanding(hash);
+    if (!heading) return false;
+    const top = Math.max(0, layoutTop(heading) - headerOffset());
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    if (!smooth) root.style.scrollBehavior = 'auto';
+    window.scrollTo({ top, left: 0, behavior: smooth ? 'smooth' : 'auto' });
+    if (!smooth) root.style.scrollBehavior = previousBehavior;
+    return true;
   };
 
-  triggers.forEach(trigger => {
-    trigger.addEventListener('mouseenter', () => openMenu(trigger.dataset.menu));
-    trigger.addEventListener('mouseleave', scheduleClose);
-  });
-  if (megaWrap) {
-    megaWrap.addEventListener('mouseenter', () => clearTimeout(closeTimer));
-    megaWrap.addEventListener('mouseleave', scheduleClose);
+  if (resolveLanding(window.location.hash)) {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    const settle = () => landAtHeading(window.location.hash, false);
+    settle();
+    window.requestAnimationFrame(() => window.requestAnimationFrame(settle));
+    window.addEventListener('load', settle, { once: true });
+    // Repeated delayed corrections made responsive pages appear to keep
+    // scrolling after the intended capability heading had already arrived.
+    // Preserve the established desktop behavior, but use one settled landing
+    // on phones and tablets.
+    if (window.innerWidth > 1040) {
+      window.addEventListener('DOMContentLoaded', settle, { once: true });
+      window.addEventListener('pageshow', settle, { once: true });
+      [80, 240].forEach((delay) => window.setTimeout(settle, delay));
+    }
   }
-}
+
+  window.addEventListener('hashchange', () => landAtHeading(window.location.hash, false));
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href]');
+    if (!link) return;
+    let url;
+    try { url = new URL(link.href, window.location.href); }
+    catch { return; }
+    if (url.origin !== window.location.origin ||
+        url.pathname !== window.location.pathname ||
+        !resolveLanding(url.hash)) return;
+    event.preventDefault();
+    if (window.location.hash !== url.hash) history.pushState(null, '', url.hash);
+    landAtHeading(url.hash, true);
+  });
+})();
 
 // Scroll progress — overlay bar, visible only while actively scrolling, fades out when idle
 const scrollProgressEl = document.getElementById('scroll-progress');
@@ -56,13 +112,22 @@ if (scrollProgressEl) {
 const toggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
 if (toggle && navLinks) {
+  toggle.setAttribute('aria-expanded', 'false');
   toggle.addEventListener('click', () => {
     const open = navLinks.classList.toggle('mobile-open');
-    navLinks.style.display = open ? 'flex' : 'none';
-    navLinks.style.cssText += 'position:absolute; top:78px; left:0; right:0; background:rgba(20,35,59,0.7); backdrop-filter:blur(24px) saturate(160%); flex-direction:column; align-items:flex-start; padding:22px 32px; gap:18px; border-bottom:1px solid rgba(255,255,255,0.14); border-radius:0 0 24px 24px; z-index:150;';
+    toggle.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('mobile-nav-open', open);
+    header?.classList.toggle('mobile-open', open);
   });
   // On mobile, Services/Industries links navigate directly to their overview pages
   // (the desktop mega-menu panel isn't shown inline on small screens)
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 1040) return;
+    navLinks.classList.remove('mobile-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('mobile-nav-open');
+    header?.classList.remove('mobile-open');
+  }, { passive: true });
 }
 
 // Magnetic buttons
@@ -98,7 +163,7 @@ if (revealTargets.length) {
   const ctx = canvas.getContext('2d');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W, H;
-  const MARGIN = 60;
+  const DESKTOP_MARGIN = 60;
   const PAD_X = 12;
   const detail = document.getElementById('hc-node-detail');
   const detailKicker = document.getElementById('hc-node-kicker');
@@ -118,6 +183,16 @@ if (revealTargets.length) {
     { id: 'tool', label: 'Tool Call', rx: 0.20, ry: 0.06, h: 42 },
     { id: 'rag', label: 'RAG Lookup', rx: 0.76, ry: 0.06, h: 42 }
   ];
+  const responsiveLabels = {
+    in: 'Business Challenge',
+    context: 'Context',
+    agent: 'Agent',
+    responsegen: 'Response',
+    out: 'Outcome',
+    router: 'Router',
+    tool: 'Tools',
+    rag: 'Knowledge'
+  };
   const edgeDefs = [
     ['in', 'context'], ['context', 'agent'], ['agent', 'router'],
     ['router', 'tool'], ['router', 'rag'],
@@ -140,23 +215,89 @@ if (revealTargets.length) {
   let activityIndex = 0;
   let activitySlot = 0;
 
+  const isResponsiveLayout = () => window.innerWidth <= 1040;
+  const isPhoneLayout = () => window.innerWidth <= 767;
   function measureWidth(label) {
-    ctx.font = "700 12px 'Manrope', sans-serif";
+    const responsive = isResponsiveLayout();
+    const phone = isPhoneLayout();
+    const fontSize = phone ? 10 : 12;
+    ctx.font = `700 ${fontSize}px 'Manrope', sans-serif`;
+    if (responsive) {
+      const iconSize = phone ? 28 : 32;
+      const gap = phone ? 8 : 10;
+      const outerPadding = phone ? 16 : 22;
+      return Math.ceil(Math.max(phone ? 90 : 108, ctx.measureText(label).width + iconSize + gap + outerPadding));
+    }
     return Math.max(64, ctx.measureText(label).width + PAD_X * 2);
   }
   function layoutNodes() {
-    const dw = W - MARGIN * 2, dh = H - MARGIN * 2;
-    const compact = W < 560;
-    const compactPositions = {
-      in: [0.12, 0.82], context: [0.43, 0.82], agent: [0.72, 0.82],
-      responsegen: [0.78, 0.56], out: [0.45, 0.56], router: [0.5, 0.33],
-      tool: [0.2, 0.09], rag: [0.8, 0.09]
-    };
+    const phone = isPhoneLayout();
+    const responsive = isResponsiveLayout();
+    const margin = DESKTOP_MARGIN;
+    const dw = Math.max(1, W - margin * 2);
+    const dh = Math.max(1, H - margin * 2);
     nodes = nodeDefs.map(n => {
-      const w = measureWidth(n.label);
-      const [rx, ry] = compact ? (compactPositions[n.id] || [n.rx, n.ry]) : [n.rx, n.ry];
-      return { ...n, w, hx: MARGIN + rx * dw, hy: MARGIN + ry * dh, x: MARGIN + rx * dw, y: -60 - Math.random() * 140, vx: 0, vy: 0 };
+      const displayLabel = responsive ? (responsiveLabels[n.id] || n.label) : n.label;
+      const measuredWidth = measureWidth(displayLabel);
+      const w = responsive
+        ? Math.min(measuredWidth, phone ? (n.id === 'in' ? 148 : 122) : 220)
+        : measuredWidth;
+      const h = responsive ? (phone ? 48 : 54) : n.h;
+      const [rx, ry] = [n.rx, n.ry];
+      const hx = margin + rx * dw;
+      const hy = margin + ry * dh;
+      return {
+        ...n,
+        displayLabel,
+        h,
+        w,
+        hx,
+        hy,
+        x: hx,
+        y: responsive ? hy : -60 - Math.random() * 140,
+        vx: 0,
+        vy: 0
+      };
     });
+
+    if (responsive) {
+      const placeRow = (ids, y, preferredGap) => {
+        const row = ids.map(findNode).filter(Boolean);
+        const sidePadding = phone ? 8 : 18;
+        const available = Math.max(1, W - sidePadding * 2);
+        const minimumGap = 5;
+        let totalWidth = row.reduce((sum, node) => sum + node.w, 0);
+        const minimumRowWidth = totalWidth + minimumGap * Math.max(0, row.length - 1);
+        if (minimumRowWidth > available && totalWidth > 0) {
+          const widthScale = Math.max(.72, (available - minimumGap * Math.max(0, row.length - 1)) / totalWidth);
+          row.forEach((node) => { node.w *= widthScale; });
+          totalWidth = row.reduce((sum, node) => sum + node.w, 0);
+        }
+        const gap = row.length > 1
+          ? Math.max(minimumGap, Math.min(preferredGap, (available - totalWidth) / (row.length - 1)))
+          : 0;
+        const rowWidth = totalWidth + gap * Math.max(0, row.length - 1);
+        let cursor = Math.max(sidePadding, (W - rowWidth) / 2);
+        row.forEach((node) => {
+          node.hx = cursor + node.w / 2;
+          node.hy = y;
+          node.x = node.hx;
+          node.y = node.hy;
+          cursor += node.w + gap;
+        });
+      };
+
+      if (phone) {
+        placeRow(['in', 'context'], H * .13, 10);
+        placeRow(['tool', 'rag'], H * .38, 12);
+        placeRow(['router', 'agent'], H * .63, 14);
+        placeRow(['responsegen', 'out'], H * .87, 12);
+      } else {
+        placeRow(['tool', 'router', 'rag'], H * .16, 20);
+        placeRow(['in', 'context', 'agent'], H * .50, 20);
+        placeRow(['responsegen', 'out'], H * .84, 24);
+      }
+    }
   }
   function resize() {
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -206,10 +347,12 @@ if (revealTargets.length) {
   }
   function selectNode(id) {
     const info = nodeInfo[id] || nodeInfo.agent;
+    const selectedNode = nodes.find(n => n.id === id);
+    const selectedLabel = selectedNode?.displayLabel || nodeDefs.find(n => n.id === id)?.label || 'Agent';
     selectedNodeId = id;
     if (detailKicker) detailKicker.textContent = info.kicker;
-    if (detailTitle) detailTitle.textContent = nodeDefs.find(n => n.id === id)?.label || 'Agent';
-    if (detailStatus) detailStatus.textContent = 'Selected · ' + (nodeDefs.find(n => n.id === id)?.label || 'Agent');
+    if (detailTitle) detailTitle.textContent = selectedLabel;
+    if (detailStatus) detailStatus.textContent = 'Selected · ' + selectedLabel;
     if (detailDescription) detailDescription.textContent = info.description;
     renderTrace(info.trace);
     activityLines = info.activity.slice();
@@ -221,12 +364,16 @@ if (revealTargets.length) {
     renderActivity();
   }
 
+  canvas.tabIndex = 0;
+  canvas.setAttribute('role', 'listbox');
+  canvas.setAttribute('aria-label', 'Interactive connected-system map. Tap a node or use the arrow keys to inspect it.');
   canvas.addEventListener('pointerdown', e => {
     const p = pointerPos(e);
     const node = nodes.find(n => hit(n, p.x, p.y));
     if (!node) return;
     pressedNode = node;
     pressPoint = p;
+    if (isResponsiveLayout() || window.matchMedia('(pointer: coarse)').matches) return;
     dragging = node;
     dragOffX = p.x - node.x;
     dragOffY = p.y - node.y;
@@ -236,6 +383,7 @@ if (revealTargets.length) {
   });
   canvas.addEventListener('pointermove', e => {
     const p = pointerPos(e);
+    if (isResponsiveLayout() || window.matchMedia('(pointer: coarse)').matches) return;
     mouse.x = p.x; mouse.y = p.y; mouse.active = true;
     if (dragging) {
       const now = performance.now(); const dt = Math.max(now - lastT, 1);
@@ -249,14 +397,35 @@ if (revealTargets.length) {
     const p = e ? pointerPos(e) : null;
     const wasClick = Boolean(node && pressPoint && p && Math.hypot(p.x - pressPoint.x, p.y - pressPoint.y) < 7);
     dragging = null; pressedNode = null; pressPoint = null;
-    mouse.active = false; mouse.x = -9999; mouse.y = -9999; canvas.style.cursor = 'grab';
+    mouse.active = false; mouse.x = -9999; mouse.y = -9999;
+    canvas.style.cursor = isResponsiveLayout() ? 'pointer' : 'grab';
     if (allowSelect && wasClick) selectNode(node.id);
   }
   canvas.addEventListener('pointerup', e => endPointer(e, true));
   canvas.addEventListener('pointercancel', e => endPointer(e, false));
   canvas.addEventListener('pointerleave', e => { if (dragging) endPointer(e, false); else { mouse.active = false; mouse.x = -9999; mouse.y = -9999; } });
+  canvas.addEventListener('keydown', (event) => {
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const current = Math.max(0, nodeDefs.findIndex((node) => node.id === selectedNodeId));
+    const next = event.key === 'Home'
+      ? 0
+      : event.key === 'End'
+        ? nodeDefs.length - 1
+        : (current + (event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1) + nodeDefs.length) % nodeDefs.length;
+    selectNode(nodeDefs[next].id);
+  });
 
   function step() {
+    if (isResponsiveLayout()) {
+      nodes.forEach((node) => {
+        node.x = node.hx;
+        node.y = node.hy;
+        node.vx = 0;
+        node.vy = 0;
+      });
+      return;
+    }
     for (const n of nodes) {
       if (n === dragging) continue;
       n.vx += (n.hx - n.x) * 0.02; n.vy += (n.hy - n.y) * 0.02;
@@ -284,6 +453,21 @@ if (revealTargets.length) {
     ctx.arcTo(x, y, x + w, y, r);
     ctx.closePath();
   }
+  function drawSparkle(cx, cy, size) {
+    const inner = size * .28;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - size);
+    ctx.lineTo(cx + inner, cy - inner);
+    ctx.lineTo(cx + size, cy);
+    ctx.lineTo(cx + inner, cy + inner);
+    ctx.lineTo(cx, cy + size);
+    ctx.lineTo(cx - inner, cy + inner);
+    ctx.lineTo(cx - size, cy);
+    ctx.lineTo(cx - inner, cy - inner);
+    ctx.closePath();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+  }
   function anchor(n, tx, ty) {
     const dx = tx - n.x, dy = ty - n.y; const hw = n.w / 2, hh = n.h / 2;
     if (dx === 0 && dy === 0) return { x: n.x, y: n.y };
@@ -298,17 +482,64 @@ if (revealTargets.length) {
       const pa = anchor(a, b.x, b.y), pb = anchor(b, a.x, a.y);
       const mx = (pa.x + pb.x) / 2, my = (pa.y + pb.y) / 2 - (Math.abs(pa.y - pb.y) < 10 ? 18 : 0);
       ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.quadraticCurveTo(mx, my, pb.x, pb.y);
-      ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.stroke();
+      ctx.strokeStyle = isResponsiveLayout() ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.22)';
+      ctx.lineWidth = isResponsiveLayout() ? 1.6 : 3;
+      ctx.lineCap = 'round'; ctx.stroke();
       if (!reduceMotion) {
         const t = pulsePos(i, time);
         const qx = (1 - t) * (1 - t) * pa.x + 2 * (1 - t) * t * mx + t * t * pb.x;
         const qy = (1 - t) * (1 - t) * pa.y + 2 * (1 - t) * t * my + t * t * pb.y;
-        ctx.beginPath(); ctx.arc(qx, qy, 2.8, 0, Math.PI * 2);
+        ctx.beginPath(); ctx.arc(qx, qy, isResponsiveLayout() ? 2.1 : 2.8, 0, Math.PI * 2);
         ctx.fillStyle = '#FF7A4D'; ctx.shadowColor = '#FF7A4D'; ctx.shadowBlur = 9; ctx.fill(); ctx.shadowBlur = 0;
       }
     });
     nodes.forEach(n => {
       const isSelected = n.id === selectedNodeId;
+      if (isResponsiveLayout()) {
+        const phone = isPhoneLayout();
+        const nodeX = n.x - n.w / 2;
+        const nodeY = n.y - n.h / 2;
+        const iconSize = phone ? 28 : 32;
+        const iconX = nodeX + (phone ? 8 : 10);
+        const iconY = n.y - iconSize / 2;
+        roundRect(nodeX, nodeY, n.w, n.h, phone ? 14 : 17);
+        ctx.fillStyle = isSelected ? 'rgba(38,35,43,.98)' : 'rgba(27,30,39,.94)';
+        if (isSelected) {
+          ctx.shadowColor = 'rgba(244,67,26,.28)';
+          ctx.shadowBlur = 14;
+        }
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.lineWidth = isSelected ? 1.7 : 1.15;
+        ctx.strokeStyle = isSelected ? 'rgba(255,107,69,.82)' : 'rgba(255,255,255,.22)';
+        ctx.stroke();
+
+        roundRect(iconX, iconY, iconSize, iconSize, phone ? 8 : 9);
+        ctx.fillStyle = '#F4431A';
+        if (isSelected) {
+          ctx.shadowColor = 'rgba(244,67,26,.5)';
+          ctx.shadowBlur = 11;
+        }
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        drawSparkle(iconX + iconSize / 2, n.y, phone ? 5 : 6);
+
+        const textX = iconX + iconSize + (phone ? 8 : 10);
+        const maxTextWidth = Math.max(1, nodeX + n.w - textX - (phone ? 8 : 10));
+        const label = n.displayLabel || n.label;
+        let labelSize = phone ? 10 : 12;
+        ctx.font = `700 ${labelSize}px 'Manrope', sans-serif`;
+        const measuredLabelWidth = ctx.measureText(label).width;
+        if (measuredLabelWidth > maxTextWidth) {
+          labelSize = Math.max(phone ? 8.5 : 10, labelSize * maxTextWidth / measuredLabelWidth);
+          ctx.font = `700 ${labelSize}px 'Manrope', sans-serif`;
+        }
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, textX, n.y);
+        return;
+      }
       roundRect(n.x - n.w / 2, n.y - n.h / 2, n.w, n.h, 12);
       ctx.fillStyle = n.id === 'agent' ? '#F4431A' : (isSelected ? 'rgba(225,53,17,0.24)' : 'rgba(255,255,255,0.06)');
       if (n.id === 'agent' || isSelected) { ctx.shadowColor = 'rgba(244,67,26,0.42)'; ctx.shadowBlur = 16; }
@@ -317,9 +548,10 @@ if (revealTargets.length) {
       ctx.lineWidth = n === dragging || isSelected ? 2.2 : 1.3;
       ctx.strokeStyle = n.id === 'agent' ? '#FF6B45' : (isSelected ? '#F4431A' : 'rgba(255,122,77,0.4)');
       ctx.stroke();
-      ctx.fillStyle = '#FFFFFF'; ctx.font = "700 12px 'Manrope', sans-serif";
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = `700 ${isPhoneLayout() ? 11 : 12}px 'Manrope', sans-serif`;
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(n.label, n.x, n.y);
+      ctx.fillText(n.displayLabel || n.label, n.x, n.y);
     });
   }
   function loop(time) { step(); draw(time || 0); requestAnimationFrame(loop); }
@@ -440,6 +672,23 @@ if (revealTargets.length) {
   root.querySelector('.assistant-expand').addEventListener('click', () => root.classList.toggle('is-fullscreen'));
   form.addEventListener('submit', (event) => { event.preventDefault(); ask(input.value); });
   panel.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(); });
+
+  const assistantSafeZones = document.querySelectorAll('.solution-finder, .assessment-shell, .interactive-tool, .contact-wrap');
+  if (assistantSafeZones.length && 'IntersectionObserver' in window) {
+    const visibleSafeZones = new Set();
+    const syncSafeDock = () => {
+      root.classList.toggle('is-content-safe', window.innerWidth <= 767 && visibleSafeZones.size > 0);
+    };
+    const safeZoneObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > .06) visibleSafeZones.add(entry.target);
+        else visibleSafeZones.delete(entry.target);
+      });
+      syncSafeDock();
+    }, { threshold: [0, .06, .2], rootMargin: '-8% 0px -8% 0px' });
+    assistantSafeZones.forEach((zone) => safeZoneObserver.observe(zone));
+    window.addEventListener('resize', syncSafeDock, { passive: true });
+  }
 })();
 
 // Restored decision-layer cards — reveal the supporting detail without changing page flow.
@@ -471,6 +720,75 @@ if (revealTargets.length) {
   });
 })();
 
+// Home-page solution finder — four lightweight questions that lead to a useful next step.
+(function initSolutionFinder() {
+  const root = document.querySelector('.solution-finder');
+  if (!root) return;
+  const steps = [...root.querySelectorAll('.solution-step')];
+  const result = root.querySelector('[data-solution-result]');
+  const progressFill = root.querySelector('#solution-progress-fill');
+  const stepNumber = root.querySelector('#solution-step-number');
+  const selections = [];
+  if (!steps.length || !result) return;
+
+  const recommendations = {
+    'manual-work': ['Workflow automation', 'A focused automation pilot can remove repetitive work first, then expand around the processes that matter most.'],
+    knowledge: ['An AI knowledge system', 'A grounded knowledge and RAG system can make the right information easier to find, trust, and use.'],
+    'custom-software': ['A build-ready digital product plan', 'A practical product plan can turn the core requirement into a clear, testable build sequence.'],
+    disconnected: ['Systems integration and data', 'Connecting the systems you already rely on can create a more reliable flow of information and fewer manual handoffs.'],
+    operations: ['A workflow and automation audit', 'Start by mapping the operating reality and identify the smallest useful layer to improve it.'],
+    'customer-experience': ['A connected customer workflow', 'Bring customer data, communication, and follow-up into one clear workflow your team can actually run.'],
+    product: ['A product discovery sprint', 'Define the product around the user, the business outcome, and the systems needed to make it useful.'],
+    data: ['A data and reporting foundation', 'Create a dependable path from source systems to the reporting and decisions your team needs.']
+  };
+
+  const updateProgress = (step) => {
+    const percent = step >= steps.length ? 100 : (step / steps.length) * 100;
+    if (progressFill) progressFill.style.width = percent + '%';
+    if (stepNumber) stepNumber.textContent = step >= steps.length ? '4' : String(step);
+  };
+  const showStep = (index) => {
+    steps.forEach((step, i) => {
+      const active = i === index;
+      step.classList.toggle('is-active', active);
+      step.hidden = !active;
+    });
+    result.hidden = true;
+    updateProgress(index + 1);
+  };
+  const showResult = () => {
+    steps.forEach(step => { step.classList.remove('is-active'); step.hidden = true; });
+    const fallback = ['A practical starting point', 'We can map the constraint, define the smallest useful first step, and connect it to the systems your team already uses.'];
+    const recommendation = recommendations[selections[0]] || recommendations[selections[1]] || fallback;
+    const title = root.querySelector('#solution-result-title');
+    const copy = root.querySelector('#solution-result-copy');
+    if (title) title.textContent = recommendation[0];
+    if (copy) copy.textContent = recommendation[1];
+    result.hidden = false;
+    updateProgress(steps.length);
+  };
+
+  root.querySelectorAll('[data-answer]').forEach(button => {
+    button.addEventListener('click', () => {
+      const step = Number(button.closest('[data-solution-step]')?.dataset.solutionStep || 1);
+      selections[step - 1] = button.dataset.answer;
+      if (step < steps.length) showStep(step);
+      else showResult();
+    });
+  });
+  root.querySelectorAll('[data-solution-back]').forEach(button => {
+    button.addEventListener('click', () => {
+      const current = Number(button.closest('[data-solution-step]')?.dataset.solutionStep || 1);
+      showStep(Math.max(0, current - 2));
+    });
+  });
+  root.querySelector('[data-solution-restart]')?.addEventListener('click', () => {
+    selections.length = 0;
+    showStep(0);
+  });
+  updateProgress(1);
+})();
+
 // The canonical header below owns navigation on every route.
 (function ensureSiteMenus() {
   return;
@@ -482,18 +800,20 @@ if (revealTargets.length) {
   const nav = headerEl?.querySelector('.nav');
   const navLinks = nav?.querySelector('.nav-links');
   if (!headerEl || !nav || !navLinks) return;
-  const siteBase = /\/(pages|projects|case-studies)(\/|$)/.test(window.location.pathname) ? '../' : '';
-  const path = window.location.pathname.toLowerCase();
-  const activeMenu = /\/services(?:-|\.html)/.test(path)
+  const path = decodeURIComponent(window.location.pathname || '').toLowerCase().replace(/\/+$/, '') || '/';
+  const siteBase = /\/(pages|projects|case-studies)(\/|$)/.test(path) ? '../' : '';
+  const route = (name) => new RegExp('(^|/)' + name + '(?:-|\\.html|/|$)').test(path);
+  const activeMenu = route('services')
       ? 'services'
-      : /\/industries(?:-|\.html)/.test(path)
+      : route('industries')
         ? 'industries'
-        : /\/work\.html|\/projects(?:\/|$)|\/case-studies(?:\/|$)/.test(path)
+        : /(?:^|\/)work\.html(?:$|\/)/.test(path) || route('projects') || route('case-studies')
           ? 'work'
-          : path.endsWith('/') || path.endsWith('/index.html')
+          : path === '/' || path.endsWith('/index.html') && !/\/(pages|projects|case-studies)\/index\.html$/.test(path)
             ? 'home'
             : 'company';
   const active = (name) => activeMenu === name ? ' active' : '';
+  const current = (name) => activeMenu === name ? ' aria-current="page"' : '';
   const normalizePath = (value) => {
     const path = String(value || '').split('#')[0].split('?')[0].replace(/\\/g, '/');
     return path.replace(/\/index\.html$/, '/').replace(/\/+$/, '') || '/';
@@ -502,16 +822,25 @@ if (revealTargets.length) {
   const isCurrentHref = (href) => {
     try {
       const target = new URL(siteBase + href, window.location.href);
-      return normalizePath(target.pathname) === currentPath && (!target.hash || target.hash === window.location.hash);
+      const samePath = normalizePath(target.pathname) === currentPath;
+      const currentHash = window.location.hash;
+      return samePath && (currentHash ? target.hash === currentHash : !target.hash);
     }
     catch { return false; }
   };
   navLinks.innerHTML =
-    '<li><a class="top-link' + active('home') + '" href="' + siteBase + 'index.html">Home</a></li>' +
-    '<li class="has-dropdown" data-menu="services"><a aria-haspopup="true" class="top-link' + active('services') + '" href="' + siteBase + 'services.html">Services <span class="caret"></span></a></li>' +
-    '<li class="has-dropdown" data-menu="industries"><a aria-haspopup="true" class="top-link' + active('industries') + '" href="' + siteBase + 'industries.html">Industries <span class="caret"></span></a></li>' +
-    '<li class="has-dropdown" data-menu="work"><a aria-haspopup="true" class="top-link' + active('work') + '" href="' + siteBase + 'work.html">Work <span class="caret"></span></a></li>' +
-    '<li class="has-dropdown" data-menu="company"><a aria-haspopup="true" class="top-link' + active('company') + '" href="' + siteBase + 'about.html">Company <span class="caret"></span></a></li>';
+    '<li><a data-top="home" class="top-link' + active('home') + '"' + current('home') + ' href="' + siteBase + 'index.html">Home</a></li>' +
+    '<li class="has-dropdown" data-menu="services"><a aria-haspopup="true" data-top="services" class="top-link' + active('services') + '"' + current('services') + ' href="' + siteBase + 'services.html">Services <span class="caret"></span></a></li>' +
+    '<li class="has-dropdown" data-menu="industries"><a aria-haspopup="true" data-top="industries" class="top-link' + active('industries') + '"' + current('industries') + ' href="' + siteBase + 'industries.html">Industries <span class="caret"></span></a></li>' +
+    '<li class="has-dropdown" data-menu="work"><a aria-haspopup="true" data-top="work" class="top-link' + active('work') + '"' + current('work') + ' href="' + siteBase + 'work.html">Work <span class="caret"></span></a></li>' +
+    '<li class="has-dropdown" data-menu="company"><a aria-haspopup="true" data-top="company" class="top-link' + active('company') + '"' + current('company') + ' href="' + siteBase + 'about.html">Company <span class="caret"></span></a></li>' +
+    '<li class="mobile-contact-link"><a class="top-link" href="' + siteBase + 'contact.html">Contact</a></li>';
+  navLinks.querySelectorAll('.top-link[data-top]').forEach((link) => {
+    const isActive = link.dataset.top === activeMenu;
+    link.classList.toggle('active', isActive);
+    if (isActive) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
   nav.querySelector('.nav-cta a')?.setAttribute('href', siteBase + 'contact.html');
   const menus = {
     services: {
@@ -566,7 +895,7 @@ if (revealTargets.length) {
         const classes = [];
         if (menu.titleFirst && index === 0) classes.push('mega-col-title');
         if (/^(All |Explore All |Start a Conversation)/.test(label)) classes.push('mega-cta');
-        if (isCurrentHref(href) && !/^Start a Conversation/.test(label)) {
+        if (isCurrentHref(href) && !/^(All |Explore All |Start a Conversation)/.test(label)) {
           classes.push('is-current');
           link.setAttribute('aria-current', 'page');
         }
@@ -581,6 +910,98 @@ if (revealTargets.length) {
     megaWrap.appendChild(panel);
   });
   if (!megaWrap.parentElement) headerEl.appendChild(megaWrap);
+
+  // Mobile/tablet navigation uses an in-header accordion. The same menu data
+  // powers both versions, so links remain consistent without exposing the
+  // detached desktop mega-menu on small screens.
+  const mobileOverview = {
+    services: ['Services overview', 'services.html'],
+    industries: ['Industries overview', 'industries.html'],
+    work: ['Work overview', 'work.html'],
+    company: ['Company overview', 'about.html']
+  };
+  const closeMobileSubmenus = (except = null) => {
+    navLinks.querySelectorAll('.mobile-submenu-open').forEach((entry) => {
+      if (entry === except) return;
+      entry.classList.remove('mobile-submenu-open');
+      entry.querySelector(':scope > .top-link')?.setAttribute('aria-expanded', 'false');
+    });
+  };
+  const closeMobileNavigation = () => {
+    navLinks.classList.remove('mobile-open');
+    nav.querySelector('.menu-toggle')?.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('mobile-nav-open');
+    headerEl.classList.remove('mobile-open');
+    closeMobileSubmenus();
+  };
+
+  Object.entries(menus).forEach(([name, menu]) => {
+    const item = navLinks.querySelector('[data-menu="' + name + '"]');
+    const link = item?.querySelector(':scope > .top-link');
+    if (!item || !link) return;
+
+    const submenu = document.createElement('div');
+    submenu.className = 'mobile-submenu';
+    const submenuInner = document.createElement('div');
+    submenuInner.className = 'mobile-submenu-inner';
+    const candidates = [mobileOverview[name], ...menu.columns.flat()];
+    const seen = new Set();
+    candidates.forEach(([label, href], index) => {
+      const resolvedHref = siteBase + href;
+      if (seen.has(resolvedHref)) return;
+      seen.add(resolvedHref);
+      const sublink = document.createElement('a');
+      sublink.href = resolvedHref;
+      sublink.textContent = label;
+      if (index === 0) sublink.classList.add('mobile-overview-link');
+      if (isCurrentHref(href)) {
+        sublink.classList.add('is-current');
+        sublink.setAttribute('aria-current', 'page');
+      }
+      sublink.addEventListener('click', closeMobileNavigation);
+      submenuInner.appendChild(sublink);
+    });
+    submenu.appendChild(submenuInner);
+    item.appendChild(submenu);
+
+    link.addEventListener('click', (event) => {
+      if (window.innerWidth > 1040) return;
+      event.preventDefault();
+      const expanding = !item.classList.contains('mobile-submenu-open');
+      closeMobileSubmenus(item);
+      item.classList.toggle('mobile-submenu-open', expanding);
+      link.setAttribute('aria-expanded', String(expanding));
+    });
+  });
+
+  nav.querySelector('.menu-toggle')?.addEventListener('click', () => {
+    if (nav.querySelector('.menu-toggle')?.getAttribute('aria-expanded') === 'false') closeMobileSubmenus();
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1040) closeMobileSubmenus();
+  }, { passive: true });
+  navLinks.querySelectorAll(':scope > li:not(.has-dropdown) > .top-link').forEach((link) => {
+    link.addEventListener('click', closeMobileNavigation);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && navLinks.classList.contains('mobile-open')) closeMobileNavigation();
+  });
+
+  let menuCloseTimer = null;
+  const menuLinks = Array.from(navLinks.querySelectorAll('.has-dropdown > .top-link'));
+  const setMenuHeight = (panel) => {
+    const panelHeight = Math.ceil(panel?.scrollHeight || 0);
+    headerEl.style.setProperty('--menu-panel-height', panelHeight + 'px');
+  };
+  const closeMenu = () => {
+    clearTimeout(menuCloseTimer);
+    menuCloseTimer = setTimeout(() => {
+      headerEl.classList.remove('menu-open');
+      menuLinks.forEach((menuLink) => menuLink.setAttribute('aria-expanded', 'false'));
+    }, 140);
+  };
+  const keepMenuOpen = () => clearTimeout(menuCloseTimer);
+
   Object.keys(menus).forEach((name) => {
     const item = navLinks.querySelector('[data-menu="' + name + '"]');
     const panel = megaWrap.querySelector('[data-panel="' + name + '"]');
@@ -588,14 +1009,30 @@ if (revealTargets.length) {
     if (!item || !panel || !link) return;
     item.dataset.menuBound = 'true';
     if (name === 'work') item.dataset.workBound = 'true';
-    let closeTimer = null;
-    const open = () => { clearTimeout(closeTimer); megaWrap.dataset.active = name; headerEl.classList.add('menu-open'); link.setAttribute('aria-expanded', 'true'); };
-    const close = () => { clearTimeout(closeTimer); closeTimer = setTimeout(() => { headerEl.classList.remove('menu-open'); link.setAttribute('aria-expanded', 'false'); }, 140); };
+    link.setAttribute('aria-expanded', 'false');
+    const open = () => {
+      if (window.innerWidth <= 1040) return;
+      keepMenuOpen();
+      megaWrap.dataset.active = name;
+      setMenuHeight(panel);
+      headerEl.classList.add('menu-open');
+      menuLinks.forEach((menuLink) => menuLink.setAttribute('aria-expanded', String(menuLink === link)));
+    };
     item.addEventListener('mouseenter', open);
-    item.addEventListener('mouseleave', close);
-    panel.addEventListener('mouseenter', open);
-    panel.addEventListener('mouseleave', close);
+    item.addEventListener('focusin', open);
+    panel.addEventListener('mouseenter', keepMenuOpen);
   });
+  headerEl.addEventListener('mouseenter', keepMenuOpen);
+  headerEl.addEventListener('mouseleave', closeMenu);
+  headerEl.addEventListener('focusout', (event) => {
+    if (!headerEl.contains(event.relatedTarget)) closeMenu();
+  });
+  window.addEventListener('resize', () => {
+    if (!headerEl.classList.contains('menu-open')) return;
+    const activePanel = megaWrap.querySelector('[data-panel="' + megaWrap.dataset.active + '"]');
+    setMenuHeight(activePanel);
+  }, { passive:true });
+  document.documentElement.dataset.canonicalHeader = 'true';
 })();
 document.body?.classList.add('header-ready');
 
@@ -974,6 +1411,7 @@ if (contactForm && submitBtn) {
     const email = document.getElementById('email').value.trim();
     const company = document.getElementById('company').value.trim();
     const budget = document.getElementById('budget').value;
+    const interest = document.getElementById('interest').value;
     const message = document.getElementById('message')?.value.trim() || '';
     const domain = email.includes('@') ? email.split('@').pop().toLowerCase() : '';
     const isBusinessEmail = Boolean(domain && !personalEmailDomains.has(domain));
@@ -981,6 +1419,7 @@ if (contactForm && submitBtn) {
     const qualifiesForCalendly = Boolean(company && isBusinessEmail && isLowBudget);
     const isPersonalQuickStart = Boolean(!company && !isBusinessEmail && isLowBudget);
     const budgetLabel = document.getElementById('budget').selectedOptions[0]?.textContent || budget;
+    const interestLabel = document.getElementById('interest').selectedOptions[0]?.textContent || interest;
     const route = qualifiesForCalendly ? 'calendly' : (isPersonalQuickStart ? 'bd-email-quick-start' : 'bd-email');
     const automatedMessage = isPersonalQuickStart
       ? 'Thanks for reaching out. Our business development team will review your quick-start inquiry and reply by email.'
@@ -992,6 +1431,7 @@ if (contactForm && submitBtn) {
       '\nEmail: ' + email +
       '\nEmail type: ' + (isBusinessEmail ? 'Business' : 'Personal') +
       '\nEstimated Budget Tier: ' + budgetLabel +
+      '\nI\'m Interested In: ' + interestLabel +
       '\n\nWhat they want to solve:\n' + (message || 'Not provided')
     );
     const bdMailto = 'mailto:' + bdEmail + '?subject=' + subject + '&body=' + body;
@@ -1004,6 +1444,8 @@ if (contactForm && submitBtn) {
       emailType: isBusinessEmail ? 'business' : 'personal',
       estimatedBudgetTier: budget,
       estimatedBudgetLabel: budgetLabel,
+      interestArea: interest,
+      interestAreaLabel: interestLabel,
       message,
       route,
       allocatedBdEmail: bdEmail,
@@ -1144,6 +1586,7 @@ if (indMorph) {
 }
 // Keep Work aligned with the base site while exposing the recent work content.
 (function ensureWorkNavigation() {
+  if (document.documentElement.dataset.canonicalHeader === 'true') return;
   const nav = document.querySelector('.nav-links');
   const headerEl = document.querySelector('header');
   if (!nav || !headerEl) return;

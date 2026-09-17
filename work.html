@@ -9,9 +9,33 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="anonymous" href="https://fonts.googleapis.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="styles.css" rel="stylesheet"/>
+<link href="styles.css?v=17" rel="stylesheet"/>
+<link href="work-hero-centered-v16.css" rel="stylesheet"/>
+<link href="responsive-v18.css" rel="stylesheet"/>
+<link href="responsive-v19.css" rel="stylesheet"/>
 </head>
 <body>
+<script>
+(() => {
+  if (window.location.hash.toLowerCase() !== '#case-studies') return;
+  document.documentElement.dataset.openWorkPanel = 'case-studies';
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+  const reset = () => {
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, 0);
+    root.style.scrollBehavior = previousBehavior;
+  };
+  reset();
+  window.addEventListener('DOMContentLoaded', reset);
+  window.addEventListener('load', reset);
+  window.addEventListener('pageshow', reset);
+  window.requestAnimationFrame(() => window.requestAnimationFrame(reset));
+  [0, 120, 320, 800].forEach((delay) => window.setTimeout(reset, delay));
+})();
+</script>
 <div class="scroll-progress" id="scroll-progress"></div><div class="cursor-dot" id="cursor-dot"></div>
 <div class="liquid-bg"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
 <header><div class="nav">
@@ -29,9 +53,10 @@
 </div><div class="mega-wrap"></div></header>
 
 <main class="work-page-shell">
-<section class="work-hero hero-console">
+<section class="work-hero centered-work-hero hero-console">
 <div class="hc-bg"><div class="hc-blob hc-blob-a"></div><div class="hc-blob hc-blob-b"></div></div>
 <div class="wrap work-hero-content">
+<h1 class="work-hero-title" aria-live="polite">Recent Engineering Projects</h1>
 <p class="lead">A selection of intelligent systems, automation workflows, software platforms, and machine-learning work designed around practical outcomes.</p>
 <div class="hero-actions"><a class="btn btn-primary magnetic" href="#projects">Explore Projects</a><a class="btn btn-outline-light" href="contact.html">Start a Conversation</a></div>
 </div>
@@ -70,7 +95,7 @@
 </main>
 
 <footer><img alt="" aria-hidden="true" class="footer-watermark" src="assets/logo-icon.png"/><div class="wrap"><div class="footer-top"><div><div class="footer-logo brand"><img alt="Ingenuity Systems" class="logo-full" src="assets/logo-light.png"/></div><p style="font-family:'Manrope',sans-serif;font-weight:700;color:#fff;font-size:14px;margin-bottom:8px">Intelligent Systems. Powerful Outcomes.</p><p>We design, build, integrate, and automate digital systems that help businesses operate smarter and evolve with confidence.</p><div class="footer-location">Lahore, Pakistan · Wyoming, USA</div></div><div class="footer-col"><h5>Company</h5><ul><li><a href="index.html">Home</a></li><li><a href="work.html">Work</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul></div><div class="footer-col"><h5>Services</h5><ul><li><a href="services-ai.html">AI &amp; Intelligent Systems</a></li><li><a href="services-automation.html">Business Process Automation</a></li><li><a href="services-software.html">Software &amp; Digital Engineering</a></li><li><a href="services-integration.html">Systems Integration &amp; Data</a></li></ul></div><div class="footer-col"><h5>Industries</h5><ul><li><a href="industries.html">Explore Industries</a></li><li><a href="industries-technology.html">Technology &amp; SaaS</a></li><li><a href="industries-professional.html">Professional Services</a></li></ul></div></div><div class="flow-line on-dark" style="margin-bottom:28px"></div><div class="footer-bottom"><span>© 2026 Ingenuity Systems. All rights reserved. | Lahore, Pakistan · Wyoming, USA</span><div class="legal-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div></div></footer>
-<script src="script.js"></script><script src="orange-ambient.js"></script>
+<script src="script.js?v=22"></script><script src="orange-ambient.js"></script>
 <script>
 (() => {
   document.querySelectorAll('details.work-card').forEach((card) => card.removeAttribute('open'));
@@ -78,6 +103,27 @@
   const panels = document.querySelectorAll('[data-work-panel]');
   const projectPanel = document.getElementById('projects');
   if (!tabs.length || !projectPanel) return;
+  const workHeroTitle = document.querySelector('.work-hero-title');
+  const workHeadlines = ['Recent Engineering Projects', 'Recent Engineering Case Studies'];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let headlineIndex = 0;
+  let headlineTimer = null;
+  const showHeadline = (nextIndex, animate = true) => {
+    headlineIndex = nextIndex % workHeadlines.length;
+    if (!workHeroTitle) return;
+    workHeroTitle.textContent = workHeadlines[headlineIndex];
+    workHeroTitle.classList.remove('is-switching');
+    if (animate && !reduceMotion) {
+      void workHeroTitle.offsetWidth;
+      workHeroTitle.classList.add('is-switching');
+      window.setTimeout(() => workHeroTitle.classList.remove('is-switching'), 450);
+    }
+  };
+  const restartHeadlineRotation = () => {
+    if (headlineTimer) window.clearInterval(headlineTimer);
+    if (!workHeroTitle || reduceMotion) return;
+    headlineTimer = window.setInterval(() => showHeadline(headlineIndex + 1), 5500);
+  };
   const workCards = [...document.querySelectorAll('details.work-card')];
   workCards.forEach((card) => card.addEventListener('toggle', () => {
     if (card.open) workCards.forEach((other) => { if (other !== card) other.open = false; });
@@ -93,6 +139,7 @@
   };
   const select = (target, {updateHash = true, animate = true} = {}) => {
     const nextPanel = [...panels].find((panel) => panel.dataset.workPanel === target) || projectPanel;
+    showHeadline(target === 'case-studies' ? 1 : 0, animate);
     tabs.forEach((tab) => { const selected = tab.dataset.workTab === target; tab.classList.toggle('is-active', selected); tab.setAttribute('aria-selected', String(selected)); });
     if (activePanel && activePanel !== nextPanel) {
       const leavingPanel = activePanel;
@@ -107,9 +154,10 @@
     activePanel = nextPanel;
     if (updateHash) history.replaceState(null, '', '#' + target);
   };
-  tabs.forEach((tab) => tab.addEventListener('click', () => select(tab.dataset.workTab, {animate: true})));
-  const initialTarget = location.hash === '#case-studies' || /case-studies/.test(location.pathname) ? 'case-studies' : 'projects';
+  tabs.forEach((tab) => tab.addEventListener('click', () => { select(tab.dataset.workTab, {animate: true}); restartHeadlineRotation(); }));
+  const initialTarget = document.documentElement.dataset.openWorkPanel === 'case-studies' || location.hash === '#case-studies' || /case-studies/.test(location.pathname) ? 'case-studies' : 'projects';
   select(initialTarget, {updateHash: false, animate: false});
+  restartHeadlineRotation();
 })();
 </script>
 </body>
