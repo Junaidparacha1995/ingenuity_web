@@ -1079,6 +1079,27 @@ document.body?.classList.add('header-ready');
   const dotsWrap = document.getElementById('hero-dots');
   if (!slides.length || !dotsWrap) return;
   let index = 0, timer;
+  const rotator = scope.querySelector('.hero-rotator');
+  const responsiveHero = window.matchMedia('(max-width: 1040px)');
+  const syncRotatorHeight = (animate = true) => {
+    if (!rotator) return;
+    if (!responsiveHero.matches) {
+      rotator.style.removeProperty('height');
+      return;
+    }
+    const activeSlide = slides[index];
+    const targetHeight = Math.ceil(activeSlide.getBoundingClientRect().height);
+    if (!targetHeight) return;
+    const currentHeight = rotator.getBoundingClientRect().height;
+    if (!animate || !currentHeight) {
+      rotator.style.height = `${targetHeight}px`;
+      return;
+    }
+    rotator.style.height = `${currentHeight}px`;
+    requestAnimationFrame(() => {
+      rotator.style.height = `${targetHeight}px`;
+    });
+  };
   slides.forEach((_, i) => {
     const dot = document.createElement('button');
     dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
@@ -1093,12 +1114,19 @@ document.body?.classList.add('header-ready');
     index = (i + slides.length) % slides.length;
     slides[index].classList.add('active');
     dots[index].classList.add('active');
+    syncRotatorHeight();
   }
   function restart() {
     clearInterval(timer);
     timer = setInterval(() => goTo(index + 1), 5500);
   }
   restart();
+  syncRotatorHeight(false);
+  requestAnimationFrame(() => syncRotatorHeight(false));
+  window.addEventListener('load', () => syncRotatorHeight(false), { once: true });
+  if (responsiveHero.addEventListener) {
+    responsiveHero.addEventListener('change', () => syncRotatorHeight(false));
+  }
 })();
 
 // Dot-grid background spotlight — follows the cursor so the pattern feels alive, not static

@@ -1353,7 +1353,8 @@
   }
 
   .home-page .hc-copy .hero-rotator {
-    min-height: 228px;
+    min-height: 0;
+    transition: height .7s var(--ease);
   }
 
   .home-page .hc-copy h1 {
@@ -1616,7 +1617,7 @@
   }
 
   .home-page .hc-copy .hero-rotator {
-    min-height: 300px;
+    min-height: 0;
   }
 
   .solution-finder::before {
@@ -1640,7 +1641,7 @@
   }
 
   .home-page .hc-copy .hero-rotator {
-    min-height: 300px;
+    min-height: 0;
   }
 
   .solution-options button {
