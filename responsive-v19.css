@@ -1837,3 +1837,27 @@
     transition: none !important;
   }
 }
+
+/* Keep the Projects / Case Studies switcher centered and symmetrical on
+   phones, Fold inner screens, and tablets. */
+@media (max-width: 1040px) {
+  .work-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(100%, 420px);
+    min-width: 0;
+    margin: -10px auto 26px;
+    padding: 5px;
+    gap: 6px;
+    overflow: visible;
+  }
+
+  .work-tab {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 12px;
+    text-align: center;
+    white-space: nowrap;
+    scroll-snap-align: none;
+  }
+}
