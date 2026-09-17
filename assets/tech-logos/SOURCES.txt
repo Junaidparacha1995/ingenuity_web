@@ -4,6 +4,4 @@ Brand marks are local SVG assets so the strip does not depend on external image 
 Most marks are from Simple Icons 16.31.0: https://github.com/simple-icons/simple-icons
 OpenAI and Salesforce marks are from Font Awesome Free Brands 7.1.0: https://fontawesome.com/search?o=r&m=free
 Microsoft Azure uses the existing local Azure icon asset from the earlier site package.
-Gumloop and Manus use their public brand icons from Brandfetch's company profiles, with a local colored fallback for offline viewing.
-
 These files are displayed as nominative technology references. Vendor names and marks remain the property of their respective owners.

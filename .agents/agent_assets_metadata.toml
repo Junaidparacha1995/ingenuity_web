@@ -14,3 +14,17 @@ mtime_ms = 1789654991676
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/e9487ddf-db00-4895-ae90-7e48334ac3ce/50d9d81f-5e5a-47bb-a49d-33f4e1e8cf99"
 storage_version_token = "1789655009546170"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "aUEcJrD28QbmyfJrOpyom"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v32.zip"
+type = "unspecified"
+title = "Ingenuity Systems v32 updated project"
+description = "Updated v30-based project with the Gumloop and Manus technology tiles removed, while retaining routing, AI assistant, contact, and Calendly integrations."
+logical_id = "67f46800-25ff-4f2d-b6b9-0c96bdd88844"
+content_hash = "sha256:2db0580de45b16c52579c5a51916fd6e60bfd80eb5ddfa7f86a344d61bd4e9e7"
+size = 11150393
+mtime_ms = 1789655126972
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/67f46800-25ff-4f2d-b6b9-0c96bdd88844/270b0f45-c4e5-41b1-96a6-5ebad5e7ff7c"
+storage_version_token = "1789655158672978"
+content_type = "application/octet-stream"
