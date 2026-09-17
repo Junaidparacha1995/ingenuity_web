@@ -1,4 +1,6 @@
+run = "python3 server.py"
 modules = ["python-base-3.13"]
+
 [workflows]
 runButton = "Project"
 
@@ -15,12 +17,10 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
-[workflows.workflow.metadata]
-outputType = "webview"
-
-run = "python3 server.py"
-
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 server.py"
 waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
