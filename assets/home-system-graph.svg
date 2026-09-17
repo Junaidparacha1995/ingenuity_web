@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="972" height="455" viewBox="0 0 972 455" role="img" aria-labelledby="title">
+  <title id="title">Connected intelligent systems graph</title>
+  <image href="home-system-graph.png" width="972" height="455" preserveAspectRatio="none"/>
+  <defs>
+    <linearGradient id="node-orange" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff4b27"/>
+      <stop offset="1" stop-color="#ef3212"/>
+    </linearGradient>
+  </defs>
+  <g font-family="Manrope, Arial, sans-serif" font-size="14" font-weight="700" fill="#fff">
+    <g>
+      <rect x="179" y="37" width="132" height="55" rx="17" fill="#191b29"/>
+      <rect x="179.5" y="37.5" width="131" height="54" rx="16.5" fill="none" stroke="#a35d55" stroke-width="1.5"/>
+      <rect x="188" y="45" width="39" height="39" rx="11" fill="url(#node-orange)"/>
+      <path d="M207.5 53.5l2.1 6.4 6.4 2.1-6.4 2.1-2.1 6.4-2.1-6.4-6.4-2.1 6.4-2.1z" fill="#fff"/>
+      <text x="238" y="70" dominant-baseline="middle">Tool Call</text>
+    </g>
+    <g>
+      <rect x="609" y="37" width="154" height="55" rx="17" fill="#191b29"/>
+      <rect x="609.5" y="37.5" width="153" height="54" rx="16.5" fill="none" stroke="#a35d55" stroke-width="1.5"/>
+      <rect x="618" y="45" width="39" height="39" rx="11" fill="url(#node-orange)"/>
+      <circle cx="635" cy="61" r="7" fill="none" stroke="#fff" stroke-width="2"/>
+      <path d="m640 66 5 5" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="668" y="70" dominant-baseline="middle">RAG Lookup</text>
+    </g>
+    <g>
+      <rect x="408" y="179" width="126" height="55" rx="17" fill="#191b29"/>
+      <rect x="408.5" y="179.5" width="125" height="54" rx="16.5" fill="none" stroke="#a35d55" stroke-width="1.5"/>
+      <rect x="417" y="187" width="39" height="39" rx="11" fill="url(#node-orange)"/>
+      <path d="M437 198v17m0-17-6 6m6-6 6 6m-6 11 8-6m-8 6-8-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="467" y="212" dominant-baseline="middle">Router</text>
+    </g>
+    <g>
+      <rect x="37" y="338" width="143" height="57" rx="17" fill="#191b29"/>
+      <rect x="37.5" y="338.5" width="142" height="56" rx="16.5" fill="none" stroke="#a35d55" stroke-width="1.5"/>
+      <rect x="46" y="347" width="39" height="39" rx="11" fill="url(#node-orange)"/>
+      <path d="M54 366.5h21m-7-7 7 7-7 7" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="96" y="367" dominant-baseline="middle">Request</text>
+    </g>
+    <g>
+      <rect x="179" y="338" width="202" height="57" rx="17" fill="#191b29"/>
+      <rect x="179.5" y="338.5" width="201" height="56" rx="16.5" fill="none" stroke="#a35d55" stroke-width="1.5"/>
+      <rect x="188" y="347" width="39" height="39" rx="11" fill="url(#node-orange)"/>
+      <path d="M199 356h16v20h-16zm3 5h10m-10 5h10m-10 5h6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="238" y="367" dominant-baseline="middle">Context Retrieval</text>
+    </g>
+    <g>
+      <rect x="407" y="332" width="134" height="69" rx="18" fill="#f0441e"/>
+      <rect x="407.5" y="332.5" width="133" height="68" rx="17.5" fill="none" stroke="#ff8166" stroke-width="1.5"/>
+      <rect x="417" y="347" width="39" height="39" rx="11" fill="#ff6a47" opacity=".8"/>
+      <path d="M436.5 354l2.1 6.4 6.4 2.1-6.4 2.1-2.1 6.4-2.1-6.4-6.4-2.1 6.4-2.1z" fill="#fff"/>
+      <text x="467" y="367" dominant-baseline="middle">Agent</text>
+    </g>
+    <g>
+      <rect x="564" y="338" width="220" height="57" rx="17" fill="#191b29"/>
+      <rect x="564.5" y="338.5" width="219" height="56" rx="16.5" fill="none" stroke="#a35d55" stroke-width="1.5"/>
+      <rect x="573" y="347" width="39" height="39" rx="11" fill="url(#node-orange)"/>
+      <path d="m592.5 354 2.1 6.4 6.4 2.1-6.4 2.1-2.1 6.4-2.1-6.4-6.4-2.1 6.4-2.1z" fill="#fff"/>
+      <path d="M585 379h15" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      <text x="624" y="367" dominant-baseline="middle">Response Generator</text>
+    </g>
+    <g>
+      <rect x="794" y="338" width="150" height="57" rx="17" fill="#191b29"/>
+      <rect x="794.5" y="338.5" width="149" height="56" rx="16.5" fill="none" stroke="#a35d55" stroke-width="1.5"/>
+      <rect x="803" y="347" width="39" height="39" rx="11" fill="url(#node-orange)"/>
+      <path d="m813 367 6 6 13-14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="854" y="367" dominant-baseline="middle">Response</text>
+    </g>
+  </g>
+</svg>
