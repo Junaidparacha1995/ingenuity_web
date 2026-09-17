@@ -182,3 +182,17 @@ mtime_ms = 1789660127927
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/5be9674b-b1e0-484c-9316-51134af5f387/2db02fe2-8d86-4af6-9954-734780418fb4"
 storage_version_token = "1789660158245763"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "dTsPHP-nVdcVf4I3BHd9z"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v45.zip"
+type = "unspecified"
+title = "Ingenuity Systems v45 tab board cleanup"
+description = "Removes the white outer container boarder from the responsive Projects / Case Studies tabs while preserving the centered active tab styling."
+logical_id = "89d873f5-4ad6-4441-a5b4-4898d28838ac"
+content_hash = "sha256:1d7979c8e9d0bb5f762aba366f55f3293901f1ca3f2c432ed8b863050b42db42"
+size = 9939406
+mtime_ms = 1789660266391
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/89d873f5-4ad6-4441-a5b4-4898d28838ac/5745d8a0-f788-4f7c-a06b-2ac4b599c8e1"
+storage_version_token = "1789660275036095"
+content_type = "application/octet-stream"

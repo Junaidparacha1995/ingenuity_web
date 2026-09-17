@@ -1860,4 +1860,16 @@
     white-space: nowrap;
     scroll-snap-align: none;
   }
+
+  .work-tabs {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .work-tabs::before {
+    display: none;
+  }
 }
