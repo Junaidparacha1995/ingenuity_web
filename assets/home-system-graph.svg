@@ -18,7 +18,7 @@
     @keyframes pulseDot { 0%,100% { opacity:.45; transform:scale(.8); } 50% { opacity:1; transform:scale(1.25); } }
     .node-frame { animation:nodePulse 3.2s ease-in-out infinite; }
     .node-icon { animation:iconBreathe 3.6s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
-    .flow-line { stroke-dasharray:9 15; animation:flowDash 2.6s linear infinite; }
+    .flow-line { stroke-dasharray:none; animation:none; }
     .flow-pulse { animation:pulseDot 1.8s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
     @media (prefers-reduced-motion: reduce) {
       .node-frame,.node-icon,.flow-line,.flow-pulse { animation:none; }
