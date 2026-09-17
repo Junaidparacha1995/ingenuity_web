@@ -92,19 +92,6 @@ if (header) {
   });
 })();
 
-// Keep the footer locations readable as two distinct lines on every page.
-(function splitFooterLocations() {
-  document.querySelectorAll('.footer-location').forEach((location) => {
-    const parts = location.textContent.split('·').map((part) => part.trim()).filter(Boolean);
-    if (parts.length !== 2) return;
-    location.replaceChildren(
-      document.createTextNode(parts[0]),
-      document.createElement('br'),
-      document.createTextNode(parts[1])
-    );
-  });
-})();
-
 // Scroll progress — overlay bar, visible only while actively scrolling, fades out when idle
 const scrollProgressEl = document.getElementById('scroll-progress');
 if (scrollProgressEl) {
@@ -168,41 +155,12 @@ if (revealTargets.length) {
   revealTargets.forEach(el => revealObserver.observe(el));
 }
 
-// Touch-friendly capability cards — hover flips on desktop, tap/keyboard flips
-// on touch devices without rendering both faces at the same time.
-(function initFlipCards() {
-  const cards = document.querySelectorAll('.flip-card');
-  if (!cards.length) return;
-
-  cards.forEach((card) => {
-    card.setAttribute('role', 'button');
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-pressed', 'false');
-
-    const toggle = () => {
-      const flipped = card.classList.toggle('is-flipped');
-      card.setAttribute('aria-pressed', String(flipped));
-    };
-
-    card.addEventListener('click', (event) => {
-      if (event.target.closest('a, button, input, select, textarea')) return;
-      toggle();
-    });
-
-    card.addEventListener('keydown', (event) => {
-      if (event.key !== 'Enter' && event.key !== ' ') return;
-      event.preventDefault();
-      toggle();
-    });
-  });
-})();
-
 // Live Systems Console hero — animated pipeline with click-to-inspect node descriptions
 (function initHeroConsole() {
   const panel = document.getElementById('hc-panel');
   const canvas = document.getElementById('hc-graph');
   if (!panel || !canvas) return;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W, H;
   const DESKTOP_MARGIN = 60;
@@ -216,29 +174,28 @@ if (revealTargets.length) {
   const cells = document.querySelectorAll('#hc-log-grid .hc-log-cell');
 
   const nodeDefs = [
-    { id: 'in', label: 'Request', rx: 0.02, ry: 0.82, h: 44 },
-    { id: 'context', label: 'Context Retrieval', rx: 0.24, ry: 0.82, h: 44 },
-    { id: 'agent', label: 'Agent', rx: 0.48, ry: 0.82, h: 52 },
-    { id: 'responsegen', label: 'Response Generator', rx: 0.74, ry: 0.82, h: 44 },
-    { id: 'out', label: 'Response', rx: 0.98, ry: 0.82, h: 44 },
-    { id: 'router', label: 'Router', rx: 0.48, ry: 0.42, h: 44 },
-    { id: 'tool', label: 'Tool Call', rx: 0.20, ry: 0.06, h: 42 },
-    { id: 'rag', label: 'RAG Lookup', rx: 0.76, ry: 0.06, h: 42 }
+    { id: 'in', label: 'Business Challenge', rx: 0.12, ry: 0.57, h: 56, kind: 'card' },
+    { id: 'context', label: 'Context Retrieval', rx: 0.47, ry: 0.34, h: 56, kind: 'card' },
+    { id: 'agent', label: 'Agent', rx: 0.47, ry: 0.57, h: 56, kind: 'card' },
+    { id: 'responsegen', label: 'Response Generator', rx: 0.47, ry: 0.80, h: 56, kind: 'card' },
+    { id: 'out', label: 'Working System', rx: 0.86, ry: 0.57, h: 56, kind: 'card' },
+    { id: 'router', label: 'Router', rx: 0.80, ry: 0.30, h: 36, kind: 'chip' },
+    { id: 'tool', label: 'Tool Call', rx: 0.47, ry: 0.10, h: 56, kind: 'card' },
+    { id: 'rag', label: 'RAG Lookup', rx: 0.87, ry: 0.10, h: 36, kind: 'chip' }
   ];
   const responsiveLabels = {
     in: 'Business Challenge',
     context: 'Context',
     agent: 'Agent',
     responsegen: 'Response',
-    out: 'Outcome',
+    out: 'System',
     router: 'Router',
     tool: 'Tools',
     rag: 'Knowledge'
   };
   const edgeDefs = [
-    ['in', 'context'], ['context', 'agent'], ['agent', 'router'],
-    ['router', 'tool'], ['router', 'rag'],
-    ['tool', 'agent'], ['rag', 'agent'],
+    ['in', 'context'], ['context', 'agent'], ['tool', 'agent'],
+    ['rag', 'router'], ['router', 'agent'],
     ['agent', 'responsegen'], ['responsegen', 'out']
   ];
   const nodeInfo = {
@@ -256,10 +213,13 @@ if (revealTargets.length) {
   let activityLines = nodeInfo.agent.activity.slice();
   let activityIndex = 0;
   let activitySlot = 0;
+  let graphVisible = true;
+  let graphRunning = false;
+  let lastGraphFrame = 0;
 
   const isResponsiveLayout = () => window.innerWidth <= 1040;
   const isPhoneLayout = () => window.innerWidth <= 767;
-  function measureWidth(label) {
+  function measureWidth(label, node) {
     const responsive = isResponsiveLayout();
     const phone = isPhoneLayout();
     const fontSize = phone ? 10 : 12;
@@ -270,7 +230,8 @@ if (revealTargets.length) {
       const outerPadding = phone ? 16 : 22;
       return Math.ceil(Math.max(phone ? 90 : 108, ctx.measureText(label).width + iconSize + gap + outerPadding));
     }
-    return Math.max(64, ctx.measureText(label).width + PAD_X * 2);
+    if (node?.kind === 'chip') return Math.max(86, ctx.measureText(label).width + PAD_X * 2 + 12);
+    return Math.ceil(Math.max(150, ctx.measureText(label).width + 32 + 10 + 26));
   }
   function layoutNodes() {
     const phone = isPhoneLayout();
@@ -280,7 +241,7 @@ if (revealTargets.length) {
     const dh = Math.max(1, H - margin * 2);
     nodes = nodeDefs.map(n => {
       const displayLabel = responsive ? (responsiveLabels[n.id] || n.label) : n.label;
-      const measuredWidth = measureWidth(displayLabel);
+      const measuredWidth = measureWidth(displayLabel, n);
       const w = responsive
         ? Math.min(measuredWidth, phone ? (n.id === 'in' ? 148 : 122) : 220)
         : measuredWidth;
@@ -296,7 +257,7 @@ if (revealTargets.length) {
         hx,
         hy,
         x: hx,
-        y: responsive ? hy : -60 - Math.random() * 140,
+        y: hy,
         vx: 0,
         vy: 0
       };
@@ -330,24 +291,44 @@ if (revealTargets.length) {
       };
 
       if (phone) {
-        placeRow(['in', 'context'], H * .13, 10);
-        placeRow(['tool', 'rag'], H * .38, 12);
+        placeRow(['in', 'context'], H * .15, 10);
+        placeRow(['tool', 'rag'], H * .39, 12);
         placeRow(['router', 'agent'], H * .63, 14);
         placeRow(['responsegen', 'out'], H * .87, 12);
       } else {
-        placeRow(['tool', 'router', 'rag'], H * .16, 20);
-        placeRow(['in', 'context', 'agent'], H * .50, 20);
+        placeRow(['tool', 'context', 'rag'], H * .16, 20);
+        placeRow(['in', 'agent', 'router'], H * .50, 20);
         placeRow(['responsegen', 'out'], H * .84, 24);
       }
+    } else {
+      // A fixed, readable process plot: main flow through the center, with
+      // tool and knowledge capabilities as supporting routes above it.
+      const place = (id, x, y) => {
+        const node = findNode(id);
+        if (!node) return;
+        node.hx = W * x;
+        node.hy = H * y;
+        node.x = node.hx;
+        node.y = node.hy;
+      };
+      place('in', .15, .56);
+      place('tool', .42, .18);
+      place('context', .42, .39);
+      place('agent', .42, .60);
+      place('responsegen', .42, .81);
+      place('rag', .82, .18);
+      place('router', .70, .38);
+      place('out', .82, .60);
     }
   }
   function resize() {
-    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const DPR = Math.min(window.devicePixelRatio || 1, isPhoneLayout() ? 1 : 1.25);
     W = panel.clientWidth; H = panel.clientHeight;
     canvas.width = W * DPR; canvas.height = H * DPR;
     canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     layoutNodes();
+    draw(0);
   }
   let dragging = null, pressedNode = null, pressPoint = null, dragOffX = 0, dragOffY = 0, lastT = 0;
   const mouse = { x: -9999, y: -9999, active: false };
@@ -404,48 +385,32 @@ if (revealTargets.length) {
       detail.classList.add('is-changing');
     }
     renderActivity();
+    draw(0);
   }
 
   canvas.tabIndex = 0;
   canvas.setAttribute('role', 'listbox');
   canvas.setAttribute('aria-label', 'Interactive connected-system map. Tap a node or use the arrow keys to inspect it.');
+  canvas.style.cursor = 'pointer';
   canvas.addEventListener('pointerdown', e => {
     const p = pointerPos(e);
     const node = nodes.find(n => hit(n, p.x, p.y));
     if (!node) return;
     pressedNode = node;
     pressPoint = p;
-    if (isResponsiveLayout() || window.matchMedia('(pointer: coarse)').matches) return;
-    dragging = node;
-    dragOffX = p.x - node.x;
-    dragOffY = p.y - node.y;
-    lastT = performance.now();
-    canvas.setPointerCapture(e.pointerId);
-    canvas.style.cursor = 'grabbing';
-  });
-  canvas.addEventListener('pointermove', e => {
-    const p = pointerPos(e);
-    if (isResponsiveLayout() || window.matchMedia('(pointer: coarse)').matches) return;
-    mouse.x = p.x; mouse.y = p.y; mouse.active = true;
-    if (dragging) {
-      const now = performance.now(); const dt = Math.max(now - lastT, 1);
-      const nx = p.x - dragOffX, ny = p.y - dragOffY;
-      dragging.vx = (nx - dragging.x) / dt * 16; dragging.vy = (ny - dragging.y) / dt * 16;
-      dragging.x = nx; dragging.y = ny; lastT = now;
-    }
+    selectNode(node.id);
   });
   function endPointer(e, allowSelect) {
     const node = pressedNode;
     const p = e ? pointerPos(e) : null;
     const wasClick = Boolean(node && pressPoint && p && Math.hypot(p.x - pressPoint.x, p.y - pressPoint.y) < 7);
-    dragging = null; pressedNode = null; pressPoint = null;
+    pressedNode = null; pressPoint = null;
     mouse.active = false; mouse.x = -9999; mouse.y = -9999;
-    canvas.style.cursor = isResponsiveLayout() ? 'pointer' : 'grab';
     if (allowSelect && wasClick) selectNode(node.id);
   }
   canvas.addEventListener('pointerup', e => endPointer(e, true));
   canvas.addEventListener('pointercancel', e => endPointer(e, false));
-  canvas.addEventListener('pointerleave', e => { if (dragging) endPointer(e, false); else { mouse.active = false; mouse.x = -9999; mouse.y = -9999; } });
+  canvas.addEventListener('pointerleave', e => endPointer(e, false));
   canvas.addEventListener('keydown', (event) => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
     event.preventDefault();
@@ -458,33 +423,6 @@ if (revealTargets.length) {
     selectNode(nodeDefs[next].id);
   });
 
-  function step() {
-    if (isResponsiveLayout()) {
-      nodes.forEach((node) => {
-        node.x = node.hx;
-        node.y = node.hy;
-        node.vx = 0;
-        node.vy = 0;
-      });
-      return;
-    }
-    for (const n of nodes) {
-      if (n === dragging) continue;
-      n.vx += (n.hx - n.x) * 0.02; n.vy += (n.hy - n.y) * 0.02;
-      for (const m of nodes) {
-        if (m === n) continue;
-        const dx = n.x - m.x, dy = n.y - m.y; const d = Math.hypot(dx, dy) || 1; const minD = (n.w + m.w) / 2 * 0.75 + 16;
-        if (d < minD) { const f = (minD - d) / minD * 0.6; n.vx += dx / d * f; n.vy += dy / d * f; }
-      }
-      if (mouse.active) {
-        const mdx = n.x - mouse.x, mdy = n.y - mouse.y; const md = Math.hypot(mdx, mdy) || 1; const rad = 80;
-        if (md < rad) { const mf = (rad - md) / rad * 0.9; n.vx += mdx / md * mf; n.vy += mdy / md * mf; }
-      }
-      n.vx *= 0.86; n.vy *= 0.86; n.x += n.vx; n.y += n.vy;
-    }
-    if (dragging) { dragging.vx *= 0.5; dragging.vy *= 0.5; }
-  }
-  function pulsePos(i, t) { return (t * 0.00022 + i * 0.15) % 1; }
   function findNode(id) { return nodes.find(n => n.id === id); }
   function roundRect(x, y, w, h, r) {
     ctx.beginPath();
@@ -524,16 +462,15 @@ if (revealTargets.length) {
       const pa = anchor(a, b.x, b.y), pb = anchor(b, a.x, a.y);
       const mx = (pa.x + pb.x) / 2, my = (pa.y + pb.y) / 2 - (Math.abs(pa.y - pb.y) < 10 ? 18 : 0);
       ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.quadraticCurveTo(mx, my, pb.x, pb.y);
-      ctx.strokeStyle = isResponsiveLayout() ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.22)';
-      ctx.lineWidth = isResponsiveLayout() ? 1.6 : 3;
+      const isActivePath = e.includes(selectedNodeId);
+      ctx.strokeStyle = isActivePath ? 'rgba(244,67,26,.82)' : (isResponsiveLayout() ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.22)');
+      ctx.lineWidth = isActivePath ? (isResponsiveLayout() ? 2 : 2.4) : (isResponsiveLayout() ? 1.4 : 1.8);
       ctx.lineCap = 'round'; ctx.stroke();
-      if (!reduceMotion) {
-        const t = pulsePos(i, time);
-        const qx = (1 - t) * (1 - t) * pa.x + 2 * (1 - t) * t * mx + t * t * pb.x;
-        const qy = (1 - t) * (1 - t) * pa.y + 2 * (1 - t) * t * my + t * t * pb.y;
-        ctx.beginPath(); ctx.arc(qx, qy, isResponsiveLayout() ? 2.1 : 2.8, 0, Math.PI * 2);
-        ctx.fillStyle = '#FF7A4D'; ctx.shadowColor = '#FF7A4D'; ctx.shadowBlur = 9; ctx.fill(); ctx.shadowBlur = 0;
-      }
+      const t = reduceMotion ? (i + 1) / (edgeDefs.length + 1) : ((time * .00016 + (i + 1) / (edgeDefs.length + 1)) % 1);
+      const qx = (1 - t) * (1 - t) * pa.x + 2 * (1 - t) * t * mx + t * t * pb.x;
+      const qy = (1 - t) * (1 - t) * pa.y + 2 * (1 - t) * t * my + t * t * pb.y;
+      ctx.beginPath(); ctx.arc(qx, qy, isResponsiveLayout() ? 2 : 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#FF7A4D'; ctx.fill();
     });
     nodes.forEach(n => {
       const isSelected = n.id === selectedNodeId;
@@ -545,7 +482,7 @@ if (revealTargets.length) {
         const iconX = nodeX + (phone ? 8 : 10);
         const iconY = n.y - iconSize / 2;
         roundRect(nodeX, nodeY, n.w, n.h, phone ? 14 : 17);
-        ctx.fillStyle = isSelected ? 'rgba(38,35,43,.98)' : 'rgba(27,30,39,.94)';
+        ctx.fillStyle = isSelected ? '#F4431A' : 'rgba(27,30,39,.94)';
         if (isSelected) {
           ctx.shadowColor = 'rgba(244,67,26,.28)';
           ctx.shadowBlur = 14;
@@ -553,11 +490,11 @@ if (revealTargets.length) {
         ctx.fill();
         ctx.shadowBlur = 0;
         ctx.lineWidth = isSelected ? 1.7 : 1.15;
-        ctx.strokeStyle = isSelected ? 'rgba(255,107,69,.82)' : 'rgba(255,255,255,.22)';
+        ctx.strokeStyle = isSelected ? '#FFB09A' : 'rgba(255,255,255,.22)';
         ctx.stroke();
 
         roundRect(iconX, iconY, iconSize, iconSize, phone ? 8 : 9);
-        ctx.fillStyle = '#F4431A';
+        ctx.fillStyle = isSelected ? 'rgba(255,255,255,.18)' : '#F4431A';
         if (isSelected) {
           ctx.shadowColor = 'rgba(244,67,26,.5)';
           ctx.shadowBlur = 11;
@@ -582,24 +519,93 @@ if (revealTargets.length) {
         ctx.fillText(label, textX, n.y);
         return;
       }
-      roundRect(n.x - n.w / 2, n.y - n.h / 2, n.w, n.h, 12);
-      ctx.fillStyle = n.id === 'agent' ? '#F4431A' : (isSelected ? 'rgba(225,53,17,0.24)' : 'rgba(255,255,255,0.06)');
-      if (n.id === 'agent' || isSelected) { ctx.shadowColor = 'rgba(244,67,26,0.42)'; ctx.shadowBlur = 16; }
+      const nodeX = n.x - n.w / 2;
+      const nodeY = n.y - n.h / 2;
+      if (n.kind === 'chip') {
+        roundRect(nodeX, nodeY, n.w, n.h, n.h / 2);
+        ctx.fillStyle = isSelected ? '#F4431A' : 'rgba(76,35,42,.68)';
+        ctx.fill();
+        ctx.lineWidth = isSelected ? 1.7 : 1;
+        ctx.strokeStyle = isSelected ? '#FFB09A' : 'rgba(244,67,26,.5)';
+        ctx.stroke();
+        ctx.fillStyle = isSelected ? '#FFFFFF' : '#F6C9C0';
+        ctx.font = `700 11px 'Manrope', sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(n.displayLabel || n.label, n.x, n.y);
+        return;
+      }
+
+      const activeNode = n.id === selectedNodeId;
+      const iconSize = 32;
+      const iconX = nodeX + 10;
+      const iconY = n.y - iconSize / 2;
+      roundRect(nodeX, nodeY, n.w, n.h, 17);
+      ctx.fillStyle = activeNode ? '#F4431A' : 'rgba(27,30,39,.94)';
+      if (activeNode) { ctx.shadowColor = 'rgba(244,67,26,.34)'; ctx.shadowBlur = 13 + (reduceMotion ? 0 : (Math.sin(time * .004) + 1) * 4); }
       ctx.fill();
       ctx.shadowBlur = 0;
-      ctx.lineWidth = n === dragging || isSelected ? 2.2 : 1.3;
-      ctx.strokeStyle = n.id === 'agent' ? '#FF6B45' : (isSelected ? '#F4431A' : 'rgba(255,122,77,0.4)');
+      ctx.lineWidth = activeNode ? 1.8 : 1.15;
+      ctx.strokeStyle = activeNode ? '#FFB09A' : 'rgba(255,255,255,.22)';
       ctx.stroke();
+
+      roundRect(iconX, iconY, iconSize, iconSize, 9);
+      ctx.fillStyle = activeNode ? 'rgba(255,255,255,.18)' : '#F4431A';
+      ctx.fill();
+      drawSparkle(iconX + iconSize / 2, n.y, 6);
+
+      const textX = iconX + iconSize + 10;
+      const maxTextWidth = Math.max(1, nodeX + n.w - textX - 10);
+      const label = n.displayLabel || n.label;
+      let labelSize = 12;
+      ctx.font = `700 ${labelSize}px 'Manrope', sans-serif`;
+      const measuredLabelWidth = ctx.measureText(label).width;
+      if (measuredLabelWidth > maxTextWidth) {
+        labelSize = Math.max(10, labelSize * maxTextWidth / measuredLabelWidth);
+        ctx.font = `700 ${labelSize}px 'Manrope', sans-serif`;
+      }
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = `700 ${isPhoneLayout() ? 11 : 12}px 'Manrope', sans-serif`;
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(n.displayLabel || n.label, n.x, n.y);
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(label, textX, n.y);
     });
   }
-  function loop(time) { step(); draw(time || 0); requestAnimationFrame(loop); }
-  resize(); window.addEventListener('resize', resize); requestAnimationFrame(loop);
+  function animateGraph(time) {
+    if (!graphVisible || document.hidden) {
+      graphRunning = false;
+      return;
+    }
+    if (time - lastGraphFrame >= 1000 / 28) {
+      draw(time);
+      lastGraphFrame = time;
+    }
+    requestAnimationFrame(animateGraph);
+  }
+  function startGraphAnimation() {
+    if (reduceMotion || graphRunning) return;
+    graphRunning = true;
+    requestAnimationFrame(animateGraph);
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      graphVisible = Boolean(entries[0]?.isIntersecting);
+      if (graphVisible) {
+        lastGraphFrame = 0;
+        startGraphAnimation();
+      }
+    }, { threshold: .08 }).observe(panel);
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && graphVisible) startGraphAnimation();
+  });
+  resize(); window.addEventListener('resize', resize, { passive: true });
   selectNode('agent');
-  if (cells.length) setInterval(pushActivityLine, reduceMotion ? 3600 : 2000);
+  startGraphAnimation();
+})();
+
+// Keep the branded Gumloop and Manus tiles readable when a remote brand asset is unavailable.
+(function bindBrandLogoFallbacks() {
+  document.querySelectorAll('.marquee-logo img[src*="cdn.brandfetch.io"]').forEach((img) => {
+    img.addEventListener('error', () => { img.style.display = 'none'; }, { once: true });
+  });
 })();
 
 // Global site-memory RAG assistant. Keep the OpenAI key server-side: set only a secure proxy URL here later.
@@ -638,13 +644,13 @@ if (revealTargets.length) {
   root.className = 'site-assistant';
   root.innerHTML = `
     <button class="assistant-launcher" type="button" aria-expanded="false" aria-controls="assistant-panel">
-      <span class="assistant-launcher-icon" aria-hidden="true">✦</span>
+      <span class="assistant-launcher-icon" aria-hidden="true"><img src="${siteHref('assets/logo-icon.png')}" alt=""></span>
       <span class="assistant-launcher-copy"><strong>Ask Ingenuity AI</strong><small>Get a solution recommendation</small></span>
       <span class="assistant-launcher-arrow" aria-hidden="true">↗</span>
     </button>
     <section class="assistant-panel" id="assistant-panel" aria-label="Ingenuity AI Consultant">
       <div class="assistant-header">
-        <span class="assistant-header-icon" aria-hidden="true">✦</span>
+        <span class="assistant-header-icon" aria-hidden="true"><img src="${siteHref('assets/logo-icon.png')}" alt=""></span>
         <span class="assistant-header-copy"><strong>Ingenuity AI Consultant</strong><small class="assistant-status">RAG site advisor · online</small></span>
         <span class="assistant-actions"><button class="assistant-action assistant-expand" type="button" aria-label="Expand assistant">↗</button><button class="assistant-action assistant-close" type="button" aria-label="Close assistant">×</button></span>
       </div>
@@ -663,7 +669,7 @@ if (revealTargets.length) {
   const close = () => { root.classList.remove('is-open'); launcher.setAttribute('aria-expanded', 'false'); };
   const addMessage = (text, user = false) => {
     const row = document.createElement('div'); row.className = `assistant-message${user ? ' user' : ''}`;
-    if (!user) { const avatar = document.createElement('span'); avatar.className = 'assistant-avatar'; avatar.textContent = 'IS'; row.appendChild(avatar); }
+    if (!user) { const avatar = document.createElement('span'); avatar.className = 'assistant-avatar'; avatar.innerHTML = `<img src="${siteHref('assets/logo-icon.png')}" alt="">`; row.appendChild(avatar); }
     const bubble = document.createElement('div'); bubble.className = 'assistant-bubble'; bubble.textContent = text; row.appendChild(bubble); body.appendChild(row); body.scrollTop = body.scrollHeight; return row;
   };
   const addSources = (docs) => {
@@ -672,7 +678,7 @@ if (revealTargets.length) {
     docs.slice(0, 3).forEach((doc) => { const link = document.createElement('a'); link.className = 'assistant-source'; link.href = siteHref(doc.href); link.textContent = doc.title; sourceWrap.appendChild(link); });
     body.appendChild(sourceWrap); body.scrollTop = body.scrollHeight;
   };
-  const typing = () => { const row = document.createElement('div'); row.className = 'assistant-message assistant-typing-row'; row.innerHTML = '<span class="assistant-avatar">IS</span><div class="assistant-bubble"><span class="assistant-typing"><i></i><i></i><i></i></span></div>'; body.appendChild(row); body.scrollTop = body.scrollHeight; return row; };
+  const typing = () => { const row = document.createElement('div'); row.className = 'assistant-message assistant-typing-row'; row.innerHTML = `<span class="assistant-avatar"><img src="${siteHref('assets/logo-icon.png')}" alt=""></span><div class="assistant-bubble"><span class="assistant-typing"><i></i><i></i><i></i></span></div>`; body.appendChild(row); body.scrollTop = body.scrollHeight; return row; };
   const renderLocalAnswer = (query, docs) => {
     const q = query.toLowerCase();
     if (/book|call|schedule|contact|talk/.test(q)) return { text: 'The quickest next step is the contact form. Share your name, company, email, and budget tier, then you can book a strategy call from the routing flow.', docs: [knowledge.find((doc) => doc.title === 'Contact and Strategy Call')] };
@@ -701,7 +707,7 @@ if (revealTargets.length) {
   const suggestions = document.createElement('div'); suggestions.className = 'assistant-suggestions';
   ['Recommend a solution', 'Automation ideas', 'Recent projects', 'Book a call'].forEach((label) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.addEventListener('click', () => ask(label)); suggestions.appendChild(button); });
   body.appendChild(suggestions);
-  addMessage('I can help diagnose a business problem, recommend an AI or automation solution, answer questions from the website, explore projects, or help you start a conversation.\n\nWhat are you trying to improve?');
+  addMessage('I can help diagnose a business problem, recommend an AI or automation solution, answer questions from the website, explore projects, or help you start a conversation. What are you trying to improve?');
   launcher.addEventListener('click', () => root.classList.contains('is-open') ? close() : open());
   root.querySelector('.assistant-close').addEventListener('click', close);
   root.querySelector('.assistant-expand').addEventListener('click', () => root.classList.toggle('is-fullscreen'));
@@ -1303,10 +1309,12 @@ initSlider('testimonial-slider-1');
     dots.forEach((d, i) => d.classList.toggle('active', i === idx));
   }
 
-  let autoSpeed = reduceMotion ? 0 : 1.5; // px per frame
+  let autoSpeed = reduceMotion ? 0 : 0.55; // px per frame — deliberately slow for easier reading
   let paused = false;
   let dragging = false, dragMoved = false, suppressClick = false;
   let dragStartX = 0, dragStartTx = 0, lastX = 0, lastT = 0, vx = 0;
+  let marqueeVisible = true;
+  let frameRunning = false;
 
   function apply() {
     if (x <= -setWidth) x += setWidth;
@@ -1316,6 +1324,10 @@ initSlider('testimonial-slider-1');
   }
 
   function frame() {
+    if (!marqueeVisible || document.hidden) {
+      frameRunning = false;
+      return;
+    }
     if (!dragging) {
       if (paused) { vx *= 0.9; } else { vx += (-autoSpeed - vx) * 0.06; }
       x += vx;
@@ -1323,6 +1335,20 @@ initSlider('testimonial-slider-1');
     apply();
     requestAnimationFrame(frame);
   }
+  function startFrame() {
+    if (frameRunning) return;
+    frameRunning = true;
+    requestAnimationFrame(frame);
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      marqueeVisible = Boolean(entries[0]?.isIntersecting);
+      if (marqueeVisible) startFrame();
+    }, { threshold: 0.01 }).observe(wrap);
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && marqueeVisible) startFrame();
+  });
 
   wrap.addEventListener('mouseenter', () => { paused = true; });
   wrap.addEventListener('mouseleave', () => { paused = false; });
@@ -1366,7 +1392,7 @@ initSlider('testimonial-slider-1');
   if (prevBtn) prevBtn.addEventListener('click', () => { x += 280; paused = true; setTimeout(() => { paused = false; }, 1600); });
   if (nextBtn) nextBtn.addEventListener('click', () => { x -= 280; paused = true; setTimeout(() => { paused = false; }, 1600); });
 
-  requestAnimationFrame(frame);
+  startFrame();
 })();
 
 // Subtle tilt on hover for glass cards
@@ -1385,6 +1411,37 @@ if (tiltCards.length && !isTouchDevice) {
     });
     card.addEventListener('mouseleave', () => { card.style.transform = ''; });
   });
+}
+
+// Flip cards become a deliberate tap-to-reveal interaction on touch screens.
+// This avoids the duplicated front/back state that mobile browsers can render
+// during a 3D hover flip.
+const touchFlipCards = document.querySelectorAll('.flip-card');
+const isTouchLayout = () => window.matchMedia('(max-width: 1040px) and (hover: none), (max-width: 1040px) and (pointer: coarse)').matches;
+if (touchFlipCards.length) {
+  touchFlipCards.forEach((card) => {
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-expanded', 'false');
+    const toggleFlip = () => {
+      if (!isTouchLayout()) return;
+      const open = card.classList.toggle('is-flipped');
+      card.setAttribute('aria-expanded', String(open));
+    };
+    card.addEventListener('click', toggleFlip);
+    card.addEventListener('keydown', (event) => {
+      if (!isTouchLayout() || !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      toggleFlip();
+    });
+  });
+  window.addEventListener('resize', () => {
+    if (isTouchLayout()) return;
+    touchFlipCards.forEach((card) => {
+      card.classList.remove('is-flipped');
+      card.setAttribute('aria-expanded', 'false');
+    });
+  }, { passive: true });
 }
 
 // Ripple / haptic click feedback on buttons
@@ -1538,32 +1595,38 @@ if (statItems.length) {
   statItems.forEach(el => statObserver.observe(el));
 }
 
+// Custom cursor — single precise dot that tracks instantly, grows slightly over interactive elements
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  const cursorDot = document.getElementById('cursor-dot');
+  if (cursorDot) {
+    window.addEventListener('mousemove', (e) => {
+      cursorDot.style.left = e.clientX + 'px';
+      cursorDot.style.top = e.clientY + 'px';
+      document.body.classList.add('cursor-active');
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'));
+    window.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'));
+    window.addEventListener('mousedown', () => document.body.classList.add('cursor-down'));
+    window.addEventListener('mouseup', () => document.body.classList.remove('cursor-down'));
+
+    const hoverTargets = 'a, button, .btn, input, textarea, select, .magnetic, [role="button"], .cap-card, .service-tile, .wide-card, .founder-card, .role-card, .testimonial-slider';
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(hoverTargets)) document.body.classList.add('cursor-hover');
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(hoverTargets) && !e.relatedTarget?.closest?.(hoverTargets)) {
+        document.body.classList.remove('cursor-hover');
+      }
+    });
+  }
+}
+
 // Industry spotlight: tab-triggered scene morph
 const indMorph = document.getElementById('ind-morph');
 if (indMorph) {
   const tabs = indMorph.querySelectorAll('.ind-tab');
   const panels = indMorph.querySelectorAll('.ind-scene-panel');
-  const tabScroller = indMorph.querySelector('.ind-tabs');
-
-  function keepActiveTabVisible(tab) {
-    if (!tabScroller || window.innerWidth > 1080) return;
-    const edgePadding = 12;
-    const tabStart = tab.offsetLeft;
-    const tabEnd = tabStart + tab.offsetWidth;
-    const visibleStart = tabScroller.scrollLeft;
-    const visibleEnd = visibleStart + tabScroller.clientWidth;
-    let nextScroll = visibleStart;
-
-    if (tabStart < visibleStart + edgePadding) {
-      nextScroll = Math.max(0, tabStart - edgePadding);
-    } else if (tabEnd > visibleEnd - edgePadding) {
-      nextScroll = tabEnd - tabScroller.clientWidth + edgePadding;
-    }
-
-    if (Math.abs(nextScroll - visibleStart) > 1) {
-      tabScroller.scrollTo({ left: nextScroll, behavior: 'smooth' });
-    }
-  }
 
   function animateStats(panel) {
     panel.querySelectorAll('.ind-stat-num').forEach(el => {
@@ -1592,7 +1655,6 @@ if (indMorph) {
         p.classList.toggle('active', match);
         if (match) animateStats(p);
       });
-      keepActiveTabVisible(tab);
     });
   });
 

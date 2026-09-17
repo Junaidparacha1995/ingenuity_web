@@ -2,8 +2,9 @@
   const canvas = document.getElementById('orange-ambient-canvas');
   if (!canvas) return;
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const compactLayout = window.matchMedia('(max-width: 1040px)');
   const palette = ['#F4431A', '#F4431A', '#ff633f', '#ff9b7d', '#26d9d0', '#648cff'];
   let width = 0;
   let height = 0;
@@ -18,14 +19,15 @@
     const rect = canvas.getBoundingClientRect();
     // A lower backing resolution keeps the effect smooth without making the
     // browser paint millions of pixels on high-density displays.
-    dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    dpr = Math.min(window.devicePixelRatio || 1, compactLayout.matches ? 1 : 1.25);
     width = rect.width;
     height = rect.height;
     canvas.width = Math.floor(width * dpr);
     canvas.height = Math.floor(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const count = Math.min(480, Math.max(180, Math.floor(width * height / 4200)));
+    const density = compactLayout.matches ? 7800 : 6200;
+    const count = Math.min(compactLayout.matches ? 150 : 240, Math.max(compactLayout.matches ? 60 : 100, Math.floor(width * height / density)));
     particles = Array.from({ length: count }, (_, i) => ({
       a: Math.random() * Math.PI * 2,
       b: Math.random() * Math.PI * 2,
@@ -43,9 +45,9 @@
     frame = 0;
     if (!active || document.hidden) return;
 
-    // The background does not need a full 60fps to look fluid. Capping the
-    // expensive canvas pass at 45fps leaves headroom for the page UI.
-    if (time - lastFrame < 1000 / 45) {
+    // Keep a subtle ambient feel without competing with the interactive map.
+    const frameRate = compactLayout.matches ? 28 : 36;
+    if (time - lastFrame < 1000 / frameRate) {
       frame = requestAnimationFrame(draw);
       return;
     }
@@ -91,13 +93,13 @@
       ctx.fill();
     });
 
-    ctx.globalAlpha = 0.18;
+    ctx.globalAlpha = 0.08;
     ctx.lineWidth = 1;
     for (let j = 0; j < 4; j += 1) {
       const offset = motion * (0.08 + j * 0.006) + j * 0.21;
       ctx.strokeStyle = j % 3 === 0 ? '#F4431A' : '#4b8cff';
       ctx.beginPath();
-      for (let i = 0; i <= 60; i += 1) {
+      for (let i = 0; i <= 40; i += 1) {
         const a = (i / 100) * Math.PI * 2 + offset;
         const wobble = 1 + Math.sin(a * 5 + motion + j) * 0.035;
         const x = cx + Math.cos(a) * ringX * wobble;

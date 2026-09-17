@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "1hq2SYxB8ZLeX8r75vuZP"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v31.zip"
+type = "unspecified"
+title = "Ingenuity Systems v31 merged project"
+description = "Final v30 site base with clean routing, server-side OpenAI assistant endpoint, contact qualification, Calendly flow, and Calendly webhook handling."
+logical_id = "e9487ddf-db00-4895-ae90-7e48334ac3ce"
+content_hash = "sha256:98a790398b13ac4f80e1f39801d3d967d1aed397d72475284c07b0e453b4decb"
+size = 11150829
+mtime_ms = 1789654991676
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/e9487ddf-db00-4895-ae90-7e48334ac3ce/50d9d81f-5e5a-47bb-a49d-33f4e1e8cf99"
+storage_version_token = "1789655009546170"
+content_type = "application/octet-stream"
