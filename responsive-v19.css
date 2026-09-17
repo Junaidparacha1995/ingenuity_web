@@ -1873,3 +1873,27 @@
     display: none;
   }
 }
+
+/* Projects page stability: keep content and surfaces steady instead of
+   stacking several blur, glow, and delayed reveal animations at once. */
+.project-page .reveal,
+.project-page .project-terminal-line {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+}
+
+.project-page .blob,
+.project-page .project-browser::before,
+.project-page .project-card,
+.project-page .project-card-status,
+.project-page .project-terminal-head b,
+.project-page .project-terminal::after,
+.project-page .btn-primary {
+  animation: none !important;
+}
+
+.project-page .project-card::before {
+  display: none;
+}

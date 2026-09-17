@@ -196,3 +196,17 @@ mtime_ms = 1789660266391
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/89d873f5-4ad6-4441-a5b4-4898d28838ac/5745d8a0-f788-4f7c-a06b-2ac4b599c8e1"
 storage_version_token = "1789660275036095"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "qhJ5Fe5jqRDe1bwHHRIDl"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v46.zip"
+type = "unspecified"
+title = "Ingenuity Systems v46 Projects stability fix"
+description = "Removes the overlapping Projects-page blur, glow, background, card, status, and terminal animations that were causing flicker while preserving filters, card expansion, and hover behavior."
+logical_id = "51203a1e-3f7d-494a-89f2-36969c7d0b58"
+content_hash = "sha256:fa2345cc755c33bc8b47eb5a126676b5686280ea8e62ab527ee8709fda959dfd"
+size = 9939542
+mtime_ms = 1789660987128
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/51203a1e-3f7d-494a-89f2-36969c7d0b58/664dc9ee-131e-43e4-82d4-aaffcab878ef"
+storage_version_token = "1789660996927018"
+content_type = "application/octet-stream"
