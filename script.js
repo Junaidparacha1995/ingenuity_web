@@ -168,6 +168,35 @@ if (revealTargets.length) {
   revealTargets.forEach(el => revealObserver.observe(el));
 }
 
+// Touch-friendly capability cards — hover flips on desktop, tap/keyboard flips
+// on touch devices without rendering both faces at the same time.
+(function initFlipCards() {
+  const cards = document.querySelectorAll('.flip-card');
+  if (!cards.length) return;
+
+  cards.forEach((card) => {
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-pressed', 'false');
+
+    const toggle = () => {
+      const flipped = card.classList.toggle('is-flipped');
+      card.setAttribute('aria-pressed', String(flipped));
+    };
+
+    card.addEventListener('click', (event) => {
+      if (event.target.closest('a, button, input, select, textarea')) return;
+      toggle();
+    });
+
+    card.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      toggle();
+    });
+  });
+})();
+
 // Live Systems Console hero — animated pipeline with click-to-inspect node descriptions
 (function initHeroConsole() {
   const panel = document.getElementById('hc-panel');

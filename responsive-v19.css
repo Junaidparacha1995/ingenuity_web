@@ -583,26 +583,30 @@
 /* Touch devices receive explicit tap states and do not depend on hover. */
 @media (max-width: 1040px) and (hover: none),
        (max-width: 1040px) and (pointer: coarse) {
+  .flip-card {
+    min-height: 270px !important;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
   .flip-card .flip-inner {
-    display: grid;
-    gap: 14px;
+    display: block;
     min-height: 0;
-    transform: none !important;
   }
 
-  .flip-front,
-  .flip-back {
-    position: relative;
-    inset: auto;
-    backface-visibility: visible;
-    transform: none !important;
+  .flip-card:hover .flip-inner {
+    transform: none;
   }
 
-  .flip-back {
-    padding: 14px;
-    border: 1px solid rgba(255,255,255,.09);
-    border-radius: 14px;
-    background: rgba(255,255,255,.045);
+  .flip-card.is-flipped .flip-inner,
+  .flip-card.is-flipped:hover .flip-inner {
+    transform: rotateY(180deg) !important;
+  }
+
+  .flip-card:focus-visible {
+    outline: 2px solid #ff9d84;
+    outline-offset: 4px;
   }
 
   .cap-card:hover,
