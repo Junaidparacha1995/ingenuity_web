@@ -10,9 +10,12 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import gzip
+import io
 import json
 import os
 import time
+from email.utils import formatdate
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -238,6 +241,7 @@ def openai_answer(question: str, context: list[dict[str, str]], page: str) -> st
 
 class RouterHandler(SimpleHTTPRequestHandler):
     server_version = "IngenuityRouter/1.0"
+    GZIP_EXTENSIONS = {".html", ".css", ".js", ".svg", ".json"}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
@@ -245,6 +249,45 @@ class RouterHandler(SimpleHTTPRequestHandler):
     def log_message(self, format: str, *args) -> None:
         # Keep request logs useful without ever logging submitted form content.
         super().log_message(format, *args)
+
+    def end_headers(self) -> None:
+        """Add safe browser caching and response hardening to static responses."""
+        path = urlsplit(self.path).path
+        existing_headers = b"\n".join(self._headers_buffer).lower()
+        if not path.startswith("/api/") and b"cache-control:" not in existing_headers:
+            if path.endswith(".html") or path in CLEAN_ROUTES:
+                self.send_header("Cache-Control", "no-cache, must-revalidate")
+            elif path.endswith((".css", ".js")):
+                self.send_header("Cache-Control", "public, max-age=31536000, immutable")
+            elif path.startswith("/assets/"):
+                self.send_header("Cache-Control", "public, max-age=604800")
+        if b"x-content-type-options:" not in existing_headers:
+            self.send_header("X-Content-Type-Options", "nosniff")
+        super().end_headers()
+
+    def send_head(self):
+        """Serve compressible static files with gzip when the browser supports it."""
+        path = urlsplit(self.path).path
+        file_path = Path(self.translate_path(path))
+        accepts_gzip = "gzip" in self.headers.get("Accept-Encoding", "").lower()
+        has_range = bool(self.headers.get("Range"))
+        if (
+            file_path.is_file()
+            and file_path.suffix.lower() in self.GZIP_EXTENSIONS
+            and accepts_gzip
+            and not has_range
+        ):
+            raw_body = file_path.read_bytes()
+            compressed_body = gzip.compress(raw_body, compresslevel=9, mtime=0)
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-type", self.guess_type(str(file_path)))
+            self.send_header("Content-Encoding", "gzip")
+            self.send_header("Vary", "Accept-Encoding")
+            self.send_header("Last-Modified", formatdate(file_path.stat().st_mtime, usegmt=True))
+            self.send_header("Content-Length", str(len(compressed_body)))
+            self.end_headers()
+            return io.BytesIO(compressed_body)
+        return super().send_head()
 
     def send_json(self, status: int, payload: object) -> None:
         body = json_bytes(payload)

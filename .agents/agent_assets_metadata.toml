@@ -56,3 +56,17 @@ mtime_ms = 1789655815048
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/1605c69d-8633-4582-adb5-3ef42adb291a/7e25e7ce-46b2-48dd-bf4f-7d8d09a9488d"
 storage_version_token = "1789655825717882"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "xsjGISiIo9EUa8mK06gGP"
+uri = "file://artifacts/ingenuity-systems-replit-ready-v35.zip"
+type = "unspecified"
+title = "Ingenuity Systems v35 optimized website"
+description = "Optimized v30-based merged site with recompressed images, gzip static delivery, browser caching, cache-busted mobile arrow fix, and preserved routing and integrations."
+logical_id = "7ee5546a-e837-48f2-82e4-95e218ccd467"
+content_hash = "sha256:453f614c64b88395140e5e96b1c036425cc46cb8493b01c4bdf6f8f506f09b7d"
+size = 9594124
+mtime_ms = 1789656397664
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/7ee5546a-e837-48f2-82e4-95e218ccd467/e59f6c2d-f4a6-479d-b5a0-d4a27dd0481d"
+storage_version_token = "1789656420407881"
+content_type = "application/octet-stream"
