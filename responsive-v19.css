@@ -1997,3 +1997,90 @@ header .mega-dropdown {
     font-size: 9.5px;
   }
 }
+
+/* Final mobile assistant polish: make the conversation read as a compact,
+   layered card instead of a loose collection of controls. */
+@media (max-width: 767px) {
+  .assistant-panel {
+    border-color: rgba(20, 35, 59, .22) !important;
+    box-shadow: 0 24px 64px rgba(7, 18, 34, .34), 0 0 0 1px rgba(255,255,255,.55) !important;
+  }
+
+  .assistant-header {
+    min-height: 70px;
+    padding: 14px 14px 13px;
+  }
+
+  .assistant-header-icon {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .assistant-header-copy strong {
+    letter-spacing: -.01em;
+  }
+
+  .assistant-body {
+    padding: 16px 14px 14px;
+    background:
+      radial-gradient(circle at 100% 0, rgba(225,53,17,.09), transparent 32%),
+      linear-gradient(180deg, #f7f8fa 0%, #f3f5f8 100%);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(20,35,59,.22) transparent;
+  }
+
+  .assistant-body::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .assistant-body::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(20,35,59,.22);
+  }
+
+  .assistant-suggestions {
+    padding: 2px 0 1px;
+    margin-bottom: 16px;
+  }
+
+  .assistant-suggestions button {
+    min-height: 34px;
+    padding: 8px 11px;
+    border-color: rgba(20,35,59,.14);
+    box-shadow: 0 2px 7px rgba(20,35,59,.04);
+    line-height: 1.2;
+  }
+
+  .assistant-message {
+    align-items: flex-start;
+  }
+
+  .assistant-avatar {
+    margin-top: 5px;
+    box-shadow: 0 4px 10px rgba(20,35,59,.12);
+  }
+
+  .assistant-bubble {
+    max-width: calc(100% - 36px);
+    border: 1px solid rgba(20,35,59,.06);
+    box-shadow: 0 10px 25px rgba(20,35,59,.09);
+  }
+
+  .assistant-form {
+    padding: 10px 11px 8px;
+    background: rgba(255,255,255,.96);
+  }
+
+  .assistant-form input {
+    background: #fbfcfe;
+    box-shadow: 0 0 0 3px rgba(225,53,17,.05);
+  }
+
+  .assistant-foot {
+    padding: 0 10px 10px;
+    border-top: 0;
+    background: rgba(255,255,255,.96);
+    letter-spacing: .01em;
+  }
+}

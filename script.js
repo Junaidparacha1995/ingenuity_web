@@ -672,7 +672,7 @@ if (revealTargets.length) {
   const suggestions = document.createElement('div'); suggestions.className = 'assistant-suggestions';
   ['Recommend a solution', 'Automation ideas', 'Recent projects', 'Book a call'].forEach((label) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.addEventListener('click', () => ask(label)); suggestions.appendChild(button); });
   body.appendChild(suggestions);
-  addMessage('I can help diagnose a business problem, recommend an AI or automation solution, answer questions from the website, explore projects, or help you start a conversation. What are you trying to improve?');
+  addMessage('I can help diagnose a business problem, recommend an AI or automation solution, answer questions from the website, explore projects, or help you start a conversation.\n\nWhat are you trying to improve?');
   launcher.addEventListener('click', () => root.classList.contains('is-open') ? close() : open());
   root.querySelector('.assistant-close').addEventListener('click', close);
   root.querySelector('.assistant-expand').addEventListener('click', () => root.classList.toggle('is-fullscreen'));
