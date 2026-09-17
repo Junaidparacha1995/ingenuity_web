@@ -1,4 +1,3 @@
 - [Visual design source](visual-design-source.md) — Keep the site aligned to the approved liquid-glass system, but never restore cursor hiding.
 - [Amendment verification](amendment-verification.md) — Treat amendment checklists as behavioral acceptance criteria; verify interactions and responsive renders before completion.
 - [Below-fold preview captures](below-fold-preview-captures.md) — Fragment screenshots can appear blank around lazy-rendered sections; verify normal scrolling plus DOM presence.
-- [Mobile hero rotation](mobile-hero-rotation.md) — Measure the active slide after class changes and keep mobile slides in normal flow to prevent clipped CTAs.
