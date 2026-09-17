@@ -31,8 +31,8 @@
       <text x="467" y="212" dominant-baseline="middle">Router</text>
     </g>
     <g>
-      <rect x="37" y="338" width="143" height="57" rx="17" fill="#191b29"/>
-      <rect x="37.5" y="338.5" width="142" height="56" rx="16.5" fill="none" stroke="#a35d55" stroke-width="1.5"/>
+      <rect x="37" y="338" width="130" height="57" rx="17" fill="#191b29"/>
+      <rect x="37.5" y="338.5" width="129" height="56" rx="16.5" fill="none" stroke="#a35d55" stroke-width="1.5"/>
       <rect x="46" y="347" width="39" height="39" rx="11" fill="url(#node-orange)"/>
       <path d="M54 366.5h21m-7-7 7 7-7 7" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       <text x="96" y="367" dominant-baseline="middle">Request</text>
@@ -66,5 +66,23 @@
       <path d="m813 367 6 6 13-14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       <text x="854" y="367" dominant-baseline="middle">Response</text>
     </g>
+  </g>
+  <g fill="none" stroke="#7a8397" stroke-width="3" stroke-linecap="round" opacity=".82">
+    <path d="M167 366 C172 356 175 356 179 366"/>
+    <path d="M381 366 C391 354 399 354 407 366"/>
+    <path d="M541 366 C549 354 556 354 564 366"/>
+    <path d="M784 366 C789 356 792 356 794 366"/>
+    <path d="M245 92 C300 150 402 245 474 332"/>
+    <path d="M686 92 C625 122 534 160 471 179"/>
+    <path d="M471 234 C472 267 473 302 474 332"/>
+  </g>
+  <g fill="#f45a31">
+    <circle cx="173" cy="361" r="3.5"/>
+    <circle cx="389" cy="360" r="3.5"/>
+    <circle cx="550" cy="360" r="3.5"/>
+    <circle cx="789" cy="361" r="3.5"/>
+    <circle cx="300" cy="151" r="3.5"/>
+    <circle cx="625" cy="122" r="3.5"/>
+    <circle cx="472" cy="267" r="3.5"/>
   </g>
 </svg>
