@@ -1346,6 +1346,12 @@
     gap: 18px !important;
   }
 
+  /* The live systems graph is a desktop enhancement. On phones and tablets
+     it consumes most of the first viewport and competes with the message. */
+  .home-page .hc-right {
+    display: none !important;
+  }
+
   .home-page .hc-copy .hero-rotator {
     min-height: 228px;
   }
