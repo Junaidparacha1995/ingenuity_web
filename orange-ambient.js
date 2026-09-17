@@ -107,22 +107,6 @@
       ctx.stroke();
     }
 
-    const burst = Math.pow((Math.sin(motion * 2.1) + 1) / 2, 8);
-    ctx.lineCap = 'round';
-    for (let k = 0; k < 18; k += 1) {
-      const a = (k / 18) * Math.PI * 2 + motion * 0.18;
-      const inner = scale * (0.12 + (k % 4) * 0.012);
-      const outer = inner + scale * (0.055 + 0.11 * burst) * (0.6 + (k % 5) / 5);
-      ctx.globalAlpha = 0.08 + burst * 0.52;
-      ctx.strokeStyle = k % 5 === 0 ? '#ffb09a' : '#F4431A';
-      ctx.lineWidth = 0.7 + burst * 1.8;
-      ctx.shadowBlur = 0;
-      ctx.beginPath();
-      ctx.moveTo(cx + Math.cos(a) * inner, cy + Math.sin(a) * inner * 0.82);
-      ctx.lineTo(cx + Math.cos(a) * outer, cy + Math.sin(a) * outer * 0.82);
-      ctx.stroke();
-    }
-
     const flareA = motion * 0.72;
     const flareX = cx + Math.cos(flareA) * ringX;
     const flareY = cy + Math.sin(flareA) * ringY;
