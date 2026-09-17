@@ -92,6 +92,19 @@ if (header) {
   });
 })();
 
+// Keep the footer locations readable as two distinct lines on every page.
+(function splitFooterLocations() {
+  document.querySelectorAll('.footer-location').forEach((location) => {
+    const parts = location.textContent.split('·').map((part) => part.trim()).filter(Boolean);
+    if (parts.length !== 2) return;
+    location.replaceChildren(
+      document.createTextNode(parts[0]),
+      document.createElement('br'),
+      document.createTextNode(parts[1])
+    );
+  });
+})();
+
 // Scroll progress — overlay bar, visible only while actively scrolling, fades out when idle
 const scrollProgressEl = document.getElementById('scroll-progress');
 if (scrollProgressEl) {

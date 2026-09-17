@@ -652,7 +652,7 @@ footer > .wrap{position:relative; z-index:1;}
 @media (prefers-reduced-motion: reduce){.footer-watermark{animation:none;}}
 .footer-status{display:inline-flex; align-items:center; gap:9px; margin-top:18px; font-size:12.5px; font-weight:600; font-family:'Manrope',sans-serif; color:rgba(255,255,255,0.75);}
 .footer-status .dot{width:8px; height:8px; border-radius:50%; background:#34D399; animation:statusPulse 2.2s ease-out infinite;}
-.footer-location{font-size:12.5px; color:rgba(255,255,255,0.55); margin-top:8px; font-family:'Inter',sans-serif;}
+.footer-location{font-size:12.5px; line-height:1.8; color:rgba(255,255,255,0.55); margin-top:8px; font-family:'Inter',sans-serif;}
 .footer-top{display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:40px; padding-bottom:50px; border-bottom:1px solid rgba(255,255,255,0.12);}
 .footer-logo{margin-bottom:16px;}
 .footer-logo img.logo-full{height:80px; width:auto;}
