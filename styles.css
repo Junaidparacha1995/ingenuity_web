@@ -179,8 +179,8 @@ header{
   --menu-panel-height:0px;
   height:var(--site-header-height);
   max-width:100%; margin:0 auto;
-  --header-bg:rgba(20,35,59,0.97);
-  background:var(--header-bg); backdrop-filter:blur(22px) saturate(160%); -webkit-backdrop-filter:blur(22px) saturate(160%);
+  --header-bg:#14233B;
+  background:var(--header-bg);
   border-bottom:1px solid rgba(255,255,255,0.14);
   border-radius:0;
   overflow:hidden;
@@ -194,7 +194,7 @@ header.scrolled{
   border-radius:28px;
   border:1px solid rgba(255,255,255,0.18);
   border-bottom-color:rgba(255,255,255,0.18);
-  --header-bg:rgba(18,32,54,0.99);
+  --header-bg:#14233B;
   background:var(--header-bg);
   box-shadow:0 16px 46px -14px rgba(10,18,30,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
 }
@@ -218,7 +218,7 @@ body:not(.header-ready) header{visibility:hidden;}
 
 .mega-wrap{
   height:0; opacity:0; overflow:hidden;
-  background:var(--header-bg);
+  background:#14233B;
   border-top:0;
   transition:height .5s var(--ease), opacity .25s ease;
 }
