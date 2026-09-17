@@ -576,7 +576,7 @@ if (revealTargets.length) {
 // Global site-memory RAG assistant. Keep the OpenAI key server-side: set only a secure proxy URL here later.
 (function initGlobalAssistant() {
   if (document.querySelector('.site-assistant')) return;
-  const CHAT_ENDPOINT = String(window.INGENUITY_CHAT_ENDPOINT || '').trim();
+  const CHAT_ENDPOINT = String(window.INGENUITY_CHAT_ENDPOINT || '/api/chat').trim();
   const siteBase = /\/(pages|projects|case-studies)(\/|$)/.test(window.location.pathname) ? '../' : '';
   const siteHref = (href) => siteBase + href;
   const knowledge = [
@@ -1378,14 +1378,15 @@ const contactStatus = document.getElementById('contact-status');
 if (contactForm && submitBtn) {
   const bdEmail = 'info@ingenuitysys.com';
   const calendlyUrl = 'https://calendly.com/junaidparacha-ingenuitysys';
-  // Paste the Make.com custom webhook URL in contact.html.
-  const contactWebhookUrl = String(window.INGENUITY_CONTACT_WEBHOOK_URL || '').trim();
+  // Keep provider URLs server-side. The API router forwards this payload to the
+  // configured webhook and can route it to email, Calendly, or both.
+  const contactWebhookUrl = String(window.INGENUITY_ROUTER_ENDPOINT || '/api/router/contact').trim();
   const personalEmailDomains = new Set([
     'gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com',
     'icloud.com', 'me.com', 'mac.com', 'proton.me', 'protonmail.com',
     'aol.com', 'gmx.com', 'mail.com', 'yandex.com', 'msn.com'
   ]);
-  const sendToMakeWebhook = async (payload) => {
+  const sendToRouter = async (payload) => {
     if (!contactWebhookUrl) return false;
     try {
       const response = await fetch(contactWebhookUrl, {
@@ -1394,19 +1395,9 @@ if (contactForm && submitBtn) {
         body: JSON.stringify(payload),
         keepalive: true
       });
-      if (response.ok) return true;
-    } catch (error) {
-      // Make webhooks may not expose CORS headers. Try one simple no-cors POST.
-    }
-    try {
-      await fetch(contactWebhookUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-        body: JSON.stringify(payload),
-        keepalive: true
-      });
-      return true;
+      if (!response.ok) return false;
+      const data = await response.json().catch(() => ({}));
+      return data.ok === true;
     } catch (error) {
       return false;
     }
@@ -1461,7 +1452,7 @@ if (contactForm && submitBtn) {
     };
     submitBtn.classList.add('success');
     submitBtn.disabled = true;
-    const webhookSent = await sendToMakeWebhook(webhookPayload);
+    const webhookSent = await sendToRouter(webhookPayload);
     submitBtn.disabled = false;
     if (webhookSent && qualifiesForCalendly) {
       if (contactStatus) contactStatus.textContent = 'Thanks — your details qualify for a strategy conversation. Opening Calendly…';
