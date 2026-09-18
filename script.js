@@ -267,6 +267,7 @@ if (revealTargets.length) {
   const ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) return;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lowPaintLayout = window.matchMedia('(max-width: 1040px), (hover: none), (pointer: coarse)');
   let W, H;
   const DESKTOP_MARGIN = 60;
   const PAD_X = 12;
@@ -677,7 +678,7 @@ if (revealTargets.length) {
     });
   }
   function animateGraph(time) {
-    if (!graphVisible || document.hidden || document.body.classList.contains('motion-paused')) {
+    if (lowPaintLayout.matches || !graphVisible || document.hidden || document.body.classList.contains('motion-paused')) {
       graphRunning = false;
       return;
     }
@@ -688,7 +689,8 @@ if (revealTargets.length) {
     requestAnimationFrame(animateGraph);
   }
   function startGraphAnimation() {
-    if (reduceMotion || graphRunning || !graphVisible || document.hidden || document.body.classList.contains('motion-paused')) return;
+    if (reduceMotion || lowPaintLayout.matches || graphRunning || !graphVisible ||
+        document.hidden || document.body.classList.contains('motion-paused')) return;
     graphRunning = true;
     requestAnimationFrame(animateGraph);
   }
@@ -710,6 +712,13 @@ if (revealTargets.length) {
     if (graphVisible) startGraphAnimation();
   });
   window.addEventListener('viewport:motion-resume', startGraphAnimation);
+  const syncGraphPaintMode = () => {
+    graphRunning = false;
+    resize();
+    if (!lowPaintLayout.matches && graphVisible) startGraphAnimation();
+  };
+  if (lowPaintLayout.addEventListener) lowPaintLayout.addEventListener('change', syncGraphPaintMode);
+  else if (lowPaintLayout.addListener) lowPaintLayout.addListener(syncGraphPaintMode);
   selectNode('agent');
   startGraphAnimation();
 })();

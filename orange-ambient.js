@@ -6,6 +6,7 @@
   if (!ctx) return;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const compactLayout = window.matchMedia('(max-width: 1040px)');
+  const lowPaintLayout = window.matchMedia('(max-width: 1040px), (hover: none), (pointer: coarse)');
   const palette = ['#F4431A', '#F4431A', '#ff633f', '#ff9b7d', '#26d9d0', '#648cff'];
   let width = 0;
   let height = 0;
@@ -62,7 +63,8 @@
 
   function draw(time) {
     frame = 0;
-    if (!active || document.hidden || document.body.classList.contains('motion-paused') || reduceMotion.matches) return;
+    if (lowPaintLayout.matches || !active || document.hidden ||
+        document.body.classList.contains('motion-paused') || reduceMotion.matches) return;
 
     // Keep a subtle ambient feel without competing with the interactive map.
     const frameRate = compactLayout.matches ? 28 : 36;
@@ -154,7 +156,7 @@
   }
 
   function start() {
-    if (!frame && active && !document.hidden && !reduceMotion.matches &&
+    if (!lowPaintLayout.matches && !frame && active && !document.hidden && !reduceMotion.matches &&
         !document.body.classList.contains('motion-paused')) {
       last = performance.now();
       frame = requestAnimationFrame(draw);
@@ -185,5 +187,12 @@
     paint(performance.now());
     start();
   });
+  const syncPaintMode = () => {
+    stop();
+    resize();
+    start();
+  };
+  if (lowPaintLayout.addEventListener) lowPaintLayout.addEventListener('change', syncPaintMode);
+  else if (lowPaintLayout.addListener) lowPaintLayout.addListener(syncPaintMode);
   start();
 })();

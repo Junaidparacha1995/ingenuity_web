@@ -2336,3 +2336,78 @@ body.motion-paused .motion-region *::after {
     margin: 0 auto !important;
   }
 }
+
+/*
+  Touch stability fallback.
+  Mobile browsers can repaint fixed, filtered, translucent layers while the
+  visual viewport moves under the browser chrome. Keep the colour and layout,
+  but make those layers ordinary page paint and stop decorative invalidations.
+  Desktop retains the full liquid-glass treatment.
+*/
+@media (max-width: 1040px), (hover: none), (pointer: coarse) {
+  body::before,
+  body::after,
+  #dot-spotlight {
+    position: absolute;
+  }
+
+  #dot-spotlight {
+    display: none !important;
+  }
+
+  .liquid-bg {
+    position: absolute;
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    min-height: 100%;
+    max-height: none;
+  }
+
+  .liquid-bg .blob,
+  .hc-blob {
+    filter: none !important;
+    animation: none !important;
+    will-change: auto !important;
+  }
+
+  /*
+    Backdrop blur is the most common mobile scroll-flicker trigger in this
+    design. Solid/translucent surfaces keep their colours without forcing a
+    full-screen backdrop recomposite on every viewport tick.
+  */
+  *,
+  *::before,
+  *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    filter: none !important;
+  }
+
+  .scroll-progress {
+    display: none !important;
+  }
+
+  .orange-ambient-glow,
+  .orange-ambient-beam,
+  .orange-ambient-ring,
+  .orange-ambient-sparkles,
+  .orange-ambient-flow,
+  footer::before,
+  footer::after,
+  .footer-watermark,
+  .footer-status .dot,
+  .flow-line::before,
+  .hc-led,
+  .project-detail-terminal::after,
+  .trace-caret,
+  .assistant-typing i {
+    animation: none !important;
+  }
+}
