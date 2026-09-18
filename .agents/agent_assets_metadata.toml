@@ -210,3 +210,17 @@ mtime_ms = 1789660987128
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/51203a1e-3f7d-494a-89f2-36969c7d0b58/664dc9ee-131e-43e4-82d4-aaffcab878ef"
 storage_version_token = "1789660996927018"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "LEgdCgVL-tgkBf9gRPZTr"
+uri = "file://ingenuity-systems-project.zip"
+type = "unspecified"
+title = "Ingenuity Systems project ZIP"
+description = "Complete active project source, assets, attached reference files, and configuration. Generated caches, old export archives, and version-control metadata were excluded."
+logical_id = "1abf717b-6b0e-436a-8315-e1b8924cb4bd"
+content_hash = "sha256:47beeb2e755d509126f7fc5ba376d4bce63120ce46bba7594b1662fc8d9b71db"
+size = 33474351
+mtime_ms = 1789730602904
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/1abf717b-6b0e-436a-8315-e1b8924cb4bd/e1ad77df-564d-41b9-84e5-cb330176bbd3"
+storage_version_token = "1789730613057752"
+content_type = "application/octet-stream"
