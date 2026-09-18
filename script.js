@@ -71,13 +71,28 @@ function createNavigationArrow(direction = 'next') {
 // Pause CSS decoration outside the viewport without hiding/recreating content.
 (function initDecorativeMotion() {
   if (!('IntersectionObserver' in window)) return;
+  const pauseOffscreenMotion = window.matchMedia('(min-width: 1041px) and (hover: hover) and (pointer: fine)');
+  const regions = Array.from(document.querySelectorAll(
+    '.hero-media, .hero-console, .tech-marquee, .solution-finder-section, .why-block, footer, .project-terminal, .project-detail-terminal, .flow-line'
+  ));
   const observer = new IntersectionObserver((entries) => {
+    if (!pauseOffscreenMotion.matches) return;
     entries.forEach(({ target, isIntersecting }) => target.classList.toggle('motion-offscreen', !isIntersecting));
   }, { rootMargin: '80px 0px', threshold: 0 });
-  document.querySelectorAll('.hero-media, .hero-console, .tech-marquee, .solution-finder-section, .why-block, footer, .project-terminal, .project-detail-terminal, .flow-line').forEach((region) => {
-    region.classList.add('motion-region');
-    observer.observe(region);
-  });
+  const syncObserver = () => {
+    observer.disconnect();
+    if (!pauseOffscreenMotion.matches) {
+      regions.forEach((region) => region.classList.remove('motion-region', 'motion-offscreen'));
+      return;
+    }
+    regions.forEach((region) => {
+      region.classList.add('motion-region');
+      observer.observe(region);
+    });
+  };
+  if (pauseOffscreenMotion.addEventListener) pauseOffscreenMotion.addEventListener('change', syncObserver);
+  else if (pauseOffscreenMotion.addListener) pauseOffscreenMotion.addListener(syncObserver);
+  syncObserver();
 })();
 
 // Header shadow + floating pill morph on scroll — activates only after the hero section
