@@ -1,0 +1,103 @@
+Only fix the website flickering problem. Do not redesign the site or change any completed features, content, colors, layout, animations, routes, cards, header, chatbot, SVG nodes, or responsive behavior unless the change is directly required to stop flickering.
+
+The flickering happens mainly during browser zoom in/out, pinch zoom, rapid resizing, scrolling, and on the Projects page. Thoroughly inspect the entire codebase and fix the root cause.
+
+Investigate these areas:
+
+- `visualViewport.resize`
+- `window.resize`
+- `orientationchange`
+- repeated `scrollTo()` calls
+- resize and scroll event listeners
+- `requestAnimationFrame` loops
+- `setInterval` and `setTimeout`
+- canvas/SVG resizing
+- animated card height or `max-height`
+- terminal typing effects
+- marquee/carousel restarts
+- hero animation restarts
+- fixed blurred backgrounds and animated box shadows
+- global CSS rules that disable all transitions or restart all animations
+- layout changes caused by DOM updates during animation
+
+Required fixes:
+
+1. Do not treat pinch-zoom scale changes as real layout resizing. A visual viewport scale change must not repeatedly rebuild the page.
+
+2. Only handle a resize when the actual layout viewport width, orientation, or device-pixel-ratio changes. Debounce or schedule resize work through one `requestAnimationFrame`.
+
+3. Do not use a global rule such as:
+
+   `body.is-resizing * { transition: none; animation-play-state: paused; }`
+
+   If pausing is needed, pause only expensive decorative animations.
+
+4. Do not repeatedly assign canvas `width` or `height`. Only resize the canvas backing buffer when its actual rendered dimensions change. Preserve the current animation frame and prevent blank canvas frames.
+
+5. Do not restart hero animations, sliders, marquees, node animations, or carousels on every resize or zoom event.
+
+6. Remove repeated forced `scrollTo()` calls and delayed scroll resets that cause the page to jump or flicker.
+
+7. Keep layout dimensions stable. Avoid animating `height`, `width`, `top`, `left`, `margin`, or `max-height` when possible. Prefer `transform` and `opacity`.
+
+8. On the Projects page:
+   - Keep cards clickable.
+   - Keep only one card open at a time.
+   - Prevent detail panels from repeatedly changing layout while opening.
+   - Reserve space for terminal/trace content before it appears.
+   - Batch terminal text updates instead of changing the DOM every character.
+   - Do not restart the terminal animation during zoom or resize.
+
+9. Pause expensive animations only when the element is hidden, off-screen, the document is hidden, or the user prefers reduced motion. Use `IntersectionObserver` where appropriate.
+
+10. Reduce unnecessary blur, backdrop-filter, animated shadows, and large fixed background repaints on mobile without changing the visual design.
+
+11. Preserve all existing interactions and functionality.
+
+12. Ensure old and new CSS/JS files are not mixed because of browser caching. Use correct cache headers or versioned asset URLs.
+
+Test the complete site after making changes at:
+
+- 320px
+- 360px
+- 390px
+- 430px
+- 768px
+- 820px
+- 1024px
+- 1280px
+- 1440px
+
+Test all major routes, especially Home, Projects, Services, Work, Industries, Case Studies, and Contact.
+
+Test:
+
+- browser zoom from 80% to 200%
+- mobile pinch-zoom emulation
+- rapid window resizing
+- device orientation changes
+- scrolling while animations are active
+- opening and closing Project cards
+- menus, chatbot, buttons, sliders, and node interactions
+
+Acceptance criteria:
+
+- No visible flicker, blank frames, flashing, jumping, or layout reset during zoom in/out.
+- No flicker on desktop or mobile.
+- No horizontal overflow.
+- No forced scroll jumps.
+- No console errors.
+- Canvas and SVG animations remain smooth.
+- Existing desktop design remains visually unchanged.
+- Existing mobile and tablet functionality remains unchanged.
+- `prefers-reduced-motion` continues to work.
+
+After completing the work, provide:
+
+1. Root cause of the flickering.
+2. Files changed.
+3. Tests performed and viewport sizes tested.
+4. Any remaining limitation.
+5. Replit restart and cache-refresh instructions.
+
+Do not simply explain the solution. Make the code changes, run the tests, and verify the result.
