@@ -2001,6 +2001,43 @@
   }
 }
 
+@media (max-width: 1079px) {
+  .home-page .hc-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+  }
+
+  .home-page .hc-copy .hero-rotator {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .home-page .hc-copy .hero-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+  }
+
+  .home-page .hc-copy h1,
+  .home-page .hc-copy p.lead {
+    width: 100%;
+  }
+
+  .home-page .hc-copy .hero-actions {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .home-page .hc-copy .hero-dots {
+    justify-content: center !important;
+  }
+}
+
 /* Tool pages: let the maturity graphic and long assessment copy fit on phones
    instead of centering the combined stack inside a fixed, clipped hero. */
 @media (max-width: 767px) {
