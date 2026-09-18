@@ -282,6 +282,19 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 .mega-col ul a.is-current:hover{background:rgba(225,53,17,.08);}
 .mega-col ul a.mega-cta{color:var(--orange); font-family:'Manrope',sans-serif; font-weight:700;}
 .mega-col ul a.mega-cta:hover{background:rgba(225,53,17,0.18); color:var(--orange);}
+.mega-col ul a.mega-col-title{
+  position:relative;
+  overflow:hidden;
+  transition:background .3s ease,color .3s ease,transform .35s var(--ease-spring),box-shadow .3s ease;
+}
+.mega-col ul a.mega-col-title:hover,
+.mega-col ul a.mega-col-title:focus-visible{
+  background:linear-gradient(100deg,rgba(225,53,17,.24),rgba(225,53,17,.08));
+  color:var(--white);
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(3,13,28,.2),0 0 0 1px rgba(225,53,17,.28);
+  outline:none;
+}
 
 .nav-cta{display:flex; justify-self:end; align-items:center; gap:16px;}
 .nav-cta .btn-sm{font:700 13.5px/1.2 'Manrope',sans-serif;}
