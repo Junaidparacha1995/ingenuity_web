@@ -1,3 +1,14 @@
+function createNavigationArrow(direction = 'next') {
+  const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  arrow.classList.add('arrow-icon');
+  if (direction === 'previous') arrow.classList.add('is-previous');
+  arrow.setAttribute('viewBox', '0 0 18 18');
+  arrow.setAttribute('aria-hidden', 'true');
+  arrow.setAttribute('focusable', 'false');
+  arrow.innerHTML = '<path d="M1 9h12M10 5l4 4-4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>';
+  return arrow;
+}
+
 // One viewport guard coordinates resize, zoom, and orientation changes without
 // rebuilding components or running layout measurements on every resize event.
 (() => {
@@ -416,9 +427,7 @@ if (revealTargets.length) {
     detailTrace.replaceChildren();
     labels.forEach((label, index) => {
       if (index) {
-        const arrow = document.createElement('i');
-        arrow.textContent = '→';
-        detailTrace.appendChild(arrow);
+        detailTrace.appendChild(createNavigationArrow('next'));
       }
       const item = document.createElement('span');
       item.textContent = label;
@@ -695,9 +704,7 @@ if (revealTargets.length) {
       trace.replaceChildren();
       info.trace.forEach((item, index) => {
         if (index) {
-          const arrow = document.createElement('i');
-          arrow.textContent = '→';
-          trace.appendChild(arrow);
+          trace.appendChild(createNavigationArrow('next'));
         }
         const chip = document.createElement('span');
         chip.textContent = item;
@@ -1085,7 +1092,7 @@ if (revealTargets.length) {
     services: ['Services overview', 'services.html'],
     industries: ['Industries overview', 'industries.html'],
     work: ['Work overview', 'work.html'],
-    company: ['Company overview', 'about.html']
+    company: ['About Us', 'about.html']
   };
   const closeMobileSubmenus = (except = null) => {
     navLinks.querySelectorAll('.mobile-submenu-open').forEach((entry) => {

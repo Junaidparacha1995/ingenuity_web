@@ -499,6 +499,9 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 .im-controls{display:flex; align-items:center; justify-content:center; gap:22px; margin-top:8px;
   background:var(--navy); border-radius:var(--radius-pill); padding:10px 18px; width:fit-content; margin-left:auto; margin-right:auto;
   box-shadow:0 10px 26px rgba(20,35,59,0.18);}
+.arrow-icon{display:block;width:16px;height:16px;flex:0 0 16px;overflow:visible;pointer-events:none;}
+.arrow-icon.is-previous{transform:rotate(180deg);}
+.hc-node-trace .arrow-icon{width:14px;height:14px;flex-basis:14px;color:#ff8d69;}
 .im-arrow{width:34px; height:34px; border-radius:50%; border:1px solid rgba(255,255,255,0.22); background:transparent; color:var(--white);
   display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; transition:background .25s ease, transform .25s var(--ease-spring);}
 .im-arrow:hover{background:var(--orange); border-color:var(--orange); transform:scale(1.08);}
@@ -610,7 +613,8 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 .slider-dots{display:flex; gap:8px;}
 .slider-dot{width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.25); cursor:pointer; border:none; padding:0; transition:background .25s ease, transform .3s var(--ease-spring);}
 .slider-dot.active{background:var(--orange); transform:scale(1.4);}
-.slider-arrow{width:36px; height:36px; border-radius:50%; border:1px solid var(--glass-dark-border); background:rgba(255,255,255,0.06); backdrop-filter:blur(10px); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .25s ease, color .25s ease, transform .25s var(--ease-spring); color:var(--white); font-size:14px;}
+.im-arrow .arrow-icon,.slider-arrow .arrow-icon{width:16px;height:16px;flex-basis:16px;}
+.slider-arrow{width:36px; height:36px; border-radius:50%; border:1px solid var(--glass-dark-border); background:rgba(255,255,255,0.06); backdrop-filter:blur(10px); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .25s ease, color .25s ease, transform .25s var(--ease-spring); color:var(--white); font-size:0;}
 .slider-arrow:hover{background:var(--orange); color:var(--white); transform:scale(1.1);}
 @media(max-width:980px){.testimonial-split{grid-template-columns:1fr; gap:32px;}}
 
