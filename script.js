@@ -1,10 +1,55 @@
+// One viewport guard coordinates resize, zoom, and orientation changes without
+// rebuilding components or running layout measurements on every resize event.
+(() => {
+  let resizeTimer = null;
+  let lastWidth = window.innerWidth;
+  let lastHeight = window.innerHeight;
+  let lastScale = window.visualViewport?.scale || 1;
+  let lastOrientation = window.screen.orientation?.angle ?? 0;
+  const finishResize = () => {
+    resizeTimer = null;
+    document.body.classList.remove('is-resizing');
+    window.dispatchEvent(new CustomEvent('viewport:resize-end'));
+  };
+  const handleViewportChange = (force = false) => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const scale = window.visualViewport?.scale || 1;
+    const orientation = window.screen.orientation?.angle ?? lastOrientation;
+    const desktopResize = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const meaningfulChange = force ||
+      Math.abs(width - lastWidth) >= 1 ||
+      Math.abs(scale - lastScale) >= 0.01 ||
+      orientation !== lastOrientation ||
+      (desktopResize && Math.abs(height - lastHeight) >= 1);
+
+    if (!meaningfulChange) return;
+
+    lastWidth = width;
+    lastHeight = height;
+    lastScale = scale;
+    lastOrientation = orientation;
+
+    if (!document.body.classList.contains('is-resizing')) {
+      window.dispatchEvent(new CustomEvent('viewport:resize-start'));
+    }
+    document.body.classList.add('is-resizing');
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(finishResize, 220);
+  };
+
+  window.addEventListener('resize', () => handleViewportChange(), { passive: true });
+  window.addEventListener('orientationchange', () => handleViewportChange(true), { passive: true });
+  window.visualViewport?.addEventListener('resize', () => handleViewportChange(), { passive: true });
+})();
+
 // Header shadow + floating pill morph on scroll — activates only after the hero section
 const header = document.querySelector('header');
 if (header) {
   const heroEl = document.querySelector('.hero-media, .work-hero, .tool-hero') || document.getElementById('hero-console');
   const getThreshold = () => heroEl ? Math.max(heroEl.offsetHeight - 80, 120) : 120;
   let threshold = getThreshold();
-  window.addEventListener('resize', () => { threshold = getThreshold(); }, { passive: true });
+  window.addEventListener('viewport:resize-end', () => { threshold = getThreshold(); });
   window.addEventListener('scroll', () => {
     header.classList.toggle('scrolled', window.scrollY > threshold);
   }, { passive: true });
@@ -96,16 +141,26 @@ if (header) {
 const scrollProgressEl = document.getElementById('scroll-progress');
 if (scrollProgressEl) {
   let progressHideTimer = null;
-  window.addEventListener('scroll', () => {
+  let progressFrame = null;
+  const renderScrollProgress = () => {
+    progressFrame = null;
+    if (document.body.classList.contains('is-resizing')) return;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
-    scrollProgressEl.style.width = pct + '%';
+    const progress = docHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / docHeight)) : 0;
+    scrollProgressEl.style.transform = `scaleX(${progress})`;
+  };
+  const scheduleScrollProgress = () => {
+    if (progressFrame === null) progressFrame = window.requestAnimationFrame(renderScrollProgress);
+  };
+  window.addEventListener('scroll', () => {
+    scheduleScrollProgress();
     scrollProgressEl.classList.add('visible');
     clearTimeout(progressHideTimer);
     progressHideTimer = setTimeout(() => {
       scrollProgressEl.classList.remove('visible');
     }, 700);
   }, { passive: true });
+  window.addEventListener('viewport:resize-end', scheduleScrollProgress);
 }
 
 // Mobile menu toggle
@@ -121,7 +176,7 @@ if (toggle && navLinks) {
   });
   // On mobile, Services/Industries links navigate directly to their overview pages
   // (the desktop mega-menu panel isn't shown inline on small screens)
-  window.addEventListener('resize', () => {
+  window.addEventListener('viewport:resize-end', () => {
     if (window.innerWidth <= 1040) return;
     navLinks.classList.remove('mobile-open');
     toggle.setAttribute('aria-expanded', 'false');
@@ -131,8 +186,10 @@ if (toggle && navLinks) {
 }
 
 // Consistent magnetic interaction for every site button
+const magneticPointer = window.matchMedia('(min-width: 1080px) and (hover: hover) and (pointer: fine)');
 document.querySelectorAll('.btn').forEach(btn => {
   btn.addEventListener('mousemove', e => {
+    if (!magneticPointer.matches || document.body.classList.contains('is-resizing')) return;
     const r = btn.getBoundingClientRect();
     const x = (e.clientX - r.left - r.width / 2) * 0.25;
     const y = (e.clientY - r.top - r.height / 2) * 0.4;
@@ -569,7 +626,7 @@ if (revealTargets.length) {
     });
   }
   function animateGraph(time) {
-    if (!graphVisible || document.hidden) {
+    if (!graphVisible || document.hidden || document.body.classList.contains('is-resizing')) {
       graphRunning = false;
       return;
     }
@@ -596,7 +653,11 @@ if (revealTargets.length) {
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && graphVisible) startGraphAnimation();
   });
-  resize(); window.addEventListener('resize', resize, { passive: true });
+  resize();
+  window.addEventListener('viewport:resize-end', () => {
+    resize();
+    if (graphVisible) startGraphAnimation();
+  });
   selectNode('agent');
   startGraphAnimation();
 })();
@@ -713,16 +774,32 @@ if (revealTargets.length) {
   const form = root.querySelector('.assistant-form');
   const open = () => { root.classList.add('is-open'); launcher.setAttribute('aria-expanded', 'true'); setTimeout(() => input.focus(), 80); };
   const close = () => { root.classList.remove('is-open'); launcher.setAttribute('aria-expanded', 'false'); };
-  const addMessage = (text, user = false) => {
-    const row = document.createElement('div'); row.className = `assistant-message${user ? ' user' : ''}`;
-    if (!user) { const avatar = document.createElement('span'); avatar.className = 'assistant-avatar'; avatar.innerHTML = `<img src="${siteHref('assets/logo-icon.png')}" alt="">`; row.appendChild(avatar); }
-    const bubble = document.createElement('div'); bubble.className = 'assistant-bubble'; bubble.textContent = text; row.appendChild(bubble); body.appendChild(row); body.scrollTop = body.scrollHeight; return row;
+  const populateAssistantRow = (row, text, user = false) => {
+    row.className = `assistant-message${user ? ' user' : ''}`;
+    row.replaceChildren();
+    if (!user) {
+      const avatar = document.createElement('span');
+      avatar.className = 'assistant-avatar';
+      avatar.innerHTML = `<img src="${siteHref('assets/logo-icon.png')}" alt="">`;
+      row.appendChild(avatar);
+    }
+    const bubble = document.createElement('div');
+    bubble.className = 'assistant-bubble';
+    bubble.textContent = text;
+    row.appendChild(bubble);
+    return row;
   };
-  const addSources = (docs) => {
+  const addMessage = (text, user = false) => {
+    const row = populateAssistantRow(document.createElement('div'), text, user);
+    body.appendChild(row);
+    window.requestAnimationFrame(() => { body.scrollTop = body.scrollHeight; });
+    return row;
+  };
+  const addSources = (docs, afterNode = null) => {
     if (!docs.length) return;
     const sourceWrap = document.createElement('div'); sourceWrap.className = 'assistant-sources';
     docs.slice(0, 3).forEach((doc) => { const link = document.createElement('a'); link.className = 'assistant-source'; link.href = siteHref(doc.href); link.textContent = doc.title; sourceWrap.appendChild(link); });
-    body.appendChild(sourceWrap); body.scrollTop = body.scrollHeight;
+    body.insertBefore(sourceWrap, afterNode?.nextSibling || null);
   };
   const typing = () => { const row = document.createElement('div'); row.className = 'assistant-message assistant-typing-row'; row.innerHTML = `<span class="assistant-avatar"><img src="${siteHref('assets/logo-icon.png')}" alt=""></span><div class="assistant-bubble"><span class="assistant-typing"><i></i><i></i><i></i></span></div>`; body.appendChild(row); body.scrollTop = body.scrollHeight; return row; };
   const renderLocalAnswer = (query, docs) => {
@@ -747,8 +824,12 @@ if (revealTargets.length) {
     const clean = String(query || '').trim(); if (!clean) return;
     addMessage(clean, true); input.value = '';
     const docs = retrieve(clean); const pending = typing();
-    const modelAnswer = await requestModel(clean, docs); pending.remove();
-    const local = renderLocalAnswer(clean, docs); addMessage(modelAnswer || local.text); addSources(modelAnswer ? docs : local.docs.filter(Boolean));
+    const modelAnswer = await requestModel(clean, docs);
+    const local = renderLocalAnswer(clean, docs);
+    const keepAtBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 80;
+    populateAssistantRow(pending, modelAnswer || local.text);
+    addSources(modelAnswer ? docs : local.docs.filter(Boolean), pending);
+    if (keepAtBottom) window.requestAnimationFrame(() => { body.scrollTop = body.scrollHeight; });
   };
   const suggestions = document.createElement('div'); suggestions.className = 'assistant-suggestions';
   ['Recommend a solution', 'Automation ideas', 'Recent projects', 'Book a call'].forEach((label) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.addEventListener('click', () => ask(label)); suggestions.appendChild(button); });
@@ -774,7 +855,7 @@ if (revealTargets.length) {
       syncSafeDock();
     }, { threshold: [0, .06, .2], rootMargin: '-8% 0px -8% 0px' });
     assistantSafeZones.forEach((zone) => safeZoneObserver.observe(zone));
-    window.addEventListener('resize', syncSafeDock, { passive: true });
+    window.addEventListener('viewport:resize-end', syncSafeDock);
   }
 })();
 
@@ -1071,9 +1152,9 @@ if (revealTargets.length) {
   nav.querySelector('.menu-toggle')?.addEventListener('click', () => {
     if (nav.querySelector('.menu-toggle')?.getAttribute('aria-expanded') === 'false') closeMobileSubmenus();
   });
-  window.addEventListener('resize', () => {
+  window.addEventListener('viewport:resize-end', () => {
     if (window.innerWidth > 1040) closeMobileSubmenus();
-  }, { passive: true });
+  });
   navLinks.querySelectorAll(':scope > li:not(.has-dropdown) > .top-link').forEach((link) => {
     link.addEventListener('click', closeMobileNavigation);
   });
@@ -1121,11 +1202,11 @@ if (revealTargets.length) {
   headerEl.addEventListener('focusout', (event) => {
     if (!headerEl.contains(event.relatedTarget)) closeMenu();
   });
-  window.addEventListener('resize', () => {
+  window.addEventListener('viewport:resize-end', () => {
     if (!headerEl.classList.contains('menu-open')) return;
     const activePanel = megaWrap.querySelector('[data-panel="' + megaWrap.dataset.active + '"]');
     setMenuHeight(activePanel);
-  }, { passive:true });
+  });
   document.documentElement.dataset.canonicalHeader = 'true';
 })();
 document.body?.classList.add('header-ready');
@@ -1155,8 +1236,17 @@ document.body?.classList.add('header-ready');
   }
   function restart() {
     clearInterval(timer);
-    timer = setInterval(() => goTo(index + 1), 5500);
+    if (document.hidden || document.body.classList.contains('is-resizing')) return;
+    timer = setInterval(() => {
+      if (!document.hidden && !document.body.classList.contains('is-resizing')) goTo(index + 1);
+    }, 5500);
   }
+  window.addEventListener('viewport:resize-start', () => clearInterval(timer));
+  window.addEventListener('viewport:resize-end', restart);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) clearInterval(timer);
+    else restart();
+  });
   restart();
 })();
 
@@ -1235,8 +1325,20 @@ function initSlider(rootId) {
     });
   });
 
-  function startAutoplay() { stopAutoplay(); autoplay = setInterval(() => { if (!isHovering) goTo(index + 1); }, 4000); }
+  function startAutoplay() {
+    stopAutoplay();
+    if (document.hidden || document.body.classList.contains('is-resizing')) return;
+    autoplay = setInterval(() => {
+      if (!isHovering && !document.hidden && !document.body.classList.contains('is-resizing')) goTo(index + 1);
+    }, 4000);
+  }
   function stopAutoplay() { clearInterval(autoplay); }
+  window.addEventListener('viewport:resize-start', stopAutoplay);
+  window.addEventListener('viewport:resize-end', startAutoplay);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAutoplay();
+    else startAutoplay();
+  });
 
   if (prevBtn) prevBtn.addEventListener('click', () => goTo(index - 1));
   if (nextBtn) nextBtn.addEventListener('click', () => goTo(index + 1));
@@ -1341,7 +1443,10 @@ initSlider('testimonial-slider-1');
     }
   }
   measure();
-  window.addEventListener('resize', measure);
+  window.addEventListener('viewport:resize-end', () => {
+    measure();
+    startFrame();
+  });
 
   const dotsWrap = document.getElementById('im-dots');
   let dots = [];
@@ -1377,7 +1482,7 @@ initSlider('testimonial-slider-1');
   }
 
   function frame() {
-    if (!marqueeVisible || document.hidden) {
+    if (!marqueeVisible || document.hidden || document.body.classList.contains('is-resizing')) {
       frameRunning = false;
       return;
     }
@@ -1488,13 +1593,13 @@ if (touchFlipCards.length) {
       toggleFlip();
     });
   });
-  window.addEventListener('resize', () => {
+  window.addEventListener('viewport:resize-end', () => {
     if (isTouchLayout()) return;
     touchFlipCards.forEach((card) => {
       card.classList.remove('is-flipped');
       card.setAttribute('aria-expanded', 'false');
     });
-  }, { passive: true });
+  });
 }
 
 // Ripple / haptic click feedback on buttons

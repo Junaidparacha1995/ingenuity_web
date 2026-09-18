@@ -195,7 +195,7 @@ section{position:relative;}
 
 /* ============ Header / SOLID horizontal mega nav ============ */
 /* ============ Scroll progress — overlay only, no layout space, fades on idle ============ */
-.scroll-progress{position:fixed; top:0; left:0; height:3px; width:0%; background:linear-gradient(90deg, var(--orange), #F05838); z-index:300; opacity:0; transition:opacity .35s ease, width .1s linear; pointer-events:none; box-shadow:0 0 12px rgba(225,53,17,0.6);}
+.scroll-progress{position:fixed; top:0; left:0; height:3px; width:100%; transform:scaleX(0); transform-origin:left center; background:linear-gradient(90deg, var(--orange), #F05838); z-index:300; opacity:0; transition:opacity .35s ease, transform .1s linear; pointer-events:none; box-shadow:0 0 12px rgba(225,53,17,0.6);}
 .scroll-progress.visible{opacity:1;}
 
 header{
@@ -1234,7 +1234,7 @@ footer > .wrap{position:relative; z-index:1;}
 @media(max-width:720px){.work-projects>.wrap{padding-left:18px;padding-right:18px}.work-projects .work-grid{grid-template-columns:1fr}.work-projects .work-card summary{grid-template-columns:44px 1fr 24px;padding:24px 20px}.work-projects .work-card .work-card-index{width:44px;height:44px}.work-projects .work-card summary strong{font-size:19px}.work-projects .work-card-detail{padding-left:20px;padding-right:20px}.work-projects .work-card-detail p{font-size:14px}.work-tabs{width:100%;min-width:0}.work-tab{min-width:0;padding:10px 14px}.project-browser-head{grid-template-columns:1fr;gap:14px}.project-grid{grid-template-columns:1fr}.project-card{min-height:420px;padding:24px}.project-card h3{font-size:24px}.project-filters{gap:7px}.project-filter{padding:10px 13px}}
 
 @media (prefers-reduced-motion: reduce){
-  *{animation:none !important; transition-duration:.15s !important;}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
   html{scroll-behavior:auto;}
 }
 

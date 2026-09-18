@@ -1972,6 +1972,21 @@
 
 /* Projects page stability: keep content and surfaces steady instead of
    stacking several blur, glow, and delayed reveal animations at once. */
+body.is-resizing *,
+body.is-resizing *::before,
+body.is-resizing *::after {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+.project-page .project-browser,
+.project-page .project-grid,
+.project-page .project-card,
+.project-page .project-card * {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
 .project-page .reveal,
 .project-page .project-terminal-line {
   opacity: 1;
@@ -1992,6 +2007,79 @@
 
 .project-page .project-card::before {
   display: none;
+}
+
+@media (max-width: 1079px) {
+  .project-page .project-grid,
+  .project-page .project-card {
+    width: 100%;
+  }
+
+  .project-page .project-card h3,
+  .project-page .project-card p,
+  .project-page .project-card li,
+  .project-page .project-card a,
+  .project-page .project-card span {
+    overflow-wrap: anywhere;
+  }
+
+  .project-page .project-card {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .project-page .project-detail-panel {
+    display: none;
+    max-height: none;
+    opacity: 1;
+    overflow: visible;
+    transform: none;
+    transition: none;
+  }
+
+  .project-page .project-card.is-open .project-detail-panel {
+    display: block;
+    max-height: none;
+  }
+
+  .project-page .project-card.is-open:hover {
+    transform: none;
+  }
+
+  .project-page .hc-blob,
+  .project-page .project-detail-terminal::after,
+  .project-page .trace-caret {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .project-page .project-filters {
+    width: 100%;
+    margin-right: 0;
+    padding-right: 0;
+    flex-wrap: wrap;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .project-page .project-card,
+  .project-page .project-card.is-open {
+    grid-column: 1;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .project-page .project-detail-inner {
+    width: 100%;
+  }
+
+  .project-page .project-detail-terminal-screen {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (max-width: 767px) {

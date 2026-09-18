@@ -15,6 +15,20 @@
   let frame = 0;
   let active = true;
 
+  function createParticle(index) {
+    return {
+      a: Math.random() * Math.PI * 2,
+      b: Math.random() * Math.PI * 2,
+      r: 0.78 + Math.random() * 0.22,
+      tube: Math.random(),
+      speed: (0.08 + Math.random() * 0.24) * (Math.random() > 0.5 ? 1 : -1),
+      size: 0.35 + Math.random() * 1.65,
+      alpha: 0.16 + Math.random() * 0.68,
+      color: palette[index % palette.length],
+      phase: Math.random() * Math.PI * 2
+    };
+  }
+
   function resize() {
     const rect = canvas.getBoundingClientRect();
     // A lower backing resolution keeps the effect smooth without making the
@@ -28,22 +42,16 @@
 
     const density = compactLayout.matches ? 7800 : 6200;
     const count = Math.min(compactLayout.matches ? 150 : 240, Math.max(compactLayout.matches ? 60 : 100, Math.floor(width * height / density)));
-    particles = Array.from({ length: count }, (_, i) => ({
-      a: Math.random() * Math.PI * 2,
-      b: Math.random() * Math.PI * 2,
-      r: 0.78 + Math.random() * 0.22,
-      tube: Math.random(),
-      speed: (0.08 + Math.random() * 0.24) * (Math.random() > 0.5 ? 1 : -1),
-      size: 0.35 + Math.random() * 1.65,
-      alpha: 0.16 + Math.random() * 0.68,
-      color: palette[i % palette.length],
-      phase: Math.random() * Math.PI * 2
-    }));
+    if (!particles.length) particles = Array.from({ length: count }, (_, index) => createParticle(index));
+    else if (particles.length > count) particles.length = count;
+    else {
+      while (particles.length < count) particles.push(createParticle(particles.length));
+    }
   }
 
   function draw(time) {
     frame = 0;
-    if (!active || document.hidden) return;
+    if (!active || document.hidden || document.body.classList.contains('is-resizing')) return;
 
     // Keep a subtle ambient feel without competing with the interactive map.
     const frameRate = compactLayout.matches ? 28 : 36;
@@ -133,7 +141,10 @@
   }
 
   resize();
-  window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('viewport:resize-end', () => {
+    resize();
+    if (active) start();
+  });
   document.addEventListener('visibilitychange', () => { active = !document.hidden; if (active) start(); });
   if ('IntersectionObserver' in window) {
     new IntersectionObserver((entries) => { active = Boolean(entries[0]?.isIntersecting); if (active) start(); }, { threshold: 0.01 }).observe(canvas);
