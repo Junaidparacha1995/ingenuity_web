@@ -1663,26 +1663,8 @@ if (contactForm && submitBtn) {
     const message = document.getElementById('message')?.value.trim() || '';
     const domain = email.includes('@') ? email.split('@').pop().toLowerCase() : '';
     const isBusinessEmail = Boolean(domain && !personalEmailDomains.has(domain));
-    const isLowBudget = budget === 'under-1000';
-    const qualifiesForCalendly = Boolean(company && isBusinessEmail && isLowBudget);
-    const isPersonalQuickStart = Boolean(!company && !isBusinessEmail && isLowBudget);
     const budgetLabel = document.getElementById('budget').selectedOptions[0]?.textContent || budget;
     const interestLabel = document.getElementById('interest').selectedOptions[0]?.textContent || interest;
-    const route = qualifiesForCalendly ? 'calendly' : (isPersonalQuickStart ? 'bd-email-quick-start' : 'bd-email');
-    const automatedMessage = isPersonalQuickStart
-      ? 'Thanks for reaching out. Our business development team will review your quick-start inquiry and reply by email.'
-      : 'Thanks for reaching out. Our team will review your details and follow up with the right next step.';
-    const subject = encodeURIComponent((isPersonalQuickStart ? 'Quick-start inquiry' : 'New qualified inquiry') + ' from ' + name);
-    const body = encodeURIComponent(
-      'Name: ' + name +
-      '\nCompany Name: ' + (company || 'None — personal inquiry') +
-      '\nEmail: ' + email +
-      '\nEmail type: ' + (isBusinessEmail ? 'Business' : 'Personal') +
-      '\nEstimated Budget Tier: ' + budgetLabel +
-      '\nI\'m Interested In: ' + interestLabel +
-      '\n\nWhat they want to solve:\n' + (message || 'Not provided')
-    );
-    const bdMailto = 'mailto:' + bdEmail + '?subject=' + subject + '&body=' + body;
     const webhookPayload = {
       source: 'ingenuity-systems-website',
       submittedAt: new Date().toISOString(),
@@ -1695,36 +1677,20 @@ if (contactForm && submitBtn) {
       interestArea: interest,
       interestAreaLabel: interestLabel,
       message,
-      route,
-      allocatedBdEmail: bdEmail,
+      route: 'webhook-calendly',
       calendlyUrl,
-      automatedMessage,
       page: window.location.href
     };
     submitBtn.classList.add('success');
     submitBtn.disabled = true;
     const webhookSent = await sendToRouter(webhookPayload);
     submitBtn.disabled = false;
-    if (qualifiesForCalendly) {
-      if (contactStatus) {
-        contactStatus.textContent = webhookSent
-          ? 'Thanks — your details qualify for a strategy conversation. Opening Calendly…'
-          : 'Your details qualify for a strategy conversation. Opening Calendly…';
-      }
+    if (webhookSent) {
+      if (contactStatus) contactStatus.textContent = 'Thanks — your details were sent. Opening Calendly…';
       setTimeout(() => { window.location.href = calendlyUrl; }, 850);
-    } else if (webhookSent && isPersonalQuickStart) {
-      if (contactStatus) contactStatus.textContent = automatedMessage;
-      setTimeout(() => { submitBtn.classList.remove('success'); contactForm.reset(); }, 3200);
-    } else if (webhookSent) {
-      if (contactStatus) contactStatus.textContent = 'Thanks — your inquiry was sent to our business development team.';
-      setTimeout(() => { submitBtn.classList.remove('success'); contactForm.reset(); }, 3200);
     } else {
-      if (contactStatus) {
-        contactStatus.textContent = isPersonalQuickStart
-          ? 'Thanks — a quick-start email draft is ready for our business development team.'
-          : 'Thanks — your inquiry email draft is ready for our business development team.';
-      }
-      setTimeout(() => { window.location.href = bdMailto; }, 850);
+      if (contactStatus) contactStatus.textContent = 'We could not submit your details right now. Please try again.';
+      submitBtn.classList.remove('success');
     }
     setTimeout(() => { submitBtn.classList.remove('success'); }, 3200);
   });

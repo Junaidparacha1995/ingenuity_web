@@ -421,7 +421,7 @@ class RouterHandler(SimpleHTTPRequestHandler):
         if not str(payload.get("email", "")).strip() or not str(payload.get("name", "")).strip():
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Name and email are required"})
             return
-        self.forward_router_event(event_type, classify_lead(payload))
+        self.forward_router_event(event_type, payload)
 
     def handle_calendly(self) -> None:
         payload, raw_body = self.read_json()
