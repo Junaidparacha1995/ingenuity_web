@@ -1780,6 +1780,7 @@
   }
 
   .home-page .hero-console {
+    min-height: var(--page-hero-height) !important;
     padding-bottom: 42px !important;
   }
 
