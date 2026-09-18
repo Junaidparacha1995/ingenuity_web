@@ -1996,12 +1996,27 @@
 
 @media (max-width: 767px) {
   .home-page .hero-console {
-    min-height: calc(var(--page-hero-height) + 120px) !important;
-    padding-bottom: 56px !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding-bottom: 32px !important;
   }
 }
 
 @media (max-width: 1079px) {
+  /* The touch hero should end after its actual copy and controls. Do not
+     reserve a viewport-sized panel when the interactive graph is hidden. */
+  .home-page .hero-console {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    padding-bottom: 32px !important;
+  }
+
+  .home-page .hc-copy .hero-rotator {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
   .home-page .hc-copy {
     display: flex;
     flex-direction: column;
@@ -2035,6 +2050,21 @@
 
   .home-page .hc-copy .hero-dots {
     justify-content: center !important;
+  }
+}
+
+@media (max-width: 767px) {
+  /* On phones, full-width stacked actions match the reference and let the
+     hero height follow the active slide instead of reserving empty columns. */
+  .home-page .hc-copy .hero-actions {
+    grid-template-columns: 1fr !important;
+    width: min(100%, 364px) !important;
+    gap: 10px !important;
+  }
+
+  .home-page .hc-copy .hero-actions .btn {
+    width: 100% !important;
+    min-height: 50px;
   }
 }
 
