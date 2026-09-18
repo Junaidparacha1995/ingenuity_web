@@ -19,7 +19,7 @@ from email.utils import formatdate
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import parse_qs, urlsplit, urlunsplit
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -252,13 +252,17 @@ class RouterHandler(SimpleHTTPRequestHandler):
 
     def end_headers(self) -> None:
         """Add safe browser caching and response hardening to static responses."""
-        path = urlsplit(self.path).path
+        parsed = urlsplit(self.path)
+        path = parsed.path
         existing_headers = b"\n".join(self._headers_buffer).lower()
         if not path.startswith("/api/") and b"cache-control:" not in existing_headers:
-            if path.endswith(".html") or path in CLEAN_ROUTES:
+            if path.endswith((".html", "/")) or path in CLEAN_ROUTES:
                 self.send_header("Cache-Control", "no-cache, must-revalidate")
             elif path.endswith((".css", ".js")):
-                self.send_header("Cache-Control", "public, max-age=31536000, immutable")
+                # Unversioned files must revalidate; only release-tagged URLs
+                # can safely remain immutable after a Replit redeployment.
+                versioned = bool(parse_qs(parsed.query).get("v"))
+                self.send_header("Cache-Control", "public, max-age=31536000, immutable" if versioned else "no-cache, must-revalidate")
             elif path.startswith("/assets/"):
                 self.send_header("Cache-Control", "public, max-age=604800")
         if b"x-content-type-options:" not in existing_headers:

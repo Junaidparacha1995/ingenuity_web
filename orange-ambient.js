@@ -2,7 +2,8 @@
   const canvas = document.getElementById('orange-ambient-canvas');
   if (!canvas) return;
 
-  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const compactLayout = window.matchMedia('(max-width: 1040px)');
   const palette = ['#F4431A', '#F4431A', '#ff633f', '#ff9b7d', '#26d9d0', '#648cff'];
@@ -14,6 +15,7 @@
   let lastFrame = 0;
   let frame = 0;
   let active = true;
+  let elapsed = 0;
 
   function createParticle(index) {
     return {
@@ -31,13 +33,21 @@
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
     // A lower backing resolution keeps the effect smooth without making the
     // browser paint millions of pixels on high-density displays.
-    dpr = Math.min(window.devicePixelRatio || 1, compactLayout.matches ? 1 : 1.25);
+    const nextDpr = Math.min(window.devicePixelRatio || 1, compactLayout.matches ? 1 : 1.25);
+    const pixelWidth = Math.max(1, Math.round(rect.width * nextDpr));
+    const pixelHeight = Math.max(1, Math.round(rect.height * nextDpr));
+    if (canvas.width === pixelWidth && canvas.height === pixelHeight &&
+        Math.abs(width - rect.width) < .5 && Math.abs(height - rect.height) < .5 && dpr === nextDpr) return;
+    dpr = nextDpr;
     width = rect.width;
     height = rect.height;
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
+    // Assigning either attribute clears the bitmap, even if its value did not
+    // change. Resize only when needed, then repaint within this same task.
+    if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+    if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const density = compactLayout.matches ? 7800 : 6200;
@@ -47,11 +57,12 @@
     else {
       while (particles.length < count) particles.push(createParticle(particles.length));
     }
+    paint(performance.now());
   }
 
   function draw(time) {
     frame = 0;
-    if (!active || document.hidden || document.body.classList.contains('is-resizing')) return;
+    if (!active || document.hidden || document.body.classList.contains('motion-paused') || reduceMotion.matches) return;
 
     // Keep a subtle ambient feel without competing with the interactive map.
     const frameRate = compactLayout.matches ? 28 : 36;
@@ -60,9 +71,16 @@
       return;
     }
     lastFrame = time;
+    paint(time);
+    frame = requestAnimationFrame(draw);
+  }
 
-    const dt = Math.min((time - last) / 1000 || 0, 0.04);
+  function paint(time) {
+    if (!width || !height) return;
+    const dt = reduceMotion.matches || document.body.classList.contains('motion-paused')
+      ? 0 : Math.min((time - last) / 1000 || 0, 0.04);
     last = time;
+    elapsed += dt;
     ctx.clearRect(0, 0, width, height);
 
     const cx = width * 0.74;
@@ -70,7 +88,7 @@
     const scale = Math.min(width, height);
     const ringX = Math.max(220, scale * 0.39);
     const ringY = Math.max(190, scale * 0.48);
-    const motion = reduceMotion.matches ? 0 : time * 0.001;
+    const motion = reduceMotion.matches ? 0 : elapsed;
 
     const halo = ctx.createRadialGradient(cx, cy, scale * 0.08, cx, cy, scale * 0.62);
     halo.addColorStop(0, 'rgba(7,15,35,.03)');
@@ -133,21 +151,39 @@
     ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = 'source-over';
-    if (!reduceMotion.matches) frame = requestAnimationFrame(draw);
   }
 
   function start() {
-    if (!frame) frame = requestAnimationFrame(draw);
+    if (!frame && active && !document.hidden && !reduceMotion.matches &&
+        !document.body.classList.contains('motion-paused')) {
+      last = performance.now();
+      frame = requestAnimationFrame(draw);
+    }
+  }
+
+  function stop() {
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
   }
 
   resize();
   window.addEventListener('viewport:resize-end', () => {
     resize();
-    if (active) start();
+    start();
   });
-  document.addEventListener('visibilitychange', () => { active = !document.hidden; if (active) start(); });
+  window.addEventListener('viewport:motion-pause', stop);
+  window.addEventListener('viewport:motion-resume', start);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver((entries) => { active = Boolean(entries[0]?.isIntersecting); if (active) start(); }, { threshold: 0.01 }).observe(canvas);
+    new IntersectionObserver((entries) => {
+      active = Boolean(entries[0]?.isIntersecting);
+      if (active) start(); else stop();
+    }, { threshold: 0.01 }).observe(canvas);
   }
-  if (reduceMotion.matches) draw(0); else start();
+  reduceMotion.addEventListener('change', () => {
+    stop();
+    paint(performance.now());
+    start();
+  });
+  start();
 })();

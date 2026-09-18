@@ -9,49 +9,75 @@ function createNavigationArrow(direction = 'next') {
   return arrow;
 }
 
-// One viewport guard coordinates resize, zoom, and orientation changes without
-// rebuilding components or running layout measurements on every resize event.
-(() => {
+// Pinch zoom changes the visual viewport, not the CSS layout viewport. Never
+// rebuild layout/canvases or reset UI transitions just because the user zooms.
+(function initViewportStability() {
   let resizeTimer = null;
-  let lastWidth = window.innerWidth;
+  let resizing = false;
+  let motionPaused = false;
+  let lastWidth = document.documentElement.clientWidth || window.innerWidth;
   let lastHeight = window.innerHeight;
-  let lastScale = window.visualViewport?.scale || 1;
-  let lastOrientation = window.screen.orientation?.angle ?? 0;
+  let lastDpr = window.devicePixelRatio || 1;
+  const desktopPointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const isZoomed = () => (window.visualViewport?.scale || 1) > 1.01;
+  const syncMotion = () => {
+    const zoomed = isZoomed();
+    const paused = resizing || zoomed || document.hidden;
+    document.body.classList.toggle('is-zoomed', zoomed);
+    if (paused === motionPaused) return;
+    motionPaused = paused;
+    document.body.classList.toggle('motion-paused', paused);
+    window.dispatchEvent(new CustomEvent(paused ? 'viewport:motion-pause' : 'viewport:motion-resume'));
+  };
   const finishResize = () => {
     resizeTimer = null;
+    resizing = false;
     document.body.classList.remove('is-resizing');
     window.dispatchEvent(new CustomEvent('viewport:resize-end'));
+    syncMotion();
   };
-  const handleViewportChange = (force = false) => {
-    const width = window.innerWidth;
+  const handleLayoutChange = (force = false) => {
+    const width = document.documentElement.clientWidth || window.innerWidth;
     const height = window.innerHeight;
-    const scale = window.visualViewport?.scale || 1;
-    const orientation = window.screen.orientation?.angle ?? lastOrientation;
-    const desktopResize = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const dpr = window.devicePixelRatio || 1;
     const meaningfulChange = force ||
       Math.abs(width - lastWidth) >= 1 ||
-      Math.abs(scale - lastScale) >= 0.01 ||
-      orientation !== lastOrientation ||
-      (desktopResize && Math.abs(height - lastHeight) >= 1);
+      Math.abs(dpr - lastDpr) >= 0.01 ||
+      (desktopPointer.matches && !isZoomed() && Math.abs(height - lastHeight) >= 1);
 
     if (!meaningfulChange) return;
 
     lastWidth = width;
     lastHeight = height;
-    lastScale = scale;
-    lastOrientation = orientation;
+    lastDpr = dpr;
 
-    if (!document.body.classList.contains('is-resizing')) {
+    if (!resizing) {
+      resizing = true;
+      document.body.classList.add('is-resizing');
+      syncMotion();
       window.dispatchEvent(new CustomEvent('viewport:resize-start'));
     }
-    document.body.classList.add('is-resizing');
     window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(finishResize, 220);
+    resizeTimer = window.setTimeout(finishResize, 180);
   };
 
-  window.addEventListener('resize', () => handleViewportChange(), { passive: true });
-  window.addEventListener('orientationchange', () => handleViewportChange(true), { passive: true });
-  window.visualViewport?.addEventListener('resize', () => handleViewportChange(), { passive: true });
+  window.addEventListener('resize', () => handleLayoutChange(), { passive: true });
+  window.addEventListener('orientationchange', () => handleLayoutChange(true), { passive: true });
+  window.visualViewport?.addEventListener('resize', syncMotion, { passive: true });
+  document.addEventListener('visibilitychange', syncMotion);
+  syncMotion();
+})();
+
+// Pause CSS decoration outside the viewport without hiding/recreating content.
+(function initDecorativeMotion() {
+  if (!('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(({ target, isIntersecting }) => target.classList.toggle('motion-offscreen', !isIntersecting));
+  }, { rootMargin: '80px 0px', threshold: 0 });
+  document.querySelectorAll('.hero-media, .hero-console, .tech-marquee, .solution-finder-section, .why-block, footer, .project-terminal, .project-detail-terminal, .flow-line').forEach((region) => {
+    region.classList.add('motion-region');
+    observer.observe(region);
+  });
 })();
 
 // Header shadow + floating pill morph on scroll — activates only after the hero section
@@ -60,10 +86,22 @@ if (header) {
   const heroEl = document.querySelector('.hero-media, .work-hero, .tool-hero') || document.getElementById('hero-console');
   const getThreshold = () => heroEl ? Math.max(heroEl.offsetHeight - 80, 120) : 120;
   let threshold = getThreshold();
-  window.addEventListener('viewport:resize-end', () => { threshold = getThreshold(); });
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > threshold);
-  }, { passive: true });
+  let headerFrame = null;
+  const syncHeader = () => {
+    headerFrame = null;
+    if (document.body.matches('.is-resizing, .is-zoomed')) return;
+    // A small dead band prevents repeated pill/full-width swaps at the boundary.
+    const scrolled = header.classList.contains('scrolled');
+    if (!scrolled && window.scrollY > threshold + 16) header.classList.add('scrolled');
+    else if (scrolled && window.scrollY < threshold - 16) header.classList.remove('scrolled');
+  };
+  const scheduleHeader = () => {
+    if (headerFrame === null) headerFrame = window.requestAnimationFrame(syncHeader);
+  };
+  window.addEventListener('viewport:resize-end', () => { threshold = getThreshold(); scheduleHeader(); });
+  window.addEventListener('viewport:motion-resume', scheduleHeader);
+  window.addEventListener('scroll', scheduleHeader, { passive: true });
+  scheduleHeader();
 }
 
 // Service capability links keep their descriptive hashes, but land at the
@@ -116,19 +154,17 @@ if (header) {
   };
 
   if (resolveLanding(window.location.hash)) {
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    const settle = () => landAtHeading(window.location.hash, false);
-    settle();
-    window.requestAnimationFrame(() => window.requestAnimationFrame(settle));
-    window.addEventListener('load', settle, { once: true });
-    // Repeated delayed corrections made responsive pages appear to keep
-    // scrolling after the intended capability heading had already arrived.
-    // Preserve the established desktop behavior, but use one settled landing
-    // on phones and tablets.
-    if (window.innerWidth > 1040) {
-      window.addEventListener('DOMContentLoaded', settle, { once: true });
-      window.addEventListener('pageshow', settle, { once: true });
-      [80, 240].forEach((delay) => window.setTimeout(settle, delay));
+    const navigation = performance.getEntriesByType?.('navigation')[0];
+    if (navigation?.type !== 'back_forward') {
+      let userMoved = false;
+      const cancelLanding = () => { userMoved = true; };
+      ['wheel', 'touchstart', 'keydown'].forEach((name) => window.addEventListener(name, cancelLanding, { once: true, passive: true }));
+      const settle = () => {
+        ['wheel', 'touchstart', 'keydown'].forEach((name) => window.removeEventListener(name, cancelLanding));
+        if (!userMoved) landAtHeading(window.location.hash, false);
+      };
+      if (document.readyState === 'complete') settle();
+      else window.addEventListener('load', settle, { once: true });
     }
   }
 
@@ -200,7 +236,7 @@ if (toggle && navLinks) {
 const magneticPointer = window.matchMedia('(min-width: 1080px) and (hover: hover) and (pointer: fine)');
 document.querySelectorAll('.btn').forEach(btn => {
   btn.addEventListener('mousemove', e => {
-    if (!magneticPointer.matches || document.body.classList.contains('is-resizing')) return;
+    if (!magneticPointer.matches || document.body.classList.contains('motion-paused')) return;
     const r = btn.getBoundingClientRect();
     const x = (e.clientX - r.left - r.width / 2) * 0.25;
     const y = (e.clientY - r.top - r.height / 2) * 0.4;
@@ -228,7 +264,8 @@ if (revealTargets.length) {
   const panel = document.getElementById('hc-panel');
   const canvas = document.getElementById('hc-graph');
   if (!panel || !canvas) return;
-  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W, H;
   const DESKTOP_MARGIN = 60;
@@ -391,12 +428,17 @@ if (revealTargets.length) {
   }
   function resize() {
     const DPR = Math.min(window.devicePixelRatio || 1, isPhoneLayout() ? 1 : 1.25);
-    W = panel.clientWidth; H = panel.clientHeight;
-    canvas.width = W * DPR; canvas.height = H * DPR;
+    const nextW = panel.clientWidth, nextH = panel.clientHeight;
+    if (!nextW || !nextH) return;
+    const pixelWidth = Math.round(nextW * DPR), pixelHeight = Math.round(nextH * DPR);
+    if (W === nextW && H === nextH && canvas.width === pixelWidth && canvas.height === pixelHeight) return;
+    W = nextW; H = nextH;
+    if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+    if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
     canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     layoutNodes();
-    draw(0);
+    draw(performance.now());
   }
   let dragging = null, pressedNode = null, pressPoint = null, dragOffX = 0, dragOffY = 0, lastT = 0;
   const mouse = { x: -9999, y: -9999, active: false };
@@ -635,7 +677,7 @@ if (revealTargets.length) {
     });
   }
   function animateGraph(time) {
-    if (!graphVisible || document.hidden || document.body.classList.contains('is-resizing')) {
+    if (!graphVisible || document.hidden || document.body.classList.contains('motion-paused')) {
       graphRunning = false;
       return;
     }
@@ -646,7 +688,7 @@ if (revealTargets.length) {
     requestAnimationFrame(animateGraph);
   }
   function startGraphAnimation() {
-    if (reduceMotion || graphRunning) return;
+    if (reduceMotion || graphRunning || !graphVisible || document.hidden || document.body.classList.contains('motion-paused')) return;
     graphRunning = true;
     requestAnimationFrame(animateGraph);
   }
@@ -667,6 +709,7 @@ if (revealTargets.length) {
     resize();
     if (graphVisible) startGraphAnimation();
   });
+  window.addEventListener('viewport:motion-resume', startGraphAnimation);
   selectNode('agent');
   startGraphAnimation();
 })();
@@ -779,7 +822,15 @@ if (revealTargets.length) {
   const body = root.querySelector('.assistant-body');
   const input = root.querySelector('.assistant-input');
   const form = root.querySelector('.assistant-form');
-  const open = () => { root.classList.add('is-open'); launcher.setAttribute('aria-expanded', 'true'); setTimeout(() => input.focus(), 80); };
+  const open = () => {
+    root.classList.add('is-open');
+    launcher.setAttribute('aria-expanded', 'true');
+    // Touch users choose when to open their keyboard; automatic focus caused
+    // another viewport jump as soon as the panel appeared.
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      setTimeout(() => { if (root.classList.contains('is-open')) input.focus({ preventScroll: true }); }, 80);
+    }
+  };
   const close = () => { root.classList.remove('is-open'); launcher.setAttribute('aria-expanded', 'false'); };
   const populateAssistantRow = (row, text, user = false) => {
     row.className = `assistant-message${user ? ' user' : ''}`;
@@ -1225,6 +1276,8 @@ document.body?.classList.add('header-ready');
   const slides = scope.querySelectorAll('.hero-slide');
   const dotsWrap = document.getElementById('hero-dots');
   if (!slides.length || !dotsWrap) return;
+  const manualHero = window.matchMedia('(max-width: 1079px), (prefers-reduced-motion: reduce)');
+  let heroVisible = true;
   let index = 0, timer;
   slides.forEach((_, i) => {
     const dot = document.createElement('button');
@@ -1240,36 +1293,58 @@ document.body?.classList.add('header-ready');
     index = (i + slides.length) % slides.length;
     slides[index].classList.add('active');
     dots[index].classList.add('active');
+    slides.forEach((slide, position) => {
+      slide.inert = position !== index;
+      slide.setAttribute('aria-hidden', String(position !== index));
+    });
   }
   function restart() {
     clearInterval(timer);
-    if (document.hidden || document.body.classList.contains('is-resizing')) return;
+    if (manualHero.matches || !heroVisible || document.hidden || document.body.classList.contains('motion-paused')) return;
     timer = setInterval(() => {
-      if (!document.hidden && !document.body.classList.contains('is-resizing')) goTo(index + 1);
+      if (!document.hidden && !document.body.classList.contains('motion-paused')) goTo(index + 1);
     }, 5500);
   }
-  window.addEventListener('viewport:resize-start', () => clearInterval(timer));
-  window.addEventListener('viewport:resize-end', restart);
+  window.addEventListener('viewport:motion-pause', () => clearInterval(timer));
+  window.addEventListener('viewport:motion-resume', restart);
+  manualHero.addEventListener('change', restart);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      heroVisible = Boolean(entries[0]?.isIntersecting);
+      restart();
+    }, { threshold: .01 }).observe(scope);
+  }
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) clearInterval(timer);
     else restart();
   });
+  goTo(0);
   restart();
 })();
 
 // Dot-grid background spotlight — follows the cursor so the pattern feels alive, not static
 (function initDotSpotlight() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const allowed = window.matchMedia('(min-width: 1080px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+  if (!allowed.matches) return;
   const spot = document.createElement('div');
   spot.id = 'dot-spotlight';
   document.body.prepend(spot);
   let hideTimer = null;
+  let spotFrame = null;
+  let point = { x: 0, y: 0 };
   window.addEventListener('mousemove', e => {
-    spot.style.setProperty('--mx', e.clientX + 'px');
-    spot.style.setProperty('--my', e.clientY + 'px');
-    spot.classList.add('active');
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => spot.classList.remove('active'), 1200);
+    if (!allowed.matches || document.body.classList.contains('motion-paused')) return;
+    point = { x: e.clientX, y: e.clientY };
+    if (spotFrame !== null) return;
+    spotFrame = requestAnimationFrame(() => {
+      spotFrame = null;
+      if (document.body.classList.contains('motion-paused')) return;
+      spot.style.setProperty('--mx', point.x + 'px');
+      spot.style.setProperty('--my', point.y + 'px');
+      spot.classList.add('active');
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => spot.classList.remove('active'), 1200);
+    });
   }, { passive: true });
 })();
 
@@ -1291,6 +1366,8 @@ function initSlider(rootId) {
   let index = 0;
   let autoplay;
   let isHovering = false;
+  let sliderVisible = true;
+  const sliderReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   for (let i = 0; i < slides.length; i++) {
     const dot = document.createElement('button');
@@ -1334,14 +1411,21 @@ function initSlider(rootId) {
 
   function startAutoplay() {
     stopAutoplay();
-    if (document.hidden || document.body.classList.contains('is-resizing')) return;
+    if (!sliderVisible || sliderReducedMotion.matches || document.hidden || document.body.classList.contains('motion-paused')) return;
     autoplay = setInterval(() => {
-      if (!isHovering && !document.hidden && !document.body.classList.contains('is-resizing')) goTo(index + 1);
+      if (!isHovering && !document.hidden && !document.body.classList.contains('motion-paused')) goTo(index + 1);
     }, 4000);
   }
   function stopAutoplay() { clearInterval(autoplay); }
-  window.addEventListener('viewport:resize-start', stopAutoplay);
-  window.addEventListener('viewport:resize-end', startAutoplay);
+  window.addEventListener('viewport:motion-pause', stopAutoplay);
+  window.addEventListener('viewport:motion-resume', startAutoplay);
+  sliderReducedMotion.addEventListener('change', startAutoplay);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      sliderVisible = Boolean(entries[0]?.isIntersecting);
+      startAutoplay();
+    }, { threshold: .01 }).observe(root);
+  }
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stopAutoplay();
     else startAutoplay();
@@ -1370,7 +1454,15 @@ function initSlider(rootId) {
     }
     setTimeout(() => { isHovering = false; }, 50);
   });
-  track.addEventListener('touchstart', (e) => { dragStartX = e.touches[0].clientX; dragging = true; isHovering = true; }, { passive: true });
+  track.addEventListener('touchstart', (e) => {
+    dragging = e.touches.length === 1;
+    isHovering = dragging;
+    if (dragging) dragStartX = e.touches[0].clientX;
+  }, { passive: true });
+  track.addEventListener('touchmove', (e) => {
+    if (e.touches.length !== 1) { dragging = false; isHovering = false; }
+  }, { passive: true });
+  track.addEventListener('touchcancel', () => { dragging = false; isHovering = false; }, { passive: true });
   track.addEventListener('touchend', (e) => {
     if (!dragging) return;
     dragging = false;
@@ -1408,6 +1500,7 @@ initSlider('testimonial-slider-1');
   };
 
   wrap.addEventListener('pointerdown', event => {
+    if (event.isPrimary === false || document.body.classList.contains('is-zoomed')) { endDrag(); return; }
     if (event.pointerType === 'mouse' && event.button !== 0) return;
     dragging = true;
     lastX = event.clientX;
@@ -1425,6 +1518,7 @@ initSlider('testimonial-slider-1');
   wrap.addEventListener('pointerup', endDrag);
   wrap.addEventListener('pointercancel', endDrag);
   wrap.addEventListener('lostpointercapture', endDrag);
+  window.addEventListener('viewport:motion-pause', endDrag);
 })();
 
 // Industries marquee — continuous auto-scroll, pauses on hover, drag/fling with momentum
@@ -1432,7 +1526,7 @@ initSlider('testimonial-slider-1');
   const wrap = document.getElementById('industry-marquee-1');
   const track = document.getElementById('industry-marquee-track');
   if (!wrap || !track) return;
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const controls = wrap.parentElement.querySelector('.im-controls');
   const prevBtn = controls && controls.querySelector('.im-prev');
   const nextBtn = controls && controls.querySelector('.im-next');
@@ -1462,53 +1556,67 @@ initSlider('testimonial-slider-1');
       const d = document.createElement('button');
       d.className = 'im-dot' + (i === 0 ? ' active' : '');
       d.setAttribute('aria-label', 'Jump to industry ' + (i + 1));
-      d.addEventListener('click', () => { x = -i * cardStep; paused = true; setTimeout(() => { paused = false; }, 1600); });
+      d.addEventListener('click', () => { x = -i * cardStep; paused = true; apply(); startFrame(); setTimeout(() => { paused = false; startFrame(); }, 1600); });
       dotsWrap.appendChild(d);
     }
     dots = Array.from(dotsWrap.children);
   }
   function updateDots() {
-    if (!dots.length) return;
+    if (!dots.length || !setWidth) return;
     const pos = ((-x % setWidth) + setWidth) % setWidth;
     const idx = Math.round(pos / cardStep) % cardCount;
     dots.forEach((d, i) => d.classList.toggle('active', i === idx));
   }
 
-  let autoSpeed = reduceMotion ? 0 : 0.55; // px per frame — deliberately slow for easier reading
   let paused = false;
   let dragging = false, dragMoved = false, suppressClick = false;
   let dragStartX = 0, dragStartTx = 0, lastX = 0, lastT = 0, vx = 0;
   let marqueeVisible = true;
   let frameRunning = false;
+  let lastFrameTime = 0;
+  let appliedX = null;
 
   function apply() {
+    if (!setWidth) return;
     if (x <= -setWidth) x += setWidth;
     if (x > 0) x -= setWidth;
+    if (x === appliedX) return;
+    appliedX = x;
     track.style.transform = 'translateX(' + x + 'px)';
     updateDots();
   }
 
-  function frame() {
-    if (!marqueeVisible || document.hidden || document.body.classList.contains('is-resizing')) {
+  function frame(now) {
+    if (!marqueeVisible || document.hidden || document.body.classList.contains('motion-paused')) {
       frameRunning = false;
       return;
     }
+    const step = lastFrameTime ? Math.min((now - lastFrameTime) / (1000 / 60), 2) : 1;
+    lastFrameTime = now;
+    const autoSpeed = reducedMotion.matches ? 0 : .55;
     if (!dragging) {
       if (paused) { vx *= 0.9; } else { vx += (-autoSpeed - vx) * 0.06; }
-      x += vx;
+      x += vx * step;
     }
     apply();
+    if (!dragging && (paused || reducedMotion.matches) && Math.abs(vx) < .01) {
+      frameRunning = false;
+      return;
+    }
     requestAnimationFrame(frame);
   }
   function startFrame() {
-    if (frameRunning) return;
+    if (frameRunning || !marqueeVisible || document.hidden || document.body.classList.contains('motion-paused')) return;
     frameRunning = true;
+    lastFrameTime = 0;
     requestAnimationFrame(frame);
   }
+  window.addEventListener('viewport:motion-resume', startFrame);
+  reducedMotion.addEventListener('change', startFrame);
   if ('IntersectionObserver' in window) {
     new IntersectionObserver((entries) => {
       marqueeVisible = Boolean(entries[0]?.isIntersecting);
-      if (marqueeVisible) startFrame();
+      if (marqueeVisible) { measure(); startFrame(); }
     }, { threshold: 0.01 }).observe(wrap);
   }
   document.addEventListener('visibilitychange', () => {
@@ -1516,11 +1624,13 @@ initSlider('testimonial-slider-1');
   });
 
   wrap.addEventListener('mouseenter', () => { paused = true; });
-  wrap.addEventListener('mouseleave', () => { paused = false; });
+  wrap.addEventListener('mouseleave', () => { paused = false; startFrame(); });
 
   wrap.addEventListener('pointerdown', e => {
+    if (e.isPrimary === false || document.body.classList.contains('is-zoomed')) { endDrag(); return; }
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     dragging = true; wrap.classList.add('grabbing');
+    startFrame();
     dragMoved = false;
     dragStartX = e.clientX; dragStartTx = x; lastX = e.clientX; lastT = performance.now(); vx = 0;
     wrap.setPointerCapture(e.pointerId);
@@ -1541,12 +1651,14 @@ initSlider('testimonial-slider-1');
     if (dragMoved) {
       suppressClick = true;
       paused = true;
-      window.setTimeout(() => { suppressClick = false; paused = false; }, 850);
+      window.setTimeout(() => { suppressClick = false; paused = false; startFrame(); }, 850);
     }
+    startFrame();
   }
   wrap.addEventListener('pointerup', endDrag);
   wrap.addEventListener('pointercancel', endDrag);
   wrap.addEventListener('lostpointercapture', endDrag);
+  window.addEventListener('viewport:motion-pause', endDrag);
   wrap.addEventListener('click', e => {
     if (!suppressClick) return;
     e.preventDefault();
@@ -1554,8 +1666,8 @@ initSlider('testimonial-slider-1');
     suppressClick = false;
   }, true);
 
-  if (prevBtn) prevBtn.addEventListener('click', () => { x += 280; paused = true; setTimeout(() => { paused = false; }, 1600); });
-  if (nextBtn) nextBtn.addEventListener('click', () => { x -= 280; paused = true; setTimeout(() => { paused = false; }, 1600); });
+  if (prevBtn) prevBtn.addEventListener('click', () => { x += 280; paused = true; apply(); startFrame(); setTimeout(() => { paused = false; startFrame(); }, 1600); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { x -= 280; paused = true; apply(); startFrame(); setTimeout(() => { paused = false; startFrame(); }, 1600); });
 
   startFrame();
 })();
@@ -1567,6 +1679,7 @@ const isTouchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matc
 if (tiltCards.length && !isTouchDevice) {
   tiltCards.forEach(card => {
     card.addEventListener('mousemove', (e) => {
+      if (!magneticPointer.matches || document.body.classList.contains('motion-paused')) return;
       const r = card.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width;
       const py = (e.clientY - r.top) / r.height;

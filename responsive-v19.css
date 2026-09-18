@@ -313,7 +313,7 @@
 
   body.mobile-nav-open {
     overflow: hidden !important;
-    touch-action: none;
+    touch-action: pan-y pinch-zoom;
   }
 
   /* One consistent hero frame for every internal route. */
@@ -1997,11 +1997,107 @@
 
 /* Projects page stability: keep content and surfaces steady instead of
    stacking several blur, glow, and delayed reveal animations at once. */
-body.is-resizing *,
-body.is-resizing *::before,
-body.is-resizing *::after {
+/* Pause decoration only. Cancelling every UI transition on every zoom event
+   made the header, open cards, and assistant snap to their end states. */
+body.motion-paused :is(.blob, .hc-bg, .hc-blob, .orange-ambient-glow,
+  .orange-ambient-flow, .orange-ambient-ring, .orange-ambient-sparkles,
+  .marquee-track, .footer-watermark, .trace-caret),
+body.motion-paused .hero-bg img,
+body.motion-paused :is(.flow-line, .cta-band, .work-tabs)::before,
+body.motion-paused :is(.project-terminal, .project-detail-terminal)::after {
   animation-play-state: paused !important;
-  transition: none !important;
+}
+
+/* Animation may pause off-screen; UI transitions and focus remain available. */
+.motion-region.motion-offscreen,
+.motion-region.motion-offscreen *,
+.motion-region.motion-offscreen::before,
+.motion-region.motion-offscreen::after,
+.motion-region.motion-offscreen *::before,
+.motion-region.motion-offscreen *::after,
+body.motion-paused .motion-region,
+body.motion-paused .motion-region *,
+body.motion-paused .motion-region::before,
+body.motion-paused .motion-region::after,
+body.motion-paused .motion-region *::before,
+body.motion-paused .motion-region *::after {
+  animation-play-state: paused !important;
+}
+
+/* Avoid scaling/rasterizing an entire large image behind the Work pages. */
+.work-hero .hc-bg { animation: none; }
+.project-page .blob, .project-page .hc-blob { will-change: auto; }
+.project-page .project-detail-terminal-top > span { overflow-wrap: anywhere; }
+
+@media (min-width: 1080px) {
+  /* All desktop headlines share a natural-height grid cell. Autoplay no
+     longer changes the hero height and shifts the sections below it. */
+  .home-page .hc-copy .hero-rotator { display: grid; }
+  .home-page .hc-copy .hero-slide {
+    position: relative;
+    inset: auto;
+    grid-area: 1 / 1;
+    visibility: hidden;
+  }
+  .home-page .hc-copy .hero-slide.active { visibility: visible; }
+}
+
+@media (max-width: 1079px), (hover: none), (pointer: coarse) {
+  .liquid-bg .blob, .hc-blob {
+    animation: none !important;
+    filter: none !important;
+    will-change: auto;
+  }
+  .hero-media .hero-bg img { animation: none; }
+  .cap-card, .service-tile, .wide-card, .founder-card, .why-block,
+  .flow-num, .btn-outline, .btn-outline-light {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .industry-marquee-wrap, .tech-marquee { touch-action: pan-y pinch-zoom !important; }
+}
+
+@media (max-width: 1079px) {
+  /* Mobile uses the existing dots for deliberate headline changes. */
+  .home-page .hc-copy .hero-slide:not(.active) { display: none; }
+}
+
+@media (max-width: 1040px) and (hover: none), (max-width: 1040px) and (pointer: coarse) {
+  /* Flat, same-size faces avoid Safari's 3D backface flashes during pinch. */
+  .flip-card { perspective: none; -webkit-perspective: none; }
+  .flip-card .flip-inner, .flip-card.is-flipped .flip-inner {
+    display: grid;
+    min-height: 0;
+    transform: none !important;
+    transform-style: flat;
+    -webkit-transform-style: flat;
+    transition: none;
+  }
+  .flip-card .flip-front, .flip-card .flip-back {
+    position: relative;
+    inset: auto;
+    grid-area: 1 / 1;
+    min-width: 0;
+    transform: none !important;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+  }
+  .flip-card .flip-back { padding: 0; visibility: hidden; pointer-events: none; }
+  .flip-card.is-flipped .flip-front { visibility: hidden; pointer-events: none; }
+  .flip-card.is-flipped .flip-back { visibility: visible; pointer-events: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-region, .motion-region *, .motion-region::before,
+  .motion-region::after, .motion-region *::before, .motion-region *::after {
+    animation: none !important;
+  }
+  .reveal, .reveal-scale, .reveal-left, .reveal-right {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
 }
 
 .project-page .project-browser,

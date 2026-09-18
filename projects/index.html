@@ -9,12 +9,12 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com" rel="preconnect" crossorigin="anonymous"/>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="../styles.css?v=43" rel="stylesheet"/>
+<link href="../styles.css?v=20260918-zoom1" rel="stylesheet"/>
 <link href="../work-hero-centered-v16.css" rel="stylesheet"/>
 <link href="../responsive-v18.css?v=19" rel="stylesheet"/>
-<link href="../responsive-v19.css?v=47" rel="stylesheet"/>
+<link href="../responsive-v19.css?v=20260918-zoom1" rel="stylesheet"/>
 </head>
-<body>
+<body class="project-page">
 <div class="scroll-progress" id="scroll-progress"></div><div class="cursor-dot" id="cursor-dot"></div>
 <div class="liquid-bg"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
 <header><div class="nav">
@@ -62,17 +62,18 @@
 <section class="section-pad work-cta"><div class="wrap"><div class="cta-band"><div><h3>Have a system worth building?</h3><p>Bring the business challenge, existing workflow, or early idea. We will help turn it into a clear engineering path.</p></div><a class="btn btn-outline-light magnetic" href="../contact.html">Start a Conversation →</a></div></div></section>
 </main>
 <footer><img alt="" aria-hidden="true" class="footer-watermark" src="../assets/logo-icon.png"/><div class="wrap"><div class="footer-top"><div><div class="footer-logo brand"><img alt="Ingenuity Systems" class="logo-full" src="../assets/logo-light.png"/></div><p style="font-family:'Manrope',sans-serif;font-weight:700;color:#fff;font-size:14px;margin-bottom:8px">Intelligent Systems. Powerful Outcomes.</p><p>We design, build, integrate, and automate digital systems that help businesses operate smarter and evolve with confidence.</p><div class="footer-location"><span>Lahore, Pakistan</span><span>Wyoming, USA</span></div></div><div class="footer-col"><h5>Company</h5><ul><li><a href="../index.html">Home</a></li><li><a href="../work.html">Work</a></li><li><a href="../about.html">About</a></li><li><a href="../contact.html">Contact</a></li></ul></div><div class="footer-col"><h5>Services</h5><ul><li><a href="../services-ai.html">AI &amp; Intelligent Systems</a></li><li><a href="../services-automation.html">Business Process Automation</a></li><li><a href="../services-software.html">Software &amp; Digital Engineering</a></li><li><a href="../services-integration.html">Systems Integration &amp; Data</a></li></ul></div><div class="footer-col"><h5>Industries</h5><ul><li><a href="../industries.html">Explore Industries</a></li><li><a href="../industries-technology.html">Technology &amp; SaaS</a></li><li><a href="../industries-professional.html">Professional Services</a></li></ul></div></div><div class="flow-line on-dark" style="margin-bottom:28px"></div><div class="footer-bottom"><span>© 2026 Ingenuity Systems. All rights reserved. | Lahore, Pakistan · Wyoming, USA</span><div class="legal-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div></div></footer>
-<script src="../script.js?v=43"></script><script src="../orange-ambient.js?v=5"></script>
+<script src="../script.js?v=20260918-zoom1"></script><script src="../orange-ambient.js?v=20260918-zoom1"></script>
 <script>
 (() => {
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const compactTrace = window.matchMedia('(max-width: 1079px)');
   const filters = [...document.querySelectorAll('.project-filter')];
   const cards = [...document.querySelectorAll('.project-card')];
   const sleep = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
   let activeCard = null;
 
   const waitForStableViewport = async (terminal, token) => {
-    while (document.hidden || document.body.classList.contains('is-resizing')) {
+    while (document.hidden || document.body.classList.contains('is-resizing') || terminal.classList.contains('motion-offscreen')) {
       if (Number(terminal.dataset.runToken) !== token) return false;
       await sleep(60);
     }
@@ -82,6 +83,7 @@
   const stopTrace = (terminal) => {
     if (!terminal) return;
     terminal.dataset.runToken = String(Number(terminal.dataset.runToken || 0) + 1);
+    terminal.querySelector('.project-detail-terminal-screen')?.setAttribute('aria-busy', 'false');
   };
 
   const runTrace = async (card) => {
@@ -90,31 +92,46 @@
     if (!terminal || !screen) return;
     const token = Number(terminal.dataset.runToken || 0) + 1;
     terminal.dataset.runToken = String(token);
-    screen.innerHTML = '';
+    screen.replaceChildren();
+    screen.setAttribute('aria-busy', 'true');
     let lines = [];
     try { lines = JSON.parse(terminal.dataset.lines || '[]'); } catch (error) { lines = []; }
-    for (let index = 0; index < lines.length; index += 1) {
-      if (!await waitForStableViewport(terminal, token)) return;
+    // Reserve the final wrapped line sizes before typing. The text animation
+    // must not repeatedly alter the card's geometry or its scrollbar width.
+    const rows = lines.map((text, index) => {
       const line = document.createElement('div');
       line.className = `trace-line ${index === 0 ? 'command' : index === lines.length - 1 ? 'status' : ''}`.trim();
       const prefix = index === 0 ? '$ ' : index === lines.length - 1 ? '✓ ' : '› ';
-      line.textContent = prefix;
+      const measure = document.createElement('span');
+      measure.className = 'trace-measure';
+      measure.setAttribute('aria-hidden', 'true');
+      measure.textContent = prefix + text;
+      const output = document.createElement('span');
+      output.className = 'trace-text';
+      line.append(measure, output);
       screen.appendChild(line);
-      if (reduceMotion) line.textContent += lines[index];
+      return { output, prefix };
+    });
+    for (let index = 0; index < lines.length; index += 1) {
+      if (!await waitForStableViewport(terminal, token)) return;
+      const { output, prefix } = rows[index];
+      if (reducedMotion.matches || compactTrace.matches) output.textContent = prefix + lines[index];
       else {
-        for (const character of lines[index]) {
+        const chunk = index === 0 ? 3 : 5;
+        for (let end = chunk; end < lines[index].length + chunk; end += chunk) {
           if (!await waitForStableViewport(terminal, token)) return;
-          line.textContent += character;
-          await sleep(index === 0 ? 12 : 6);
+          output.textContent = prefix + lines[index].slice(0, end);
+          await sleep(32);
         }
       }
-      await sleep(reduceMotion ? 0 : 85);
+      await sleep(reducedMotion.matches || compactTrace.matches ? 0 : 85);
     }
     if (Number(terminal.dataset.runToken) === token) {
       const caret = document.createElement('div');
       caret.className = 'trace-line cursor-line';
       caret.innerHTML = '<span class="trace-prompt">$</span> <span class="trace-caret"></span>';
       screen.appendChild(caret);
+      screen.setAttribute('aria-busy', 'false');
     }
   };
 

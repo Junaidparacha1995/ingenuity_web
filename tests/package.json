@@ -1,0 +1,10 @@
+{
+  "name": "ingenuity-stability-checks",
+  "private": true,
+  "scripts": { "test": "node --test stability.test.cjs" },
+  "devDependencies": {
+    "@sinonjs/fake-timers": "13.0.5",
+    "jsdom": "26.1.0",
+    "postcss": "8.5.28"
+  }
+}
