@@ -297,10 +297,9 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 }
 .mega-col ul a.mega-col-title:hover,
 .mega-col ul a.mega-col-title:focus-visible{
-  background:linear-gradient(100deg,rgba(225,53,17,.24),rgba(225,53,17,.08));
+  background:rgba(225,53,17,.18);
   color:var(--orange);
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px rgba(3,13,28,.2),0 0 0 1px rgba(225,53,17,.28);
+  box-shadow:0 8px 20px rgba(3,13,28,.16),0 0 0 1px rgba(225,53,17,.2);
   outline:none;
 }
 
