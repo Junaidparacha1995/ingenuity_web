@@ -1359,6 +1359,9 @@ html,body{max-width:100%;overflow-x:hidden}
 
 /* Case-study page: keep the hero title present and give every card action its own clear row. */
 .case-study-page .case-study-hero-title{display:block!important;visibility:visible!important;opacity:1!important;position:relative;z-index:2;color:var(--white);margin:0 auto 18px;}
+.work-case-studies .work-grid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;}
+.work-case-studies{scroll-margin-top:calc(var(--site-header-height) + 20px);}
+.work-case-studies .case-study-card{min-width:0;}
 .case-study-page .work-grid{align-items:start;grid-auto-rows:max-content;}
 .case-study-page .case-study-card{height:auto;min-height:390px;}
 .case-study-page .case-study-card .case-study-result{flex:0 0 auto;margin-bottom:0;}
@@ -1368,6 +1371,7 @@ html,body{max-width:100%;overflow-x:hidden}
 .case-study-page .case-study-explore:hover{background:rgba(225,53,17,.2);border-color:rgba(225,53,17,.62);}
 @media(max-width:720px){
   .project-page .project-browser{padding-top:42px;}
+  .work-case-studies .work-grid{grid-template-columns:1fr;}
   .case-study-page .work-grid{gap:18px;}
   .case-study-page .case-study-card{height:auto;min-height:0;}
   .case-study-page .case-study-card .work-flow{margin-top:20px;row-gap:10px;}
