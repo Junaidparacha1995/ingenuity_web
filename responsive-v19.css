@@ -2054,6 +2054,30 @@
 }
 
 @media (max-width: 767px) {
+  /* Match the compact Work hero's mobile presence without fixing the Home
+     hero to a viewport height. The active slide still determines the frame. */
+  .home-page .hero-console {
+    padding-top: calc(var(--site-header-height) + 32px) !important;
+    padding-bottom: 54px !important;
+  }
+
+  .home-page .hc-copy h1 {
+    max-width: 15ch;
+    font-size: clamp(34px, 9.6vw, 42px) !important;
+    line-height: 1.08;
+    letter-spacing: -.035em;
+  }
+
+  .home-page .hc-copy p.lead {
+    max-width: 36rem;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+
+  .home-page .hc-copy .hero-dots {
+    margin-top: 22px;
+  }
+
   /* On phones, full-width stacked actions match the reference and let the
      hero height follow the active slide instead of reserving empty columns. */
   .home-page .hc-copy .hero-actions {
@@ -2064,7 +2088,8 @@
 
   .home-page .hc-copy .hero-actions .btn {
     width: 100% !important;
-    min-height: 50px;
+    min-height: 52px;
+    font-size: 12px;
   }
 }
 
