@@ -44,7 +44,7 @@
 <section class="section-pad work-projects" id="projects" data-work-panel="projects">
 <div class="wrap">
 <div class="section-head reveal center"><h2>Systems built to move from idea to working capability.</h2><p>Each project shows the problem space, the system direction, and the engineering workflow behind the solution.</p></div>
-<div class="work-tabs" role="tablist" aria-label="Work categories"><button class="work-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="projects" data-work-tab="projects">Projects</button><button class="work-tab" type="button" role="tab" aria-selected="false" aria-controls="case-studies" data-work-tab="case-studies">Case Studies</button></div>
+<div class="work-tabs" role="tablist" aria-label="Work categories"><button class="work-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="projects" data-work-tab="projects">Projects</button><a class="work-tab" href="./" aria-label="Open Case Studies page" data-work-tab="case-studies">Case Studies</a></div>
 <div class="work-grid">
 <details class="work-card reveal" open><summary><span class="work-card-index">01</span><span><small>AI AGENTS · WEB3</small><strong>AURA Forge / Cross-Chain Hub</strong></span><b>＋</b></summary><div class="work-card-detail"><p>An autonomous AI system that generates, audits, self-corrects, and prepares smart contracts for EVM and Solana from plain-English requirements.</p><div class="work-meta"><span>LangGraph</span><span>MCP</span><span>Solidity</span><span>Anchor / Rust</span></div><div class="work-flow"><i>Requirements</i><em>→</em><i>Agent audit loop</i><em>→</em><i>Contract output</i></div></div></details>
 <details class="work-card reveal"><summary><span class="work-card-index">02</span><span><small>ML · FORECASTING</small><strong>Retail Sales Forecasting</strong></span><b>＋</b></summary><div class="work-card-detail"><p>Time-series forecasting using multiple machine-learning models and LSTM-based sequence modeling with feature engineering.</p><div class="work-meta"><span>Python</span><span>LSTM</span><span>Feature engineering</span></div><div class="work-flow"><i>Sales history</i><em>→</em><i>Feature engineering</i><em>→</em><i>Forecast</i></div></div></details>
@@ -92,7 +92,10 @@
     panels.forEach((panel) => { panel.hidden = panel.dataset.workPanel !== target; });
     if (updateHash) history.replaceState(null, '', '#' + target);
   };
-  tabs.forEach((tab) => tab.addEventListener('click', () => select(tab.dataset.workTab, {updateHash: true})));
+  tabs.forEach((tab) => {
+    if (tab.tagName !== 'BUTTON') return;
+    tab.addEventListener('click', () => select(tab.dataset.workTab, {updateHash: true}));
+  });
   const initialTarget = location.hash === '#case-studies' || /case-studies/.test(location.pathname) ? 'case-studies' : 'projects';
   select(initialTarget, {updateHash: false});
 
