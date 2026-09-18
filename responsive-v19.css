@@ -1780,7 +1780,7 @@
   }
 
   .home-page .hero-console {
-    min-height: calc(var(--page-hero-height) + 36px) !important;
+    min-height: calc(var(--page-hero-height) + 96px) !important;
     padding-bottom: 42px !important;
   }
 
@@ -1992,6 +1992,13 @@
 
 .project-page .project-card::before {
   display: none;
+}
+
+@media (max-width: 767px) {
+  .home-page .hero-console {
+    min-height: calc(var(--page-hero-height) + 120px) !important;
+    padding-bottom: 56px !important;
+  }
 }
 
 /* Tool pages: let the maturity graphic and long assessment copy fit on phones
