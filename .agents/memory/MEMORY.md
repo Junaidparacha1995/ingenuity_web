@@ -2,3 +2,4 @@
 - [Amendment verification](amendment-verification.md) — Treat amendment checklists as behavioral acceptance criteria; verify interactions and responsive renders before completion.
 - [Below-fold preview captures](below-fold-preview-captures.md) — Fragment screenshots can appear blank around lazy-rendered sections; verify normal scrolling plus DOM presence.
 - [Viewport stability signals](viewport-stability-signals.md) — Accumulate width/scale changes from the last accepted baseline; ignore mobile height-only toolbar and keyboard changes.
+- [Case-study card layout](case-study-card-layout.md) — Case-study cards must use natural height instead of inheriting shared Work-card percentage height.
