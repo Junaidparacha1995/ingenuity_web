@@ -1183,9 +1183,9 @@ if (revealTargets.length) {
         const classes = [];
         if (menu.titleFirst && index === 0) classes.push('mega-col-title');
         if (/^(All |Explore All |Start a Conversation)/.test(label)) classes.push('mega-cta');
-        if (label === 'About Us') classes.push('mega-overview');
         const isCallToAction = /^(All |Explore All |Start a Conversation)/.test(label);
-        if (isCurrentHref(href) && !isCallToAction) {
+        const isOverviewCallToAction = label === 'Explore All Industries →';
+        if (isCurrentHref(href) && (!isCallToAction || isOverviewCallToAction)) {
           classes.push('is-current');
           link.setAttribute('aria-current', 'page');
         }

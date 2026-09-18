@@ -306,7 +306,6 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 .mega-col ul a:focus-visible{background:rgba(225,53,17,0.18); color:var(--orange); transform:translateX(3px); box-shadow:0 8px 20px rgba(3,13,28,.16),0 0 0 1px rgba(225,53,17,.2); outline:none;}
 .mega-col ul a.is-current{display:inline-block;position:relative;width:fit-content;max-width:100%;color:var(--white);font-weight:800;background:transparent;box-shadow:none;padding-left:10px;text-decoration-line:underline;text-decoration-color:var(--orange);text-decoration-thickness:2px;text-underline-offset:8px;text-decoration-skip-ink:none;}
 .mega-col ul a.is-current::after{display:none;}
-.mega-col ul a.mega-overview.is-current{text-decoration:none;}
 .mega-col ul a.is-current:hover{background:rgba(225,53,17,.08);}
 .mega-col ul a.mega-cta{color:var(--orange); font-family:'Manrope',sans-serif; font-weight:700;}
 .mega-col ul a.mega-cta:hover{background:rgba(225,53,17,0.18); color:var(--orange);}
