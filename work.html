@@ -20,15 +20,6 @@
   if (window.location.hash.toLowerCase() !== '#case-studies') return;
   document.documentElement.dataset.openWorkPanel = 'case-studies';
   history.replaceState(null, '', window.location.pathname + window.location.search);
-  const reset = () => {
-    const root = document.documentElement;
-    const previousBehavior = root.style.scrollBehavior;
-    root.style.scrollBehavior = 'auto';
-    window.scrollTo(0, 0);
-    root.style.scrollBehavior = previousBehavior;
-  };
-  reset();
-  window.addEventListener('DOMContentLoaded', reset, { once: true });
 })();
 </script>
 <div class="scroll-progress" id="scroll-progress"></div><div class="cursor-dot" id="cursor-dot"></div>

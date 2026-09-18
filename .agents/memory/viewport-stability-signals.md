@@ -8,3 +8,9 @@ Treat width, zoom scale, and orientation changes as responsive resize signals. O
 **Why:** A site-wide resize state tied to every visual viewport event can pause or snap transitions while the user scrolls or types. Gradual pinch zoom can also be missed if the comparison baseline advances after every sub-threshold event.
 
 **How to apply:** Compare against the last accepted width and scale so small pinch increments accumulate into one meaningful resize lifecycle. Advance that baseline only after accepting a change, debounce the end event, and resume each animation loop once.
+
+For touch layouts, do not toggle a whole-region `animation-play-state: paused` class as sections cross the viewport during scrolling. Keep visible animation timelines continuous; reserve subtree pausing for stable desktop pointer layouts.
+
+**Why:** Mobile scroll boundary crossings can repeatedly pause and resume large animation trees, producing a full-page snap or flicker even when layout dimensions remain unchanged.
+
+**How to apply:** Gate off-screen decorative pausing behind a desktop hover/fine-pointer media query, and remove any stale pause classes when the media query changes.
