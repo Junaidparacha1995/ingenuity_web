@@ -9,11 +9,11 @@ Use the Ingenuity Systems liquid-glass design system as the visual source of tru
 
 **How to apply:** Build new visual work from the shared tokens and component language already represented in the active CSS stack. Preserve native cursors and appropriate pointer, text, and grab affordances; do not copy cursor-hiding rules from the supplied source.
 
-Full-width active mega-menu titles should keep the hover surface full-width but render the active underline with text decoration so it follows the label text.
+Full-width active mega-menu titles should keep the hover surface full-width but render the active underline with text decoration so it follows the label text; overview links and CTAs should not receive that underline.
 
-**Why:** A pseudo-element positioned across a full-width active link expands the underline to the entire menu card instead of matching the original label-only treatment.
+**Why:** A pseudo-element positioned across a full-width active link expands the underline to the entire menu card instead of matching the original label-only treatment, while overview links and CTAs are destinations rather than leaf-page selections.
 
-**How to apply:** Use the full-width title link for the hover background and `text-decoration` for its active underline; do not use a right/left-stretched active-link pseudo-element.
+**How to apply:** Use the full-width title link for the hover background and `text-decoration` for leaf-page active underlines; suppress underline styling for overview links and CTAs, and do not use a right/left-stretched active-link pseudo-element.
 
 Connected-system diagrams should keep only the supplied nodes and connection lines. Do not add baked-in backgrounds, decorative badges, ambient particles, or visible click-area overlays.
 
