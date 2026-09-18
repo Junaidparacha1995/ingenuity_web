@@ -1406,7 +1406,7 @@ document.body?.classList.add('header-ready');
   const move = (event) => {
     point = { x: event.clientX, y: event.clientY };
     if (frame === null) frame = requestAnimationFrame(render);
-    document.body.classList.add('cursor-active');
+    document.body.classList.add('cursor-active', 'custom-cursor-ready');
   };
 
   window.addEventListener('pointermove', move, { passive: true });
@@ -1414,6 +1414,10 @@ document.body?.classList.add('header-ready');
     if (interactiveAt(event.target)) document.body.classList.add('cursor-hover');
   }, { passive: true });
   window.addEventListener('pointerout', (event) => {
+    if (!event.relatedTarget) {
+      document.body.classList.remove('cursor-active', 'cursor-hover', 'cursor-down', 'custom-cursor-ready');
+      return;
+    }
     if (!interactiveAt(event.relatedTarget)) document.body.classList.remove('cursor-hover');
   }, { passive: true });
   window.addEventListener('pointerdown', () => document.body.classList.add('cursor-down'), { passive: true });

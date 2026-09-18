@@ -109,6 +109,9 @@ section{position:relative;}
    the visible orange interaction dot used by the original experience. */
 .cursor-dot{display:none;}
 @media (hover:hover) and (pointer:fine){
+  body.custom-cursor-ready,
+  body.custom-cursor-ready *{cursor:none !important;}
+
   .cursor-dot{
     display:block; position:fixed; top:0; left:0; width:11px; height:11px;
     border-radius:50%; background:var(--orange); pointer-events:none; z-index:9999;
