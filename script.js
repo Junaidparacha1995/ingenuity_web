@@ -760,6 +760,40 @@ if (revealTargets.length) {
     rag: { label: 'RAG Lookup', kicker: 'KNOWLEDGE LAYER', description: 'Retrieves grounded information from connected knowledge sources so responses and actions are based on the right evidence.', trace: ['Query', 'Knowledge retrieval', 'Grounded evidence'] }
   };
   const buttons = [...layer.querySelectorAll('[data-hc-node]')];
+  const panel = layer.closest('.hc-panel');
+  const compactGraph = panel?.querySelector('.hc-static-graph-compact');
+  const desktopGraph = panel?.querySelector('.hc-static-graph-desktop');
+  const syncHitLayer = () => {
+    if (!panel) return;
+    const desktop = window.matchMedia('(min-width:1080px)').matches;
+    const graph = desktop ? desktopGraph : compactGraph;
+    if (!graph || !layer || !panel.clientWidth || !panel.clientHeight) return;
+    const sourceWidth = desktop ? 1440 : 972;
+    const sourceHeight = desktop ? 680 : 455;
+    const panelWidth = panel.clientWidth;
+    const panelHeight = panel.clientHeight;
+    const objectFit = getComputedStyle(graph).objectFit;
+    const scale = objectFit === 'contain'
+      ? Math.min(panelWidth / sourceWidth, panelHeight / sourceHeight)
+      : Math.max(panelWidth / sourceWidth, panelHeight / sourceHeight);
+    const renderedWidth = sourceWidth * scale;
+    const renderedHeight = sourceHeight * scale;
+    layer.style.left = `${(panelWidth - renderedWidth) / 2}px`;
+    layer.style.top = `${(panelHeight - renderedHeight) / 2}px`;
+    layer.style.right = 'auto';
+    layer.style.bottom = 'auto';
+    layer.style.width = `${renderedWidth}px`;
+    layer.style.height = `${renderedHeight}px`;
+    layer.style.setProperty('--hc-node-radius', `${(desktop ? 24 : 17) * scale}px`);
+  };
+  syncHitLayer();
+  if (window.ResizeObserver) new ResizeObserver(syncHitLayer).observe(panel);
+  window.addEventListener('resize', syncHitLayer, { passive: true });
+  window.addEventListener('viewport:resize-end', syncHitLayer);
+  [compactGraph, desktopGraph].filter(Boolean).forEach((graph) => {
+    if (graph.complete) syncHitLayer();
+    else graph.addEventListener('load', syncHitLayer, { once: true });
+  });
   const update = (id, moveToDetail = false) => {
     const info = nodeDetails[id] || nodeDetails.agent;
     buttons.forEach((button) => button.classList.toggle('is-selected', button.dataset.hcNode === id));
