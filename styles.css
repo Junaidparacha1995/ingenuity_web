@@ -238,7 +238,7 @@ header.scrolled .nav{padding:6px 22px;}
 .nav-links a.top-link:hover{color:var(--white);}
 .nav-links a.top-link:hover::after{width:100%;}
 .nav-links a.top-link.active{color:var(--white);font-weight:800;}
-.nav-links a.top-link.active::after{width:100%;}
+.nav-links a.top-link.active::after,.nav-links a.top-link[aria-current="page"]::after{width:100%;}
 body:not(.header-ready) header{visibility:hidden;}
 .caret{width:8px; height:8px; border-right:1.6px solid currentColor; border-bottom:1.6px solid currentColor; transform:rotate(45deg); margin-top:-3px; transition:transform .3s ease;}
 .has-dropdown:hover .caret{transform:rotate(225deg); margin-top:3px;}
