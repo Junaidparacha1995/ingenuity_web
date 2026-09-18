@@ -920,8 +920,7 @@ if (revealTargets.length) {
     '<li class="has-dropdown" data-menu="services"><a aria-haspopup="true" data-top="services" class="top-link' + active('services') + '"' + current('services') + ' href="' + siteBase + 'services.html">Services <span class="caret"></span></a></li>' +
     '<li class="has-dropdown" data-menu="industries"><a aria-haspopup="true" data-top="industries" class="top-link' + active('industries') + '"' + current('industries') + ' href="' + siteBase + 'industries.html">Industries <span class="caret"></span></a></li>' +
     '<li class="has-dropdown" data-menu="work"><a aria-haspopup="true" data-top="work" class="top-link' + active('work') + '"' + current('work') + ' href="' + siteBase + 'work.html">Work <span class="caret"></span></a></li>' +
-    '<li class="has-dropdown" data-menu="company"><a aria-haspopup="true" data-top="company" class="top-link' + active('company') + '"' + current('company') + ' href="' + siteBase + 'about.html">Company <span class="caret"></span></a></li>' +
-    '<li class="mobile-contact-link"><a class="top-link" href="' + siteBase + 'contact.html">Contact</a></li>';
+    '<li class="has-dropdown" data-menu="company"><a aria-haspopup="true" data-top="company" class="top-link' + active('company') + '"' + current('company') + ' href="' + siteBase + 'about.html">Company <span class="caret"></span></a></li>';
   navLinks.querySelectorAll('.top-link[data-top]').forEach((link) => {
     const isActive = link.dataset.top === activeMenu;
     link.classList.toggle('active', isActive);
@@ -1001,12 +1000,6 @@ if (revealTargets.length) {
   // Mobile/tablet navigation uses an in-header accordion. The same menu data
   // powers both versions, so links remain consistent without exposing the
   // detached desktop mega-menu on small screens.
-  const mobileOverview = {
-    services: ['Services overview', 'services.html'],
-    industries: ['Industries overview', 'industries.html'],
-    work: ['Work overview', 'work.html'],
-    company: ['Company overview', 'about.html']
-  };
   const closeMobileSubmenus = (except = null) => {
     navLinks.querySelectorAll('.mobile-submenu-open').forEach((entry) => {
       if (entry === except) return;
@@ -1031,14 +1024,13 @@ if (revealTargets.length) {
     submenu.className = 'mobile-submenu';
     const submenuInner = document.createElement('div');
     submenuInner.className = 'mobile-submenu-inner';
-    const candidates = [
-      { label: mobileOverview[name][0], href: mobileOverview[name][1], kind: 'overview' },
-      ...menu.columns.flatMap((column) => column.map(([label, href], index) => ({
-        label,
-        href,
-        kind: index === 0 ? 'core' : 'sub'
-      })))
-    ];
+    const candidates = menu.columns.flatMap((column) => column.map(([label, href], index) => {
+      const isCta = /^(All |Explore All |Start a Conversation)/.test(label);
+      const kind = isCta
+        ? 'sub'
+        : (name === 'industries' || name === 'company' || index === 0 ? 'core' : 'sub');
+      return { label, href, kind };
+    }));
     const seen = new Set();
     candidates.forEach(({ label, href, kind }) => {
       const resolvedHref = siteBase + href;
