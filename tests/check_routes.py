@@ -13,7 +13,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:5000").rstrip("/")
-RELEASE = "20260918-zoom10"
+RELEASE = "20260918-zoom11"
 
 
 class Resources(HTMLParser):
