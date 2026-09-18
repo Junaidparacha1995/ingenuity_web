@@ -285,6 +285,7 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 .mega-col ul a.mega-cta:hover{background:rgba(225,53,17,0.18); color:var(--orange);}
 .mega-col ul a.mega-col-title{
   position:relative;
+  border-radius:12px !important;
   transition:background .3s ease,color .3s ease,transform .35s var(--ease-spring),box-shadow .3s ease;
 }
 .mega-col ul a.mega-col-title:hover,
