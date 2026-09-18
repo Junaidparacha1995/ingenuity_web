@@ -180,14 +180,15 @@ section{position:relative;}
 .about-philosophy-pills{display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:24px;}
 
 /* ============ Buttons ============ */
-.btn{font-family:'Manrope', sans-serif; font-weight:700; font-size:15px; padding:16px 32px; border-radius:999px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:1px solid transparent; position:relative; overflow:hidden; transition:transform .28s var(--ease-spring), box-shadow .3s ease, background .25s ease, color .25s ease, border-color .25s ease; white-space:nowrap;}
+.btn{font-family:'Manrope', sans-serif; font-weight:700; font-size:15px; padding:16px 32px; border-radius:999px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:1px solid transparent; position:relative; overflow:hidden; transition:transform .28s var(--ease-spring), box-shadow .3s ease, background .25s ease, color .25s ease, border-color .25s ease; white-space:nowrap; will-change:transform;}
 .btn:active{transform:scale(0.94) !important;}
-.btn-primary{background:var(--orange); color:var(--white); box-shadow:0 10px 28px rgba(225,53,17,0.35), 0 1px 0 rgba(255,255,255,0.3) inset; animation:pulseGlow 4s ease-in-out infinite;}
-.btn-primary:hover{box-shadow:0 16px 38px rgba(225,53,17,0.48); transform:translateY(-2px);}
+.btn-primary{background:var(--orange); color:var(--white); box-shadow:0 10px 28px rgba(225,53,17,0.35), 0 1px 0 rgba(255,255,255,0.3) inset;}
+.btn-primary:hover,.btn-primary:focus-visible{box-shadow:0 16px 38px rgba(225,53,17,0.48); transform:translateY(-2px) scale(1.01);}
 .btn-outline{background:var(--glass-bg); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-color:var(--glass-border); color:var(--navy); box-shadow:var(--glass-shadow);}
-.btn-outline:hover{background:var(--navy); color:var(--white); box-shadow:var(--glass-shadow-hover); transform:translateY(-2px);}
+.btn-outline:hover,.btn-outline:focus-visible{background:var(--navy); color:var(--white); box-shadow:var(--glass-shadow-hover); transform:translateY(-2px) scale(1.01);}
 .btn-outline-light{background:rgba(255,255,255,0.14); backdrop-filter:blur(10px); border-color:rgba(255,255,255,0.55); color:var(--white);}
-.btn-outline-light:hover{background:var(--white); color:var(--navy); transform:translateY(-2px);}
+.btn-outline-light:hover,.btn-outline-light:focus-visible{background:var(--white); color:var(--navy); box-shadow:0 12px 30px rgba(3,13,28,.24); transform:translateY(-2px) scale(1.01);}
+.btn:focus-visible{outline:2px solid rgba(255,192,173,.95); outline-offset:4px;}
 .btn-text{font-family:'Manrope', sans-serif; font-weight:700; font-size:14.5px; color:var(--navy); display:inline-flex; align-items:center; gap:6px; transition:gap .3s ease, color .3s ease;}
 .btn-text:hover{gap:11px; color:var(--orange);}
 .btn-sm{padding:12px 24px; font-size:13.5px;}

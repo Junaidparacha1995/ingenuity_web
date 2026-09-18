@@ -130,8 +130,8 @@ if (toggle && navLinks) {
   }, { passive: true });
 }
 
-// Magnetic buttons
-document.querySelectorAll('.magnetic').forEach(btn => {
+// Consistent magnetic interaction for every site button
+document.querySelectorAll('.btn').forEach(btn => {
   btn.addEventListener('mousemove', e => {
     const r = btn.getBoundingClientRect();
     const x = (e.clientX - r.left - r.width / 2) * 0.25;
