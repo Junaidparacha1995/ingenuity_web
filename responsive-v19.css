@@ -1780,7 +1780,7 @@
   }
 
   .home-page .hero-console {
-    min-height: var(--page-hero-height) !important;
+    min-height: calc(var(--page-hero-height) + 36px) !important;
     padding-bottom: 42px !important;
   }
 
@@ -1792,6 +1792,17 @@
     max-width: 640px;
     margin: 0 auto;
     text-align: center;
+  }
+
+  .home-page .hc-copy .hero-rotator,
+  .home-page .hc-copy h1,
+  .home-page .hc-copy p.lead {
+    text-align: center;
+  }
+
+  .home-page .hc-copy h1 {
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .home-page .hc-copy p.lead {
