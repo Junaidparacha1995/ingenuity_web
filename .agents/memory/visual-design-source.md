@@ -9,7 +9,7 @@ Use the Ingenuity Systems liquid-glass design system as the visual source of tru
 
 **How to apply:** Build new visual work from the shared tokens and component language already represented in the active CSS stack. Preserve native cursors and appropriate pointer, text, and grab affordances; do not copy cursor-hiding rules from the supplied source.
 
-Full-width active mega-menu titles should keep the hover surface full-width but render the active underline with text decoration so it follows the label text.
+Full-width active mega-menu links should keep the hover surface full-width but render the active underline with text decoration so it follows the label text.
 
 **Why:** A pseudo-element positioned across a full-width active link expands the underline to the entire menu card instead of matching the original label-only treatment.
 
