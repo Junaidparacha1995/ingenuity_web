@@ -319,10 +319,17 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 }
 .mega-col ul a.mega-col-title:hover,
 .mega-col ul a.mega-col-title:focus-visible{
-  background:rgba(225,53,17,.18);
+  background:linear-gradient(100deg,rgba(225,53,17,.24),rgba(225,53,17,.08));
   color:var(--orange);
-  box-shadow:0 8px 20px rgba(3,13,28,.16),0 0 0 1px rgba(225,53,17,.2);
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(3,13,28,.2),0 0 0 1px rgba(225,53,17,.28);
   outline:none;
+}
+.mega-col ul a.is-current,
+.mega-col ul a.is-current:hover,
+.mega-col ul a.is-current:focus-visible{
+  color:var(--white) !important;
+  font-weight:800 !important;
 }
 
 .nav-cta{display:flex; justify-self:end; align-items:center; gap:16px;}
