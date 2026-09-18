@@ -1,0 +1,365 @@
+You are working on the Ingenuity Systems website. Perform a complete stability and responsive-quality pass, with the main focus on the Projects page flickering during mobile/tablet zooming, resizing, scrolling, and card expansion.
+
+Important rules:
+
+- Inspect the existing code before changing anything.
+- Fix the actual causes instead of adding random delays or hiding errors.
+- Preserve the current design, content, colors, branding, navigation, chatbot, forms, images, and links.
+- Do not redesign the desktop website.
+- Desktop at 1280px and 1440px must remain visually unchanged.
+- Make changes carefully and keep the code compatible with Replit deployment.
+- Do not introduce new dependencies unless absolutely necessary.
+- Do not remove existing functionality.
+
+MAIN ISSUE
+
+The Projects page flickers or jumps, especially on mobile, when:
+
+- Zooming in or out
+- Rotating the device
+- Resizing the viewport
+- Opening and closing project cards
+- Switching project tabs
+- Scrolling quickly
+- Opening the chatbot or mobile menu
+
+Find and fix the flickering, layout shifts, repeated animation loops, and forced reflows.
+
+1. Add a global resize/zoom protection system
+
+Create a debounced resize handler.
+
+When the viewport changes:
+
+- Add `is-resizing` to the body.
+- Pause animations and transitions while resizing.
+- Remove the class approximately 200ms after resizing stops.
+- Do not reload the page.
+- Do not recreate all components during resize.
+
+Use a pattern similar to:
+
+```js
+let resizeTimer;
+
+function handleViewportChange() {
+  document.body.classList.add('is-resizing');
+
+  clearTimeout(resizeTimer);
+
+  resizeTimer = setTimeout(() => {
+    document.body.classList.remove('is-resizing');
+  }, 200);
+}
+
+window.addEventListener('resize', handleViewportChange, { passive: true });
+
+During resizing, pause:
+
+Project card transitions
+Hover transforms
+Reveal animations
+Terminal effects
+Marquee movement
+Logo animations
+Background particles
+SVG animations
+Canvas animations
+Glow and blur effects
+Image scaling effects
+
+Use:
+
+body.is-resizing *,
+body.is-resizing *::before,
+body.is-resizing *::after {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+Stabilize the Projects page cards
+
+For all project cards:
+
+Use box-sizing: border-box.
+Use min-width: 0.
+Prevent unexpected width changes.
+Prevent text from causing layout shifts.
+Do not animate width, grid columns, margins, or padding during resizing.
+Use natural content height for expanded cards.
+Keep the card content inside its boundaries.
+Make buttons remain visible and clickable.
+
+Use appropriate rules such as:
+
+.project-card,
+.project-card *,
+.project-grid,
+.project-browser {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.project-card {
+  overflow: hidden;
+}
+
+Do not repeatedly measure or set card dimensions inside animation loops.
+
+Avoid repeatedly calling:
+
+offsetWidth
+offsetHeight
+scrollHeight
+getBoundingClientRect()
+
+inside requestAnimationFrame.
+
+Fix project card expansion
+
+Project-card behavior must remain:
+
+Only one card open at a time.
+No automatic page scrolling when a card opens.
+Expanded height adapts to content.
+Closing a card does not jump the page.
+Buttons and links remain accessible.
+Mobile cards stack vertically.
+Expanded content never overflows horizontally.
+
+Use one stable class such as:
+
+.project-card.is-open
+
+Do not constantly add and remove multiple animation classes.
+
+When a project card opens:
+
+Close the previously open card.
+Add .is-open to the selected card.
+Do not call scrollIntoView().
+Do not force a full-page layout rebuild.
+Do not reset all reveal animations.
+Fix reveal animations
+
+Check all IntersectionObserver logic.
+
+Make sure:
+
+Observers are created once.
+Resize handlers do not recreate observers.
+Elements are not repeatedly reset to hidden state.
+Once a project card has .in-view, it stays visible.
+No animation restarts every time the user scrolls slightly.
+Elements outside the viewport do not run unnecessary animations.
+Stabilize project images and logos
+
+Every project image must reserve its space before loading.
+
+Use appropriate fixed ratios, for example:
+
+.project-card img,
+.project-image img,
+.project-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+Adjust the selectors to match the actual project page.
+
+For SVG logos:
+
+Keep their dimensions stable.
+Use width: 100%.
+Use a stable container height.
+Do not allow the SVG to change the card height after loading.
+Do not apply large transforms on mobile.
+Control all animation loops
+
+Inspect every requestAnimationFrame, setInterval, marquee, canvas, and SVG animation.
+
+Requirements:
+
+No duplicate animation loops.
+Only one loop per animation system.
+Pause loops when the element is outside the viewport.
+Pause loops when document.hidden is true.
+Pause loops during resizing.
+Restart loops only once after resizing finishes.
+Cancel existing loops before starting new ones.
+
+Use IntersectionObserver where appropriate.
+
+Mobile and tablet behavior
+
+Below 1080px:
+
+Keep the Home SVG process map hidden.
+Keep the Home hero compact.
+Do not leave an empty map area.
+Disable cursor-follow and magnetic effects.
+Disable desktop-only hover movement.
+Disable unnecessary background particles and heavy glows.
+Keep tap and click interactions working.
+Keep the chatbot launcher fixed at the bottom-right.
+Ensure the chatbot does not move project cards or cause page reflow.
+Prevent horizontal scrolling.
+
+Use:
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 1079px) {
+  .desktop-only-animation,
+  .desktop-only-map {
+    display: none !important;
+  }
+}
+
+Do not hide important project content.
+
+Mobile card layout
+
+At mobile widths:
+
+Project cards must use one column.
+Text must wrap naturally.
+Buttons must fit within the viewport.
+No card may exceed the viewport width.
+No text may be clipped.
+No horizontal scrolling inside cards.
+Expanded cards must use auto height.
+Keep spacing consistent and compact.
+
+Test at:
+
+320px
+360px
+375px
+390px
+430px
+Tablet layout
+
+Test and refine:
+
+768px
+820px
+912px
+1024px
+
+Make sure:
+
+Cards do not overlap.
+Grid columns remain stable.
+Text does not overflow.
+Project details expand correctly.
+Chatbot stays within the viewport.
+No blank space is created by hidden desktop visuals.
+Desktop preservation
+
+At 1280px and 1440px:
+
+Do not change the existing project layout.
+Do not change the current desktop card design.
+Do not change the current SVG visual style.
+Do not change the Home hero composition.
+Do not change the header or navigation appearance.
+Keep desktop hover effects subtle and functional.
+Keep all existing animations, but prevent flickering and duplicate loops.
+SVG and Home visual
+
+The Home connected-system SVG must:
+
+Remain desktop-only.
+Stay hidden on mobile and tablet.
+Preserve its connected nodes and orange power-line animation.
+Keep the current card formatting.
+Remain inside its container.
+Not create layout shifts.
+Use the current asset path and cache-busting version.
+Not reintroduce the removed bottom label.
+Chatbot stability
+
+On mobile and tablet:
+
+Keep the launcher bottom-right.
+Use a stable fixed size.
+Do not let it move when cards open.
+Keep the panel inside the viewport.
+Use max-height.
+Use internal scrolling.
+Hide the launcher while the mobile menu is open.
+Do not allow the assistant panel to change page layout.
+Reduced-motion support
+
+Add or preserve:
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+Console and performance checks
+
+After implementation:
+
+Check the browser console for errors.
+Check for duplicate event listeners.
+Check for duplicate animation loops.
+Check for failed image, SVG, CSS, or JavaScript requests.
+Check for forced layout loops.
+Check for horizontal overflow.
+Check that every route still loads successfully.
+Do not leave debug logs in production code.
+Final testing checklist
+
+Test all of the following:
+
+Projects page on mobile
+Projects page on tablet
+Projects page on desktop
+Pinch zoom in and out
+Browser zoom at 80%, 100%, 125%, and 200%
+Device rotation
+Opening and closing project cards
+Switching tabs
+Fast scrolling
+Opening the mobile menu
+Opening and closing the chatbot
+Clicking every project button
+Refreshing the page
+Loading the page directly from a nested route
+
+Acceptance criteria:
+
+No flickering during zoom.
+No flashing during resize.
+No card jumping.
+No horizontal scrolling.
+No unexpected automatic scrolling.
+No content clipping.
+No duplicate animations.
+No console errors.
+Project cards remain clickable.
+Mobile and tablet look clean and compact.
+Desktop remains visually unchanged.
+All current website functionality continues working.
+
+When finished, show a short summary of:
+
+The root cause found.
+The files changed.
+The mobile/tablet fixes.
+The desktop checks completed.
+The routes and device sizes tested.
