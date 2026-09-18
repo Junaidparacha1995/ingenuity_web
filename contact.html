@@ -148,7 +148,6 @@
 <option value="systems-integration-data">Systems Integration &amp; Data</option>
 <option value="multiple-capabilities">A Combination of Capabilities</option>
 <option value="not-sure">Not Sure Yet — Help Me Decide</option>
-<option value="careers">Careers</option>
 </select>
 </div>
 <div class="form-field"><label for="message">What are you looking to solve? <span class="field-optional">(optional)</span></label><textarea id="message" placeholder="Tell us about the process, bottleneck, system, or opportunity you're dealing with" rows="4"></textarea></div>
@@ -225,15 +224,5 @@
 </footer>
 <script>window.INGENUITY_CONTACT_WEBHOOK_URL = '';</script>
 <script src="script.js?v=43"></script>
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const subjectParam = params.get('subject');
-  const messageField = document.getElementById('message');
-  const interestField = document.getElementById('interest');
-  if (subjectParam === 'careers') {
-    if (interestField) interestField.value = 'careers';
-    if (messageField) messageField.value = 'I am interested in a career opportunity with Ingenuity Systems.';
-  }
-</script>
 </body>
 </html>
