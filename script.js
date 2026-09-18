@@ -1000,6 +1000,12 @@ if (revealTargets.length) {
   // Mobile/tablet navigation uses an in-header accordion. The same menu data
   // powers both versions, so links remain consistent without exposing the
   // detached desktop mega-menu on small screens.
+  const mobileOverview = {
+    services: ['Services overview', 'services.html'],
+    industries: ['Industries overview', 'industries.html'],
+    work: ['Work overview', 'work.html'],
+    company: ['Company overview', 'about.html']
+  };
   const closeMobileSubmenus = (except = null) => {
     navLinks.querySelectorAll('.mobile-submenu-open').forEach((entry) => {
       if (entry === except) return;
@@ -1024,13 +1030,15 @@ if (revealTargets.length) {
     submenu.className = 'mobile-submenu';
     const submenuInner = document.createElement('div');
     submenuInner.className = 'mobile-submenu-inner';
-    const candidates = menu.columns.flatMap((column) => column.map(([label, href], index) => {
-      const isCta = /^(All |Explore All |Start a Conversation)/.test(label);
-      const kind = isCta
-        ? 'sub'
-        : (name === 'industries' || name === 'company' || index === 0 ? 'core' : 'sub');
-      return { label, href, kind };
-    }));
+    const candidates = [
+      { label: mobileOverview[name][0], href: mobileOverview[name][1], kind: 'overview' },
+      ...menu.columns.flatMap((column) => column
+        .filter(([label], index) => {
+          if (/^(All |Explore All |Start a Conversation)/.test(label)) return false;
+          return name === 'industries' || name === 'company' || (menu.titleFirst && index === 0);
+        })
+        .map(([label, href]) => ({ label, href, kind: 'core' })))
+    ];
     const seen = new Set();
     candidates.forEach(({ label, href, kind }) => {
       const resolvedHref = siteBase + href;
