@@ -1091,7 +1091,7 @@ if (revealTargets.length) {
       ? 'services'
       : route('industries')
         ? 'industries'
-        : /(?:^|\/)work\.html(?:$|\/)/.test(path) || route('projects') || route('case-studies')
+        : route('work') || route('projects') || route('case-studies')
           ? 'work'
           : path === '/' || path.endsWith('/index.html') && !/\/(pages|projects|case-studies)\/index\.html$/.test(path)
             ? 'home'
