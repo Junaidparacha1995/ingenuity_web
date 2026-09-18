@@ -331,6 +331,10 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
   color:var(--white) !important;
   font-weight:800 !important;
 }
+.mega-col ul a.mega-col-title.is-current{
+  display:flex;
+  width:auto;
+}
 
 .nav-cta{display:flex; justify-self:end; align-items:center; gap:16px;}
 .nav-cta .btn-sm{font:700 13.5px/1.2 'Manrope',sans-serif;}
