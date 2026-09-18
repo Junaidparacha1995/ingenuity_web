@@ -105,6 +105,25 @@ img{max-width:100%; display:block;}
 button{font-family:inherit; cursor:pointer;}
 section{position:relative;}
 
+/* Desktop pointer accent — keep the native cursor available while restoring
+   the visible orange interaction dot used by the original experience. */
+.cursor-dot{display:none;}
+@media (hover:hover) and (pointer:fine){
+  .cursor-dot{
+    display:block; position:fixed; top:0; left:0; width:11px; height:11px;
+    border-radius:50%; background:var(--orange); pointer-events:none; z-index:9999;
+    box-shadow:0 0 10px rgba(225,53,17,.5);
+    transform:translate(-50%,-50%); opacity:0;
+    transition:opacity .3s ease,width .25s var(--ease-spring),height .25s var(--ease-spring),background-color .25s ease,box-shadow .25s ease;
+  }
+  body.cursor-active .cursor-dot{opacity:1;}
+  body.cursor-hover .cursor-dot{
+    width:20px; height:20px; background:var(--orange);
+    box-shadow:0 0 18px rgba(225,53,17,.75);
+  }
+  body.cursor-down .cursor-dot{width:8px; height:8px;}
+}
+
 .wrap{max-width:1240px; margin:0 auto; padding:0 32px; position:relative; z-index:2;}
 .wrap-narrow{max-width:900px; margin:0 auto; padding:0 32px; position:relative; z-index:2;}
 .section-pad{padding:var(--space-section) 0;}

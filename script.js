@@ -1380,6 +1380,43 @@ document.body?.classList.add('header-ready');
   restart();
 })();
 
+// Visible orange pointer accent — preserves the native cursor while restoring
+// the previous desktop interaction dot and its hover/press states.
+(function initCursorDot() {
+  const dot = document.getElementById('cursor-dot');
+  const allowed = window.matchMedia('(hover: hover) and (pointer: fine)');
+  if (!dot || !allowed.matches) return;
+
+  let frame = null;
+  let point = { x: 0, y: 0 };
+  const interactiveSelector = 'a,button,[role="button"],input,textarea,select,summary,canvas,.hc-node-hit-layer';
+  const interactiveAt = (target) => target instanceof Element ? target.closest(interactiveSelector) : null;
+  const render = () => {
+    frame = null;
+    dot.style.left = point.x + 'px';
+    dot.style.top = point.y + 'px';
+  };
+  const move = (event) => {
+    point = { x: event.clientX, y: event.clientY };
+    if (frame === null) frame = requestAnimationFrame(render);
+    document.body.classList.add('cursor-active');
+  };
+
+  window.addEventListener('pointermove', move, { passive: true });
+  window.addEventListener('pointerover', (event) => {
+    if (interactiveAt(event.target)) document.body.classList.add('cursor-hover');
+  }, { passive: true });
+  window.addEventListener('pointerout', (event) => {
+    if (!interactiveAt(event.relatedTarget)) document.body.classList.remove('cursor-hover');
+  }, { passive: true });
+  window.addEventListener('pointerdown', () => document.body.classList.add('cursor-down'), { passive: true });
+  window.addEventListener('pointerup', () => document.body.classList.remove('cursor-down'), { passive: true });
+  window.addEventListener('pointercancel', () => document.body.classList.remove('cursor-down'), { passive: true });
+  window.addEventListener('blur', () => {
+    document.body.classList.remove('cursor-active', 'cursor-hover', 'cursor-down');
+  });
+})();
+
 // Dot-grid background spotlight — follows the cursor so the pattern feels alive, not static
 (function initDotSpotlight() {
   const allowed = window.matchMedia('(min-width: 1080px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
