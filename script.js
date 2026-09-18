@@ -1726,33 +1726,6 @@ if (statItems.length) {
   statItems.forEach(el => statObserver.observe(el));
 }
 
-// Custom cursor — single precise dot that tracks instantly, grows slightly over interactive elements
-if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  const cursorDot = document.getElementById('cursor-dot');
-  if (cursorDot) {
-    window.addEventListener('mousemove', (e) => {
-      cursorDot.style.left = e.clientX + 'px';
-      cursorDot.style.top = e.clientY + 'px';
-      document.body.classList.add('cursor-active');
-    }, { passive: true });
-
-    window.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'));
-    window.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'));
-    window.addEventListener('mousedown', () => document.body.classList.add('cursor-down'));
-    window.addEventListener('mouseup', () => document.body.classList.remove('cursor-down'));
-
-    const hoverTargets = 'a, button, .btn, input, textarea, select, .magnetic, [role="button"], .cap-card, .service-tile, .wide-card, .founder-card, .role-card, .testimonial-slider';
-    document.addEventListener('mouseover', (e) => {
-      if (e.target.closest(hoverTargets)) document.body.classList.add('cursor-hover');
-    });
-    document.addEventListener('mouseout', (e) => {
-      if (e.target.closest(hoverTargets) && !e.relatedTarget?.closest?.(hoverTargets)) {
-        document.body.classList.remove('cursor-hover');
-      }
-    });
-  }
-}
-
 // Industry spotlight: tab-triggered scene morph
 const indMorph = document.getElementById('ind-morph');
 if (indMorph) {
