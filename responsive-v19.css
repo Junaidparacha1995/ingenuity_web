@@ -1993,3 +1993,38 @@
 .project-page .project-card::before {
   display: none;
 }
+
+/* Tool pages: let the maturity graphic and long assessment copy fit on phones
+   instead of centering the combined stack inside a fixed, clipped hero. */
+@media (max-width: 767px) {
+  .tool-page .tool-hero {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .tool-page .tool-hero > .wrap {
+    height: auto !important;
+    min-height: 0 !important;
+    align-items: stretch !important;
+    padding-top: 42px !important;
+    padding-bottom: 56px !important;
+  }
+
+  .tool-page .tool-hero-grid {
+    height: auto !important;
+    min-height: 0 !important;
+    justify-content: flex-start !important;
+    gap: 30px !important;
+  }
+
+  .tool-page .tool-hero-grid > div:first-child {
+    flex: 0 0 auto;
+  }
+
+  .tool-page .maturity-rings {
+    width: min(260px, 70vw) !important;
+    margin: 0 auto !important;
+  }
+}
