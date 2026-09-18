@@ -2367,8 +2367,7 @@ body.motion-paused .motion-region *::after {
   .liquid-bg .blob,
   .hc-blob {
     filter: none !important;
-    animation: none !important;
-    will-change: auto !important;
+    will-change: transform !important;
   }
 
   /*
@@ -2390,24 +2389,122 @@ body.motion-paused .motion-region *::after {
     filter: none !important;
   }
 
-  .scroll-progress {
-    display: none !important;
+  .orange-ambient-canvas {
+    contain: strict;
+    transform: translateZ(0);
+    will-change: contents;
   }
 
-  .orange-ambient-glow,
-  .orange-ambient-beam,
-  .orange-ambient-ring,
-  .orange-ambient-sparkles,
-  .orange-ambient-flow,
-  footer::before,
-  footer::after,
-  .footer-watermark,
-  .footer-status .dot,
-  .flow-line::before,
-  .hc-led,
-  .project-detail-terminal::after,
-  .trace-caret,
-  .assistant-typing i {
-    animation: none !important;
+  .home-page .orange-ambient-glow,
+  .home-page .orange-ambient-flow,
+  .home-page .orange-ambient-ring,
+  .home-page .orange-ambient-sparkles,
+  .liquid-bg .blob,
+  .hc-blob,
+  .hero-media .hero-bg img,
+  .work-hero .hc-bg {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: transform;
   }
+
+  .home-page .orange-ambient-glow-one {
+    display: block;
+    animation: mobileAmbientDriftOne 18s ease-in-out infinite alternate !important;
+  }
+
+  .home-page .orange-ambient-glow-two {
+    display: block;
+    animation: mobileAmbientDriftTwo 22s ease-in-out infinite alternate !important;
+  }
+
+  .home-page .orange-ambient-glow-three {
+    display: block;
+    animation: mobileAmbientBreathe 14s ease-in-out infinite alternate !important;
+  }
+
+  .home-page .orange-ambient-flow {
+    display: block;
+    filter: none;
+    animation: mobileAmbientFlow 24s ease-in-out infinite alternate !important;
+  }
+
+  .home-page .orange-ambient-ring {
+    animation: orangeRotate 36s linear infinite !important;
+  }
+
+  .home-page .orange-ambient-sparkles {
+    animation: mobileAmbientSparkle 8s ease-in-out infinite alternate !important;
+  }
+
+  .liquid-bg .blob-1 {
+    animation: mobileBlobDriftOne 28s ease-in-out infinite alternate !important;
+  }
+
+  .liquid-bg .blob-2 {
+    animation: mobileBlobDriftTwo 34s ease-in-out infinite alternate !important;
+  }
+
+  .liquid-bg .blob-3 {
+    animation: mobileBlobDriftThree 30s ease-in-out infinite alternate !important;
+  }
+
+  .hc-blob-a {
+    animation: mobileBlobDriftOne 26s ease-in-out infinite alternate !important;
+  }
+
+  .hc-blob-b {
+    animation: mobileBlobDriftTwo 30s ease-in-out infinite alternate !important;
+  }
+
+  .hero-media .hero-bg img,
+  .work-hero .hc-bg {
+    animation: mobileHeroDrift 28s ease-in-out infinite alternate !important;
+  }
+}
+
+@keyframes mobileAmbientDriftOne {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(8vw, 5vh, 0) scale(1.08); }
+}
+
+@keyframes mobileAmbientDriftTwo {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-7vw, -5vh, 0) scale(1.1); }
+}
+
+@keyframes mobileAmbientBreathe {
+  from { transform: translate3d(0, 0, 0) scale(.96); opacity: .1; }
+  to { transform: translate3d(2vw, -2vh, 0) scale(1.12); opacity: .2; }
+}
+
+@keyframes mobileAmbientFlow {
+  from { transform: translate3d(-3%, -1%, 0) rotate(-7deg) scale(1); }
+  to { transform: translate3d(3%, 2%, 0) rotate(-4deg) scale(1.04); }
+}
+
+@keyframes mobileAmbientSparkle {
+  from { transform: translate3d(0, 0, 0) scale(1); opacity: .12; }
+  to { transform: translate3d(1%, -1%, 0) scale(1.025); opacity: .22; }
+}
+
+@keyframes mobileBlobDriftOne {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(30px, 22px, 0) scale(1.05); }
+}
+
+@keyframes mobileBlobDriftTwo {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-24px, 28px, 0) scale(1.06); }
+}
+
+@keyframes mobileBlobDriftThree {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-20px, -22px, 0) scale(1.04); }
+}
+
+@keyframes mobileHeroDrift {
+  from { transform: translate3d(0, 0, 0) scale(1.01); }
+  to { transform: translate3d(-1.5%, 1%, 0) scale(1.045); }
 }

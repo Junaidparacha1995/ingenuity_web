@@ -6,7 +6,6 @@
   if (!ctx) return;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const compactLayout = window.matchMedia('(max-width: 1040px)');
-  const lowPaintLayout = window.matchMedia('(max-width: 1040px), (hover: none), (pointer: coarse)');
   const palette = ['#F4431A', '#F4431A', '#ff633f', '#ff9b7d', '#26d9d0', '#648cff'];
   let width = 0;
   let height = 0;
@@ -51,8 +50,8 @@
     if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const density = compactLayout.matches ? 7800 : 6200;
-    const count = Math.min(compactLayout.matches ? 150 : 240, Math.max(compactLayout.matches ? 60 : 100, Math.floor(width * height / density)));
+    const density = compactLayout.matches ? 12000 : 6200;
+    const count = Math.min(compactLayout.matches ? 84 : 240, Math.max(compactLayout.matches ? 36 : 100, Math.floor(width * height / density)));
     if (!particles.length) particles = Array.from({ length: count }, (_, index) => createParticle(index));
     else if (particles.length > count) particles.length = count;
     else {
@@ -63,11 +62,11 @@
 
   function draw(time) {
     frame = 0;
-    if (lowPaintLayout.matches || !active || document.hidden ||
-        document.body.classList.contains('motion-paused') || reduceMotion.matches) return;
+    if (!active || document.hidden || document.body.classList.contains('motion-paused') || reduceMotion.matches) return;
 
-    // Keep a subtle ambient feel without competing with the interactive map.
-    const frameRate = compactLayout.matches ? 28 : 36;
+    // Mobile keeps the effect alive at a lower paint budget. The canvas has a
+    // 1x backing store there, so each frame remains cheap and stable.
+    const frameRate = compactLayout.matches ? 24 : 36;
     if (time - lastFrame < 1000 / frameRate) {
       frame = requestAnimationFrame(draw);
       return;
@@ -156,7 +155,7 @@
   }
 
   function start() {
-    if (!lowPaintLayout.matches && !frame && active && !document.hidden && !reduceMotion.matches &&
+    if (!frame && active && !document.hidden && !reduceMotion.matches &&
         !document.body.classList.contains('motion-paused')) {
       last = performance.now();
       frame = requestAnimationFrame(draw);
@@ -187,12 +186,5 @@
     paint(performance.now());
     start();
   });
-  const syncPaintMode = () => {
-    stop();
-    resize();
-    start();
-  };
-  if (lowPaintLayout.addEventListener) lowPaintLayout.addEventListener('change', syncPaintMode);
-  else if (lowPaintLayout.addListener) lowPaintLayout.addListener(syncPaintMode);
   start();
 })();
