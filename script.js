@@ -1100,7 +1100,12 @@ if (revealTargets.length) {
   const current = (name) => activeMenu === name ? ' aria-current="page"' : '';
   const normalizePath = (value) => {
     const path = String(value || '').split('#')[0].split('?')[0].replace(/\\/g, '/');
-    return path.replace(/\/index\.html$/, '/').replace(/\/+$/, '') || '/';
+    const withoutIndex = path.replace(/\/index\.html$/, '/');
+    const cleanPath = withoutIndex.replace(/\/+$/, '') || '/';
+    if (cleanPath === '/') return '/';
+    const pageRoute = cleanPath.match(/^\/pages\/([^/]+)\.html$/);
+    if (pageRoute) return '/' + pageRoute[1];
+    return cleanPath.replace(/\.html$/, '') || '/';
   };
   const currentPath = normalizePath(window.location.pathname);
   const isCurrentHref = (href) => {
@@ -1178,7 +1183,9 @@ if (revealTargets.length) {
         const classes = [];
         if (menu.titleFirst && index === 0) classes.push('mega-col-title');
         if (/^(All |Explore All |Start a Conversation)/.test(label)) classes.push('mega-cta');
-        if (isCurrentHref(href) && !/^(All |Explore All |Start a Conversation)/.test(label)) {
+        const isCallToAction = /^(All |Explore All |Start a Conversation)/.test(label);
+        const isOverviewCallToAction = label === 'Explore All Industries →';
+        if (isCurrentHref(href) && (!isCallToAction || isOverviewCallToAction)) {
           classes.push('is-current');
           link.setAttribute('aria-current', 'page');
         }
