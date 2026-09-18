@@ -188,8 +188,7 @@
 .builder-result-head strong{color:var(--white);font:800 26px/1.2 'Manrope',sans-serif;letter-spacing:-.035em;}
 .architecture-chain{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:24px 0;}
 .architecture-chain span{padding:10px 12px;border:1px solid rgba(225,53,17,.3);border-radius:10px;background:rgba(225,53,17,.11);color:rgba(255,255,255,.84);font:700 12px 'Manrope',sans-serif;}
-.architecture-chain i{width:18px;height:1px;background:rgba(255,122,77,.78);position:relative;}
-.architecture-chain i::after{content:"";position:absolute;right:0;top:-3px;border:3px solid transparent;border-left-color:#ff7a4d;}
+.architecture-chain .architecture-arrow{display:block;width:18px;height:18px;flex:0 0 18px;overflow:visible;}
 .builder-result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
 .builder-result-grid>div{padding:16px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(255,255,255,.05);}
 .builder-result-grid small{display:block;margin-bottom:8px;color:#ff9f84;font:800 10px 'Manrope',sans-serif;letter-spacing:.1em;text-transform:uppercase;}

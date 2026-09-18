@@ -69,7 +69,12 @@
         span.textContent = label;
         chainWrap.appendChild(span);
         if (index < chain.length - 1) {
-          const arrow = document.createElement('i');
+          const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          arrow.classList.add('architecture-arrow');
+          arrow.setAttribute('viewBox', '0 0 18 18');
+          arrow.setAttribute('aria-hidden', 'true');
+          arrow.setAttribute('focusable', 'false');
+          arrow.innerHTML = '<path d="M1 9h12M10 5l4 4-4 4" fill="none" stroke="#ff7a4d" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>';
           chainWrap.appendChild(arrow);
         }
       });
