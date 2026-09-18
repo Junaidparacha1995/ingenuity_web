@@ -118,10 +118,11 @@
     workHeroPrimary.textContent = isCaseStudy ? 'Explore Case Studies' : 'Browse Projects';
     workHeroPrimary.href = isCaseStudy ? '#case-studies' : 'projects/index.html';
   };
+  // Keep the hero title and CTA tied to the selected panel. Rotating the
+  // headline independently can show "Case Studies" above the Projects CTA.
   const restartHeadlineRotation = () => {
     if (headlineTimer) window.clearInterval(headlineTimer);
-    if (!workHeroTitle || manualHeadline.matches || !headlineVisible || document.hidden || document.body.classList.contains('motion-paused')) return;
-    headlineTimer = window.setInterval(() => showHeadline(headlineIndex + 1), 5500);
+    headlineTimer = null;
   };
   window.addEventListener('viewport:motion-pause', () => window.clearInterval(headlineTimer));
   window.addEventListener('viewport:motion-resume', restartHeadlineRotation);
