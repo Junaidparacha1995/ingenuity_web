@@ -574,7 +574,7 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
   .hc-static-graph-compact{display:none!important;}
   .hc-static-graph-desktop{display:block!important;object-fit:contain!important;object-position:center;}
   .home-page .hc-panel{height:auto!important;aspect-ratio:1440 / 680;}
-  .home-page .hc-right{align-items:stretch;}
+  .home-page .hc-right{align-items:stretch;gap:0;}
   .home-page .hc-panel,
   .home-page .hc-node-detail{width:100%;box-sizing:border-box;align-self:stretch;}
   .home-page .hc-node-hit[data-hc-node="tool"]{left:17.36%!important;top:13.24%!important;width:18.06%!important;height:14.12%!important;}
