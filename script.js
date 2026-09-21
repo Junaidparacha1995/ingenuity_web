@@ -9,6 +9,26 @@ function createNavigationArrow(direction = 'next') {
   return arrow;
 }
 
+// Keep the legal footer consistent across root and nested routes.
+(function syncLegalFooter() {
+  const nestedRoute = /(?:^|\/)(pages|projects|case-studies)(?:\/|$)/.test(window.location.pathname);
+  const prefix = nestedRoute ? '../' : '';
+  const links = [
+    ['Privacy Policy', `${prefix}privacy.html`],
+    ['Terms & Conditions', `${prefix}terms.html`],
+    ['Sitemap', `${prefix}sitemap.html`],
+    ['Cookie Policy', `${prefix}cookie-policy.html`]
+  ];
+  document.querySelectorAll('.legal-links').forEach((group) => {
+    group.replaceChildren(...links.map(([label, href]) => {
+      const link = document.createElement('a');
+      link.href = href;
+      link.textContent = label;
+      return link;
+    }));
+  });
+})();
+
 // Pinch zoom changes the visual viewport, not the CSS layout viewport. Never
 // rebuild layout/canvases or reset UI transitions just because the user zooms.
 (function initViewportStability() {
