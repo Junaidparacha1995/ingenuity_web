@@ -1245,6 +1245,7 @@ footer > .wrap{position:relative; z-index:1;}
 @keyframes projectTraceScan{0%{transform:translateY(0);opacity:0}12%{opacity:.9}82%{opacity:.35}100%{transform:translateY(280px);opacity:0}}
 @keyframes traceBlink{50%{opacity:0}}
 .project-card.is-open .project-card-foot{margin-top:20px;border-color:rgba(255,255,255,.14)}
+.project-card-foot a{display:none}
 
 @media(max-width:800px){.project-detail-inner{grid-template-columns:1fr}.project-detail-terminal{min-height:300px}.project-detail-terminal-screen{height:255px}.project-card.is-open{padding:24px}}
 @media(max-width:720px){.case-study-card{min-height:0}.case-study-detail-grid{grid-template-columns:1fr}.case-study-detail-grid p{font-size:13px}}

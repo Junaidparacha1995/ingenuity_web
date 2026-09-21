@@ -1,0 +1,236 @@
+We have completed the Phase 1 implementation, but before committing it or moving to Phase 2, perform a Phase 1 Verification & Acceptance Gate.
+
+Do NOT implement Phase 2 and do NOT add unrelated features.
+
+First reread:
+
+the original Lead Qualification & Routing Agent build plan
+docs/requirements.md
+docs/architecture.md
+docs/implementation-plan.md
+the current Phase 1 implementation
+
+Your job is to verify that what was actually implemented matches what Phase 1 was supposed to deliver.
+
+1. Requirements traceability
+
+Create a checklist mapping every Phase 1 requirement to:
+
+Implemented: Yes/No/Partial
+Exact file(s) implementing it
+Test(s) validating it
+Any discrepancy
+
+Do not mark something complete simply because a file exists. Inspect the implementation.
+
+2. Backend verification
+
+The previous run reported that backend pytest, Ruff, mypy, and Alembic could not execute because Python/uv was unavailable.
+
+This time, these checks must not simply be skipped.
+
+First detect what is available locally:
+
+Python version
+uv
+Docker
+PostgreSQL/Redis containers
+
+Prefer using the project's existing supported development environment.
+
+If Python/uv are genuinely missing and cannot be used from the existing Docker setup, STOP and give me the exact Windows installation commands required. Do not claim Phase 1 passed until the backend tests can actually run.
+
+Once the environment is available, execute:
+
+backend dependency installation
+database startup
+Alembic migration
+seed process
+pytest
+Ruff
+mypy
+3. Database verification
+
+Verify:
+
+PostgreSQL starts successfully
+Redis starts successfully
+Alembic migration applies from a clean database
+required tables are created
+seed data loads correctly
+all five test lead categories exist
+
+The five expected outcomes are:
+
+Hot
+Warm
+Needs Qualifying
+Nurture
+Disqualified
+4. API functional tests
+
+Actually start the FastAPI application and test:
+
+POST /v1/leads
+POST /v1/intake/web
+GET /v1/leads
+GET /v1/leads/{id}
+GET /v1/leads/{id}/qualification
+health/readiness endpoints
+
+Validate real responses, HTTP status codes, persisted data, qualification output, and error handling.
+
+Do not only inspect route definitions.
+
+5. Scoring acceptance tests
+
+Verify the scoring implementation against the project specification:
+
+ICP Fit = maximum 40
+Intent & Urgency = maximum 35
+Engagement Quality = maximum 25
+Total = maximum 100
+
+Verify the routing boundaries exactly:
+
+80–100 → Hot
+60–79 → Warm
+40–59 → Needs Qualifying
+20–39 → Nurture
+0–19 → Disqualify
+
+Add boundary tests specifically for:
+
+100
+80
+79
+60
+59
+40
+39
+20
+19
+0
+
+Verify hard disqualifiers override normal scoring and result in the intended disqualified outcome.
+
+6. Explainability verification
+
+For every qualification result, verify that the system provides:
+
+ICP score
+intent/urgency score
+engagement score
+total score
+routing classification
+rationale explaining why the result was produced
+
+A bare score without rationale is a failure.
+
+7. Normalization tests
+
+Verify that manual/web intake converts correctly into the canonical NormalizedLead.
+
+Include tests for:
+
+complete lead
+missing optional fields
+malformed input
+empty message
+duplicate/repeated submission behavior currently expected in Phase 1
+
+Do not implement Phase 2 idempotency/replay functionality yet unless Phase 1 already requires it.
+
+8. Frontend verification
+
+Run:
+
+TypeScript typecheck
+production build
+lint if configured
+
+Start both frontend and backend and verify the actual user flow:
+
+User submits lead → API receives it → lead is normalized → lead is scored → routing decision is produced → frontend displays:
+
+normalized information
+score breakdown
+total score
+classification
+routing decision
+rationale
+
+Verify the browser does not show console/API errors during this workflow.
+
+9. Regression and negative testing
+
+Test at minimum:
+
+valid high-quality lead
+warm lead
+low-intent lead
+hard-disqualified lead
+invalid request
+missing required fields
+database unavailable behavior
+malformed configuration
+
+Ensure failure cases fail safely rather than silently dropping data.
+
+10. Configuration/security verification
+
+Confirm:
+
+.env is ignored
+.env.example contains placeholders only
+no credentials or API keys are committed
+no provider integrations have accidentally been implemented
+configuration is not unnecessarily hardcoded
+11. Fix failures
+
+If any Phase 1 requirement or test fails:
+
+diagnose it
+fix only what belongs to Phase 1
+rerun the affected tests
+rerun the complete regression suite afterward
+
+Do not hide, suppress, or simply remove a failing test to obtain a green result.
+
+12. Final acceptance report
+
+At the end produce:
+
+Phase 1 Acceptance Matrix
+
+Requirement	Implemented	Automated Test	Manual Verification	Status
+
+Use only:
+
+PASS
+FAIL
+PARTIAL
+BLOCKED
+
+Then report:
+
+commands actually executed
+automated test counts and results
+API tests performed
+manual flows tested
+defects found
+defects fixed
+remaining blockers
+files changed during validation
+
+Finish with one of:
+
+PHASE 1 ACCEPTANCE: PASS
+
+or
+
+PHASE 1 ACCEPTANCE: FAIL
+
+Do not recommend moving to Phase 2 if acceptance is FAIL or BLOCKED.
+
+Do not begin Phase 2.
