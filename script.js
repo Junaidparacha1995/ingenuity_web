@@ -19,6 +19,104 @@ function createNavigationArrow(direction = 'next') {
     ['Sitemap', `${prefix}sitemap.html`],
     ['Cookie Policy', `${prefix}cookie-policy.html`]
   ];
+  const socials = [
+    {
+      label: 'LinkedIn',
+      href: 'https://www.linkedin.com/company/ingenuity-systems-co/home/',
+      path: 'M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.24 8.25h4.5V23h-4.5V8.25zM8.25 8.25h4.31v2.02h.06c.6-1.13 2.07-2.33 4.26-2.33 4.55 0 5.39 3 5.39 6.9V23h-4.5v-6.94c0-1.66-.03-3.79-2.31-3.79-2.32 0-2.67 1.81-2.67 3.67V23h-4.5V8.25z'
+    },
+    {
+      label: 'Email',
+      href: 'mailto:info@ingenuitysys.com',
+      path: 'M2 4h20v16H2V4zm2 2v.01L12 12l8-5.99V6H4zm16 2.24l-7.42 5.57a1 1 0 01-1.16 0L4 8.24V18h16V8.24z'
+    },
+    {
+      label: 'Instagram',
+      href: 'https://www.instagram.com/ingenuitysystems',
+      path: 'M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.47 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.47.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-. 1.06.36 2.23.41 1.27.06 1.65.07 4.85.07s3.58-.01 4.85-.07c1.17-.05 1.8-.25 2.23-.41.56-.22.96-.47 1.38-.9.42-.42.68-.82.9-1.38.16-.42.36-1.06.41-2.23.06-1.27.07-1.65.07-4.85s-.01-3.58-.07-4.85c-.05-1.17-.25-1.8-.41-2.23-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58-.07-4.85c-.06-1.28-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.13C21.33 1.35 20.66.94 19.87.63c-.76-.3-1.63-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-10.85a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z'
+    }
+  ];
+  socials[2].path = 'M12 2.2a9.8 9.8 0 1 0 0 19.6 9.8 9.8 0 0 0 0-19.6zm0 3a6.8 6.8 0 1 1 0 13.6 6.8 6.8 0 0 1 0-13.6zm5.2-1.2a1.15 1.15 0 1 0 0 2.3 1.15 1.15 0 0 0 0-2.3z';
+  const footerNavigation = [
+    {
+      title: 'Company',
+      items: [['Home', 'index.html'], ['About', 'about.html'], ['Careers', 'careers.html'], ['Contact', 'contact.html']]
+    },
+    {
+      title: 'Services',
+      items: [
+        ['AI & Intelligent Systems', 'services-ai.html'],
+        ['Business Process Automation', 'services-automation.html'],
+        ['Software & Digital Engineering', 'services-software.html'],
+        ['Systems Integration & Data', 'services-integration.html']
+      ]
+    },
+    {
+      title: 'Industries',
+      items: [
+        ['Ecommerce & Retail', 'industries-ecommerce.html'],
+        ['Professional & Business Services', 'industries-professional.html'],
+        ['Real Estate & Property', 'industries-realestate.html'],
+        ['Financial Services', 'industries-financial.html'],
+        ['Healthcare', 'industries-healthcare.html'],
+        ['Manufacturing & Supply Chain', 'industries-manufacturing.html'],
+        ['Technology & SaaS', 'industries-technology.html']
+      ]
+    }
+  ];
+  document.querySelectorAll('footer').forEach((footer) => {
+    if (!footer.querySelector('.footer-watermark')) {
+      const watermark = document.createElement('img');
+      watermark.className = 'footer-watermark';
+      watermark.alt = '';
+      watermark.setAttribute('aria-hidden', 'true');
+      watermark.src = `${prefix}assets/logo-icon.png`;
+      footer.prepend(watermark);
+    }
+    if (!footer.querySelector('.social-row')) {
+      const intro = footer.querySelector('.footer-top > div');
+      if (intro) {
+        const socialRow = document.createElement('div');
+        socialRow.className = 'social-row';
+        socials.forEach(({ label, href, path }) => {
+          const link = document.createElement('a');
+          link.setAttribute('aria-label', label);
+          link.href = href;
+          if (/^https?:/.test(href)) {
+            link.target = '_blank';
+            link.rel = 'noopener';
+          }
+          link.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"></path></svg>`;
+          socialRow.appendChild(link);
+        });
+        const location = intro.querySelector('.footer-location');
+        if (location) location.insertAdjacentElement('afterend', socialRow);
+        else intro.appendChild(socialRow);
+      }
+    }
+    const footerTop = footer.querySelector('.footer-top');
+    const intro = footerTop?.firstElementChild;
+    if (footerTop && intro) {
+      Array.from(footerTop.children).slice(1).forEach((column) => column.remove());
+      footerNavigation.forEach(({ title, items }) => {
+        const column = document.createElement('div');
+        column.className = 'footer-col';
+        const heading = document.createElement('h5');
+        heading.textContent = title;
+        const list = document.createElement('ul');
+        items.forEach(([label, href]) => {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = `${prefix}${href}`;
+          link.textContent = label;
+          item.appendChild(link);
+          list.appendChild(item);
+        });
+        column.append(heading, list);
+        footerTop.appendChild(column);
+      });
+    }
+  });
   document.querySelectorAll('.legal-links').forEach((group) => {
     group.replaceChildren(...links.map(([label, href]) => {
       const link = document.createElement('a');
