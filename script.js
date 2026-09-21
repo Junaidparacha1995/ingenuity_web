@@ -993,6 +993,14 @@ if (revealTargets.length) {
     assistantSafeZones.forEach((zone) => safeZoneObserver.observe(zone));
     window.addEventListener('viewport:resize-end', syncSafeDock);
   }
+
+  const footer = document.querySelector('footer');
+  if (footer && 'IntersectionObserver' in window) {
+    const footerObserver = new IntersectionObserver(([entry]) => {
+      root.classList.toggle('is-footer-visible', entry.isIntersecting);
+    }, { threshold: 0.02 });
+    footerObserver.observe(footer);
+  }
 })();
 
 // Restored decision-layer cards — reveal the supporting detail without changing page flow.
