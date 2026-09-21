@@ -1515,3 +1515,8 @@ html,body{max-width:100%;overflow-x:hidden}
   .legal-document,.sitemap-document{padding:24px 20px;border-radius:22px;}
   .sitemap-grid{grid-template-columns:1fr;}
 }
+
+/* Repository destinations are intentionally omitted from the public project
+   cards at every breakpoint; the cards use their expandable project briefs
+   as the visible interaction instead. */
+.project-page .project-card-foot a{display:none!important;}
