@@ -1,3 +1,63 @@
+// Shared theme state — the small preload script sets the initial value before
+// paint; this module owns the animated switch and keeps injected headers in sync.
+(function initThemeMode() {
+  const root = document.documentElement;
+  const storageKey = 'ingenuity-theme';
+  const getTheme = () => root.dataset.theme === 'dark' ? 'dark' : 'light';
+  const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const syncButton = (button) => {
+    const theme = getTheme();
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    const icon = button.querySelector('.theme-toggle-icon');
+    if (icon) icon.textContent = theme === 'dark' ? '☀' : '☾';
+    button.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+    button.setAttribute('aria-pressed', String(theme === 'dark'));
+    button.title = `Switch to ${nextTheme} mode`;
+  };
+
+  const setTheme = (theme, source) => {
+    const nextTheme = theme === 'dark' ? 'dark' : 'light';
+    const currentTheme = getTheme();
+    if (nextTheme === currentTheme) return;
+
+    const reducedMotion = prefersReducedMotion();
+    const rect = source?.getBoundingClientRect();
+    const x = rect ? `${rect.left + rect.width / 2}px` : '50%';
+    const y = rect ? `${rect.top + rect.height / 2}px` : '50%';
+    const transition = document.createElement('div');
+
+    transition.className = 'theme-transition-layer';
+    transition.style.setProperty('--theme-x', x);
+    transition.style.setProperty('--theme-y', y);
+    transition.style.setProperty('--theme-layer-bg', nextTheme === 'dark' ? '#0a1220' : '#ffffff');
+    if (!reducedMotion) document.body.appendChild(transition);
+
+    root.dataset.theme = nextTheme;
+    root.style.colorScheme = nextTheme;
+    try {
+      window.localStorage.setItem(storageKey, nextTheme);
+    } catch (error) {
+      // The visual mode still works when storage is unavailable.
+    }
+    document.querySelectorAll('.theme-toggle').forEach(syncButton);
+    document.dispatchEvent(new CustomEvent('themechange', { detail: { theme: nextTheme } }));
+
+    if (!reducedMotion) {
+      requestAnimationFrame(() => transition.classList.add('is-expanding'));
+      transition.addEventListener('animationend', () => transition.remove(), { once: true });
+    }
+  };
+
+  window.ingenuityTheme = {
+    get: getTheme,
+    syncButton,
+    toggle(button) {
+      setTheme(getTheme() === 'dark' ? 'light' : 'dark', button);
+    }
+  };
+})();
+
 function createNavigationArrow(direction = 'next') {
   const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   arrow.classList.add('arrow-icon');
@@ -1256,6 +1316,17 @@ if (revealTargets.length) {
     else link.removeAttribute('aria-current');
   });
   nav.querySelector('.nav-cta a')?.setAttribute('href', siteBase + 'contact.html');
+  const cta = nav.querySelector('.nav-cta');
+  if (cta && !cta.querySelector('.theme-toggle')) {
+    const themeToggle = document.createElement('button');
+    themeToggle.className = 'theme-toggle';
+    themeToggle.type = 'button';
+    themeToggle.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"></span>';
+    themeToggle.addEventListener('click', () => window.ingenuityTheme?.toggle(themeToggle));
+    cta.prepend(themeToggle);
+  }
+  const themeToggle = cta?.querySelector('.theme-toggle');
+  if (themeToggle) window.ingenuityTheme?.syncButton(themeToggle);
   const menus = {
     services: {
       titleFirst: true,
