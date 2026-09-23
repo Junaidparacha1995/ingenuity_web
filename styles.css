@@ -118,8 +118,10 @@ section{position:relative;}
 
   .cursor-dot{
     display:block; position:fixed; top:0; left:0; width:11px; height:11px;
-    border-radius:50%; background:var(--orange); pointer-events:none; z-index:9999;
+    border-radius:50%; background:var(--orange); pointer-events:none;
     box-shadow:0 0 10px rgba(225,53,17,.5);
+    /* Keep the pointer accent behind the fixed AI panel and its controls. */
+    z-index:210;
     transform:translate(-50%,-50%); opacity:0;
     transition:opacity .3s ease,width .25s var(--ease-spring),height .25s var(--ease-spring),background-color .25s ease,box-shadow .25s ease;
   }
@@ -1639,12 +1641,30 @@ html[data-theme="dark"] .tech-marquee .marquee-item[title="PostgreSQL"] img{
 html[data-theme="dark"] .tech-marquee .marquee-item[title="Cursor"] img{
   filter:invert(1) brightness(1.2);
 }
-html[data-theme="dark"] .assistant-body,
-html[data-theme="dark"] .assistant-suggestions button,
-html[data-theme="dark"] .assistant-form{background:#111F33;border-color:rgba(185,211,239,.16);}
+html[data-theme="dark"] .assistant-panel{background:#111F33;border-color:rgba(185,211,239,.16);}
+html[data-theme="dark"] .assistant-body{background:radial-gradient(circle at 100% 0,rgba(225,53,17,.1),transparent 38%),#111F33;}
+html[data-theme="dark"] .assistant-suggestions button{
+  background:#1B2C44;
+  border-color:rgba(185,211,239,.2);
+  color:#E7EEF7;
+}
 html[data-theme="dark"] .assistant-bubble{background:#1B2C44;color:#E7EEF7;}
-html[data-theme="dark"] .assistant-source{color:#AEB9C8;}
-html[data-theme="dark"] .assistant-form input{color:#F3F7FC;background:#0A1220;border-color:rgba(185,211,239,.18);}
+html[data-theme="dark"] .assistant-source{
+  background:#1B2C44;
+  border-color:rgba(185,211,239,.2);
+  color:#D8E1EC;
+}
+html[data-theme="dark"] .assistant-form{
+  background:#111F33;
+  border-top-color:rgba(185,211,239,.16);
+}
+html[data-theme="dark"] .assistant-form input{
+  color:#F3F7FC;
+  background:#0A1220;
+  border-color:rgba(185,211,239,.24);
+}
+html[data-theme="dark"] .assistant-form input::placeholder{color:#8F9DB0;}
+html[data-theme="dark"] .assistant-foot{background:#111F33;color:#8F9DB0;}
 html[data-theme="dark"] .flow-line{background:rgba(185,211,239,.14);}
 html[data-theme="dark"] ::-webkit-scrollbar-track{background:#0A1220;}
 html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-color:#0A1220;}
