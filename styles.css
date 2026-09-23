@@ -339,19 +339,17 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 }
 .nav-cta{display:flex; justify-self:end; align-items:center; gap:16px;}
 .nav-cta .btn-sm{font:700 13.5px/1.2 'Manrope',sans-serif;}
-  .theme-toggle{position:relative;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;gap:0;flex:0 0 auto;padding:0;border:1px solid rgba(255,255,255,.22);border-radius:14px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.04));color:#fff;box-shadow:0 8px 22px rgba(3,13,28,.2),inset 0 1px 0 rgba(255,255,255,.16);line-height:1;transition:transform .35s var(--ease-spring),background .35s ease,border-color .35s ease,box-shadow .35s ease;}
-  .theme-toggle::before{content:"";position:absolute;inset:4px;border-radius:10px;border:1px solid rgba(225,53,17,.18);opacity:.9;pointer-events:none;transition:opacity .35s ease,border-color .35s ease;}
-.theme-toggle:hover,.theme-toggle:focus-visible{border-color:rgba(255,178,149,.72);box-shadow:0 12px 28px rgba(3,13,28,.28),0 0 0 5px rgba(225,53,17,.1);transform:translateY(-2px);}
+  .theme-toggle{position:relative;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;gap:0;flex:0 0 auto;padding:0;border:0;border-radius:50%;background:#edf2fc;color:#17243b;line-height:1;transition:transform .25s ease,background .25s ease;}
+ .theme-toggle:hover,.theme-toggle:focus-visible{background:#e1e8f6;transform:scale(1.04);}
 .theme-toggle:focus-visible{outline:2px solid rgba(255,192,173,.95);outline-offset:4px;}
   .theme-toggle-icon{position:relative;z-index:1;display:block;width:24px;height:24px;flex:0 0 24px;}
 .theme-glyph{position:absolute;inset:0;display:block;opacity:0;transform:rotate(-70deg) scale(.35);transition:opacity .42s ease,transform .52s var(--ease-spring);}
-.theme-glyph-sun::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#D8E1EC;}
-.theme-glyph-sun::after{content:"";position:absolute;inset:1px;background:linear-gradient(#D8E1EC,#D8E1EC) center top/2px 5px no-repeat,linear-gradient(#D8E1EC,#D8E1EC) center bottom/2px 5px no-repeat,linear-gradient(90deg,#D8E1EC,#D8E1EC) left center/5px 2px no-repeat,linear-gradient(90deg,#D8E1EC,#D8E1EC) right center/5px 2px no-repeat,linear-gradient(45deg,transparent 44%,#D8E1EC 45% 55%,transparent 56%) center/19px 19px no-repeat,linear-gradient(-45deg,transparent 44%,#D8E1EC 45% 55%,transparent 56%) center/19px 19px no-repeat;}
-.theme-glyph-moon::before{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#B9D3EF;}
-.theme-glyph-moon::after{content:"";position:absolute;top:0;left:0;width:18px;height:18px;border-radius:50%;background:#172B47;transform:translate(7px,-3px);}
+.theme-glyph-sun::before{content:"";position:absolute;inset:7px;border-radius:50%;background:currentColor;}
+.theme-glyph-sun::after{content:"";position:absolute;inset:1px;background:linear-gradient(currentColor,currentColor) center top/2px 5px no-repeat,linear-gradient(currentColor,currentColor) center bottom/2px 5px no-repeat,linear-gradient(90deg,currentColor,currentColor) left center/5px 2px no-repeat,linear-gradient(90deg,currentColor,currentColor) right center/5px 2px no-repeat,linear-gradient(45deg,transparent 44%,currentColor 45% 55%,transparent 56%) center/19px 19px no-repeat,linear-gradient(-45deg,transparent 44%,currentColor 45% 55%,transparent 56%) center/19px 19px no-repeat;}
+.theme-glyph-moon::before{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:currentColor;}
+.theme-glyph-moon::after{content:"";position:absolute;top:0;left:0;width:18px;height:18px;border-radius:50%;background:#080D2B;transform:translate(7px,-3px);}
 .theme-toggle[aria-pressed="false"] .theme-glyph-sun{opacity:1;transform:rotate(0) scale(1);}
-  .theme-toggle[aria-pressed="true"]{background:linear-gradient(145deg,#172B47,#0D1A2B);}
-.theme-toggle[aria-pressed="true"]::before{border-color:rgba(112,174,229,.25);}
+  .theme-toggle[aria-pressed="true"]{background:#080D2B;color:#B9D3EF;}
 .theme-toggle[aria-pressed="true"] .theme-glyph-moon{opacity:1;transform:rotate(0) scale(1);}
 .theme-toggle.is-switching{animation:themeButtonCompress .16s cubic-bezier(.22,1,.36,1) both,themeButtonHalo .58s ease-out both;}
 .theme-toggle.is-switching[aria-pressed="true"] .theme-glyph-sun{animation:themeSunExit .34s ease both;}
