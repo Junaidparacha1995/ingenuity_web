@@ -232,7 +232,7 @@ header{
   --menu-panel-height:0px;
   height:var(--site-header-height);
   max-width:100%; margin:0 auto;
-  --header-bg:#14233B;
+  --header-bg:rgb(21,35,56);
   background:var(--header-bg); backdrop-filter:none; -webkit-backdrop-filter:none;
   border-bottom:1px solid rgba(255,255,255,0.14);
   border-radius:0;
@@ -247,7 +247,7 @@ header.scrolled{
   border-radius:28px;
   border:1px solid rgba(255,255,255,0.18);
   border-bottom-color:rgba(255,255,255,0.18);
-  --header-bg:#14233B;
+  --header-bg:rgb(21,35,56);
   background:var(--header-bg);
   box-shadow:0 16px 46px -14px rgba(10,18,30,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
 }
@@ -1292,7 +1292,7 @@ footer > .wrap{position:relative; z-index:1;}
 
 /* Global AI advisor: the same compact launcher and consultant panel follows every route. */
 .site-assistant{position:fixed;right:24px;bottom:22px;z-index:220;font-family:'Manrope',sans-serif;color:var(--navy)}
-.assistant-launcher{display:flex;align-items:center;gap:12px;min-width:236px;padding:10px 14px 10px 10px;border:1px solid rgba(255,255,255,.18);border-radius:22px;background:linear-gradient(145deg,#14233b,#0e1c31);color:#fff;box-shadow:0 18px 42px rgba(10,20,38,.25),0 0 0 7px rgba(20,35,59,.06);transition:transform .28s var(--ease-spring),box-shadow .28s ease;cursor:pointer;text-align:left}
+.assistant-launcher{display:flex;align-items:center;gap:12px;min-width:236px;padding:10px 14px 10px 10px;border:1px solid rgba(255,255,255,.18);border-radius:22px;background:rgb(21,35,56);color:#fff;box-shadow:0 18px 42px rgba(10,20,38,.25),0 0 0 7px rgba(20,35,59,.06);transition:transform .28s var(--ease-spring),box-shadow .28s ease;cursor:pointer;text-align:left}
 .assistant-launcher:hover{transform:translateY(-4px);box-shadow:0 24px 50px rgba(10,20,38,.32),0 0 0 7px rgba(225,53,17,.08)}
 .assistant-launcher-icon{display:grid;place-items:center;flex:0 0 auto;width:46px;height:46px;border-radius:15px;background:var(--orange);color:#fff;box-shadow:0 8px 20px rgba(225,53,17,.28);overflow:hidden}
 .assistant-launcher-icon img,.assistant-header-icon img{display:block;width:27px;height:27px;object-fit:contain;filter:brightness(0) invert(1);}
@@ -1300,7 +1300,7 @@ footer > .wrap{position:relative; z-index:1;}
 .assistant-launcher-arrow{margin-left:auto;color:rgba(255,255,255,.66);font-size:19px;transition:transform .25s ease}.site-assistant.is-open .assistant-launcher-arrow{transform:rotate(45deg);color:#fff}
 .assistant-panel{position:absolute;right:0;bottom:72px;display:grid;grid-template-rows:auto 1fr auto;width:min(440px,calc(100vw - 24px));height:min(660px,calc(100vh - 100px));overflow:hidden;border:1px solid rgba(20,35,59,.18);border-radius:28px;background:#f4f6f8;box-shadow:0 28px 80px rgba(10,20,38,.3);opacity:0;pointer-events:none;transform:translateY(14px) scale(.97);transform-origin:bottom right;transition:opacity .28s ease,transform .35s var(--ease-spring)}
 .site-assistant.is-open .assistant-panel{opacity:1;pointer-events:auto;transform:none}
-.assistant-header{display:flex;align-items:center;gap:12px;padding:16px 16px 15px;background:linear-gradient(135deg,#14233b,#0c1a2e);color:#fff}.assistant-header-icon{display:grid;place-items:center;flex:0 0 auto;width:42px;height:42px;border-radius:14px;background:var(--orange);box-shadow:0 8px 22px rgba(225,53,17,.25);overflow:hidden}.assistant-header-icon img{width:24px;height:24px}
+.assistant-header{display:flex;align-items:center;gap:12px;padding:16px 16px 15px;background:rgb(21,35,56);color:#fff}.assistant-header-icon{display:grid;place-items:center;flex:0 0 auto;width:42px;height:42px;border-radius:14px;background:var(--orange);box-shadow:0 8px 22px rgba(225,53,17,.25);overflow:hidden}.assistant-header-icon img{width:24px;height:24px}
 .assistant-header-copy{min-width:0;display:grid;gap:4px}.assistant-header-copy strong{font-size:15px}.assistant-header-copy small{font-size:10px;color:rgba(255,255,255,.64)}.assistant-status{display:inline-flex;align-items:center;gap:6px;color:#75e2ae}.assistant-status:before{content:'';width:7px;height:7px;border-radius:50%;background:#48d597;box-shadow:0 0 0 4px rgba(72,213,151,.1)}
 .assistant-actions{display:flex;gap:7px;margin-left:auto}.assistant-action{width:34px;height:34px;border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.08);color:#fff;font-size:16px;cursor:pointer}.assistant-action:hover{background:rgba(255,255,255,.16)}
 .assistant-body{min-height:0;overflow:auto;padding:20px 16px 14px;background:radial-gradient(circle at 100% 0,rgba(225,53,17,.07),transparent 38%),#f4f6f8}.assistant-message{display:flex;gap:9px;margin:0 0 14px;align-items:flex-end}.assistant-message.user{justify-content:flex-end}.assistant-avatar{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:9px;background:var(--navy);color:#fff;font:800 10px 'Manrope',sans-serif;overflow:hidden}.assistant-avatar img{display:block;width:18px;height:18px;object-fit:contain;filter:brightness(0) invert(1)}.assistant-bubble{max-width:86%;padding:13px 14px;border-radius:17px 17px 17px 5px;background:#fff;color:#5d6a7a;font-size:13px;line-height:1.55;box-shadow:0 8px 24px rgba(20,35,59,.08);white-space:pre-wrap}.assistant-message.user .assistant-bubble{border-radius:17px 17px 5px 17px;background:var(--navy);color:#fff}.assistant-sources{display:flex;flex-wrap:wrap;gap:6px;margin:-5px 0 15px 37px}.assistant-source{padding:6px 9px;border:1px solid rgba(20,35,59,.12);border-radius:999px;background:#fff;color:var(--navy);font-size:10px;text-decoration:none}.assistant-source:hover{border-color:rgba(225,53,17,.38);color:var(--orange)}
@@ -1588,7 +1588,9 @@ html[data-theme="dark"] .btn-outline{background:rgba(21,35,56,.72);border-color:
 html[data-theme="dark"] .btn-outline:hover,
 html[data-theme="dark"] .btn-outline:focus-visible{background:#F3F7FC;color:#0A1220;}
 html[data-theme="dark"] header,
-html[data-theme="dark"] header.scrolled{--header-bg:#091322;}
+html[data-theme="dark"] header.scrolled{--header-bg:rgb(21,35,56);background:rgb(21,35,56);}
+html[data-theme="dark"] .assistant-launcher,
+html[data-theme="dark"] .assistant-header{background:rgb(21,35,56);}
 html[data-theme="dark"] header .brand img.logo-full,
 html[data-theme="dark"] footer .brand img.logo-full{
   opacity:1!important;
