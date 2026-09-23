@@ -13,6 +13,8 @@
     button.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
     button.setAttribute('aria-pressed', String(theme === 'dark'));
     button.title = `Switch to ${nextTheme} mode`;
+    const label = button.querySelector('.theme-toggle-label');
+    if (label) label.textContent = theme === 'dark' ? 'Dark' : 'Light';
   };
 
   const applyTheme = (theme) => {
@@ -1364,7 +1366,7 @@ if (revealTargets.length) {
     const themeToggle = document.createElement('button');
     themeToggle.className = 'theme-toggle';
     themeToggle.type = 'button';
-    themeToggle.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"><span class="theme-glyph theme-glyph-sun"></span><span class="theme-glyph theme-glyph-moon"></span></span>';
+    themeToggle.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"><span class="theme-glyph theme-glyph-sun"></span><span class="theme-glyph theme-glyph-moon"></span></span><span class="theme-toggle-label">Light</span>';
     themeToggle.addEventListener('click', () => window.ingenuityTheme?.toggle(themeToggle));
     cta.prepend(themeToggle);
   }
