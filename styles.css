@@ -1626,89 +1626,21 @@ html[data-theme="dark"] .flow-line{background:rgba(185,211,239,.14);}
 html[data-theme="dark"] ::-webkit-scrollbar-track{background:#0A1220;}
 html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-color:#0A1220;}
 
-body.theme-transitioning,
-body.theme-transitioning *{
-  transition:color .62s ease,background-color .62s ease,border-color .62s ease,box-shadow .62s ease !important;
-}
-body.theme-transitioning .theme-toggle,
-body.theme-transitioning .theme-toggle::before,
-body.theme-transitioning .theme-toggle .theme-glyph{
-  transition:transform .45s var(--ease-spring),opacity .4s ease,background-color .35s ease,box-shadow .35s ease !important;
-}
-.theme-refraction-wave{
-  position:fixed;inset:0;z-index:190;pointer-events:none;overflow:visible;
-  background:radial-gradient(circle at var(--wave-x) var(--wave-y),rgba(255,181,145,.28) 0 2px,rgba(225,53,17,.16) 3px 6px,rgba(225,53,17,.08) 7px 12px,transparent 13px);
-  background-repeat:no-repeat;
-  --wave-angle:-18deg;
-}
-.theme-refraction-wave::before,
-.theme-refraction-wave::after{
-  content:"";position:absolute;left:var(--wave-x);top:var(--wave-y);
-  width:clamp(300px,34vw,520px);height:240vmax;transform:translate3d(-50%,-50%,0) rotate(var(--wave-angle));
-  border-radius:42% 58% 46% 54% / 26% 38% 62% 74%;
-  will-change:transform,opacity;
-}
-.theme-refraction-wave::before{
-  background:
-    radial-gradient(ellipse at 25% 48%,rgba(255,255,255,.52),transparent 42%),
-    linear-gradient(90deg,transparent 0%,rgba(225,53,17,.2) 15%,rgba(255,250,246,.92) 42%,rgba(255,172,141,.58) 52%,rgba(255,255,255,.34) 60%,rgba(225,53,17,.16) 78%,transparent 100%),
-    linear-gradient(106deg,transparent 24%,rgba(255,255,255,.18) 38%,transparent 52%),
-    linear-gradient(74deg,transparent 48%,rgba(225,53,17,.14) 61%,transparent 74%);
-  border-left:2px solid rgba(255,239,232,.72);
-  border-right:2px solid rgba(255,151,120,.5);
-  box-shadow:0 0 24px 3px rgba(255,210,190,.55),0 0 70px 12px rgba(225,53,17,.3),0 0 130px 28px rgba(225,53,17,.12);
-  filter:blur(1.5px) brightness(1.12) saturate(1.12);
-  backdrop-filter:blur(4px) brightness(1.05);
-  opacity:0;
-  mix-blend-mode:screen;
-}
-.theme-refraction-wave::after{
-  left:calc(var(--wave-x) - 230px);
-  width:700px;
-  background:radial-gradient(ellipse at 42% 50%,rgba(225,53,17,.22),rgba(255,196,168,.12) 32%,transparent 72%),linear-gradient(90deg,transparent,rgba(225,53,17,.24) 42%,rgba(255,196,168,.16) 52%,transparent);
-  filter:blur(28px);
-  opacity:0;
-}
-.theme-refraction-wave[data-direction="light"]::before{
-  background:
-    radial-gradient(ellipse at 25% 48%,rgba(255,255,255,.66),transparent 42%),
-    linear-gradient(90deg,transparent 0%,rgba(151,193,232,.22) 15%,rgba(255,255,255,.98) 42%,rgba(211,231,250,.64) 52%,rgba(255,255,255,.38) 60%,rgba(112,174,229,.14) 78%,transparent 100%),
-    linear-gradient(106deg,transparent 24%,rgba(255,255,255,.22) 38%,transparent 52%),
-    linear-gradient(74deg,transparent 48%,rgba(112,174,229,.14) 61%,transparent 74%);
-  border-left-color:rgba(255,255,255,.84);
-  border-right-color:rgba(170,211,247,.56);
-  box-shadow:0 0 24px 3px rgba(219,239,255,.6),0 0 70px 12px rgba(112,174,229,.32),0 0 130px 28px rgba(112,174,229,.12);
-}
-.theme-refraction-wave[data-direction="light"]::after{background:radial-gradient(ellipse at 42% 50%,rgba(112,174,229,.2),rgba(219,239,255,.12) 32%,transparent 72%),linear-gradient(90deg,transparent,rgba(112,174,229,.2) 48%,rgba(219,239,255,.12) 52%,transparent);}
-.theme-refraction-wave[data-direction="light"]{--wave-angle:18deg;}
-.theme-refraction-wave.is-traveling::before{animation:refractionWaveTravel .82s cubic-bezier(.22,1,.36,1) forwards;}
-.theme-refraction-wave.is-traveling::after{animation:refractionWaveTrail .82s cubic-bezier(.22,1,.36,1) .03s forwards;}
-.theme-refraction-wave.is-traveling{animation:refractionOriginPulse .82s ease-out forwards;}
-@keyframes refractionOriginPulse{
-  0%{opacity:0;}
-  8%{opacity:1;}
-  72%{opacity:1;}
-  100%{opacity:0;}
-}
-@keyframes refractionWaveTravel{
-  0%{opacity:0;transform:translate3d(-50%,-50%,0) rotate(var(--wave-angle));}
-  6%{opacity:1;}
-  28%{opacity:.94;}
-  70%{opacity:.72;}
-  100%{opacity:0;transform:translate3d(calc(-110vw - 50%),calc(110vh + 50%),0) rotate(var(--wave-angle));}
-}
-@keyframes refractionWaveTrail{
-  0%{opacity:0;transform:translate3d(-50%,-50%,0) rotate(var(--wave-angle));}
-  12%{opacity:.3;}
-  38%{opacity:.22;}
-  100%{opacity:0;transform:translate3d(calc(-110vw - 50%),calc(110vh + 50%),0) rotate(var(--wave-angle));}
+/* Keep both complete page states visible while the incoming theme crosses
+   the viewport. The browser holds a snapshot of the outgoing page underneath. */
+::view-transition-old(root),
+::view-transition-new(root){animation:none!important;mix-blend-mode:normal;}
+::view-transition-old(root){z-index:1;}
+::view-transition-new(root){z-index:2;}
+body.theme-color-fallback,
+body.theme-color-fallback *{
+  transition:color .65s ease,background-color .65s ease,border-color .65s ease,box-shadow .65s ease!important;
 }
 @media(max-width:720px){
   .theme-toggle{width:40px;height:40px;}
   .nav-cta{gap:8px;}
 }
 @media(prefers-reduced-motion:reduce){
-  .theme-refraction-wave{display:none;}
-  html[data-theme="dark"] body{transition:none;}
+  body.theme-color-fallback,body.theme-color-fallback *{transition-duration:.18s!important;}
   .theme-toggle,.theme-toggle-icon,.theme-glyph{transition:none;animation:none!important;}
 }

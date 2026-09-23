@@ -5,56 +5,96 @@
   const storageKey = 'ingenuity-theme';
   const getTheme = () => root.dataset.theme === 'dark' ? 'dark' : 'light';
   const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let switching = false;
 
   const syncButton = (button) => {
     const theme = getTheme();
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    const icon = button.querySelector('.theme-toggle-icon');
     button.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
     button.setAttribute('aria-pressed', String(theme === 'dark'));
     button.title = `Switch to ${nextTheme} mode`;
   };
 
-  const setTheme = (theme, source) => {
-    const nextTheme = theme === 'dark' ? 'dark' : 'light';
-    const currentTheme = getTheme();
-    if (nextTheme === currentTheme) return;
-
-    const reducedMotion = prefersReducedMotion();
-    source?.classList.add('is-switching');
-    const rect = source?.getBoundingClientRect();
-    const x = rect ? `${rect.left + rect.width / 2}px` : '50%';
-    const y = rect ? `${rect.top + rect.height / 2}px` : '50%';
-    const transition = document.createElement('div');
-
-    transition.className = 'theme-refraction-wave';
-    transition.dataset.direction = nextTheme;
-    transition.style.setProperty('--wave-x', x);
-    transition.style.setProperty('--wave-y', y);
-    if (!reducedMotion) document.body.appendChild(transition);
-
-    document.body.classList.add('theme-transitioning');
-    root.dataset.theme = nextTheme;
-    root.style.colorScheme = nextTheme;
-    try {
-      window.localStorage.setItem(storageKey, nextTheme);
-    } catch (error) {
-      // The visual mode still works when storage is unavailable.
+  const applyTheme = (theme) => {
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+    try { window.localStorage.setItem(storageKey, theme); } catch (error) {
+      // Theme switching remains available when storage is disabled.
     }
     document.querySelectorAll('.theme-toggle').forEach(syncButton);
-    document.dispatchEvent(new CustomEvent('themechange', { detail: { theme: nextTheme } }));
+    document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+  };
 
-    if (!reducedMotion) {
-      requestAnimationFrame(() => transition.classList.add('is-traveling'));
-      transition.addEventListener('animationend', (event) => {
-        if (event.animationName !== 'refractionWaveTravel') return;
-        transition.remove();
-        document.body.classList.remove('theme-transitioning');
-        source?.classList.remove('is-switching');
-      });
-    } else {
-      window.setTimeout(() => document.body.classList.remove('theme-transitioning'), 180);
+  // Both themes remain rendered as snapshots. Only the incoming snapshot is
+  // progressively revealed; a translucent band alone cannot show the theme change.
+  const revealFrames = (x, y, theme) => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const edgeGlow = theme === 'dark'
+      ? 'drop-shadow(-14px 0 16px rgba(225,53,17,.27))'
+      : 'drop-shadow(-14px 0 16px rgba(164,205,240,.34))';
+    const shape = (edge) => {
+      const points = [0, .25, .5, .75, 1].map((fraction) => {
+        const py = height * fraction;
+        const curve = Math.sin(fraction * Math.PI * 2) * 18;
+        return `${edge + (py - y) * .28 + curve}px ${py}px`;
+      }).reverse();
+      return `polygon(${width}px 0px, ${width}px ${height}px, ${points.join(', ')})`;
+    };
+    const origin = `polygon(${x}px ${y}px, ${x}px ${y}px, ${x}px ${y}px)`;
+    return [
+      {
+        clipPath: origin,
+        transform: 'perspective(1100px) rotateY(-5deg) scale(1.035)',
+        filter: `brightness(1.12) ${edgeGlow}`,
+        offset: 0
+      },
+      {
+        clipPath: shape(x),
+        transform: 'perspective(1100px) rotateY(-4deg) scale(1.03)',
+        filter: `brightness(1.1) ${edgeGlow}`,
+        offset: .16
+      },
+      {
+        clipPath: shape(-height * .28 - 80),
+        transform: 'perspective(1400px) rotateY(0deg) scale(1)',
+        filter: 'brightness(1) drop-shadow(0 0 0 transparent)',
+        offset: 1
+      }
+    ];
+  };
+
+  const setTheme = (theme, source) => {
+    if (switching || theme === getTheme()) return;
+    switching = true;
+    const rect = source?.getBoundingClientRect();
+    const x = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+    const y = rect ? rect.top + rect.height / 2 : 0;
+    source?.classList.add('is-switching');
+    const finish = () => {
+      switching = false;
       source?.classList.remove('is-switching');
+      document.body.classList.remove('theme-color-fallback');
+    };
+
+    if (!prefersReducedMotion() && typeof document.startViewTransition === 'function') {
+      const transition = document.startViewTransition(() => applyTheme(theme));
+      transition.ready.then(() => {
+        const animation = root.animate(revealFrames(x, y, theme), {
+          duration: 1250,
+          easing: 'cubic-bezier(.45,0,.18,1)',
+          fill: 'forwards',
+          pseudoElement: '::view-transition-new(root)'
+        });
+        return animation.finished.finally(() => {
+          transition.skipTransition();
+          animation.cancel();
+        });
+      }).catch(() => {}).finally(finish);
+    } else {
+      document.body.classList.add('theme-color-fallback');
+      applyTheme(theme);
+      window.setTimeout(finish, prefersReducedMotion() ? 180 : 650);
     }
   };
 

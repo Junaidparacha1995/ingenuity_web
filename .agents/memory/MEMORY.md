@@ -3,3 +3,4 @@
 - [Below-fold preview captures](below-fold-preview-captures.md) — Fragment screenshots can appear blank around lazy-rendered sections; verify normal scrolling plus DOM presence.
 - [Viewport stability signals](viewport-stability-signals.md) — Accumulate width/scale changes from the last accepted baseline; ignore mobile height-only toolbar and keyboard changes.
 - [Case-study card layout](case-study-card-layout.md) — Case-study cards must use natural height instead of inheriting shared Work-card percentage height.
+- [Theme motion visibility](theme-motion-visibility.md) — The dark hero is already navy in both modes; verify an actual in-between theme state, not just an overlay or static preview.

@@ -1728,8 +1728,17 @@
     display: none;
   }
 
-  .menu-toggle {
+  header .nav .nav-cta {
+    display: flex;
     margin-left: auto;
+  }
+
+  header .nav .nav-cta .btn {
+    display: none;
+  }
+
+  .menu-toggle {
+    margin-left: 0;
   }
 
   .home-page .hc-copy .hero-rotator {
