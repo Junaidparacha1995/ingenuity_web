@@ -1679,6 +1679,20 @@ html[data-theme="dark"] .flow-line{background:rgba(185,211,239,.14);}
 html[data-theme="dark"] ::-webkit-scrollbar-track{background:#14233B;}
 html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-color:#14233B;}
 
+/* Dark mode uses one consistent navy surface between sections. Hero imagery,
+   cards, and orange accent treatments remain layered above this base. */
+html[data-theme="dark"] body,
+html[data-theme="dark"] main{
+  background:#14233B!important;
+}
+html[data-theme="dark"] body > section:not(.hero-console):not(.hero-media):not(.page-hero):not(.work-hero),
+html[data-theme="dark"] body > .section-pad,
+html[data-theme="dark"] main > section:not(.hero-console):not(.hero-media):not(.page-hero):not(.work-hero),
+html[data-theme="dark"] main > .section-pad{
+  background:#14233B!important;
+  background-image:none!important;
+}
+
 /* Keep both complete page states visible while the incoming theme crosses
    the viewport. The browser holds a snapshot of the outgoing page underneath. */
 ::view-transition-old(root),
