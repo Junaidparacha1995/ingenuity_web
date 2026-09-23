@@ -1610,6 +1610,10 @@ html[data-theme="dark"] .work-projects,
 html[data-theme="dark"] .decision-layer,
 html[data-theme="dark"] .legal-page,
 html[data-theme="dark"] .sitemap-group{background:var(--page-bg-alt);}
+html[data-theme="dark"] .project-browser-head h2{color:var(--heading-text);}
+html[data-theme="dark"] .project-browser-head p{color:#AEB9C8;}
+html[data-theme="dark"] .project-filter{background:rgba(255,255,255,.06);border-color:rgba(185,211,239,.16);color:#D8E1EC;}
+html[data-theme="dark"] .project-filter:hover{color:#F3F7FC;border-color:rgba(225,53,17,.5);}
 /* Repeated content sections keep their light glass treatment in light mode,
    but use the black surface requested for the dark theme. */
 html[data-theme="dark"] section.section-pad[style*="rgba(255,255,255,0.55)"]{
