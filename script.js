@@ -1638,12 +1638,6 @@ document.body?.classList.add('header-ready');
   let point = { x: 0, y: 0 };
   const interactiveSelector = 'a,button,[role="button"],input,textarea,select,summary,canvas,.hc-node-hit-layer';
   const interactiveAt = (target) => target instanceof Element ? target.closest(interactiveSelector) : null;
-  const assistantAt = (target) => target instanceof Element ? target.closest('.site-assistant') : null;
-  const syncAssistantSurface = (target) => {
-    const overAssistant = Boolean(assistantAt(target));
-    document.body.classList.toggle('cursor-over-assistant', overAssistant);
-    if (overAssistant) document.body.classList.remove('cursor-hover');
-  };
   const render = () => {
     frame = null;
     dot.style.left = point.x + 'px';
@@ -1651,29 +1645,26 @@ document.body?.classList.add('header-ready');
   };
   const move = (event) => {
     point = { x: event.clientX, y: event.clientY };
-    syncAssistantSurface(event.target);
     if (frame === null) frame = requestAnimationFrame(render);
     document.body.classList.add('cursor-active', 'custom-cursor-ready');
   };
 
   window.addEventListener('pointermove', move, { passive: true });
   window.addEventListener('pointerover', (event) => {
-    syncAssistantSurface(event.target);
     if (interactiveAt(event.target)) document.body.classList.add('cursor-hover');
   }, { passive: true });
   window.addEventListener('pointerout', (event) => {
     if (!event.relatedTarget) {
-      document.body.classList.remove('cursor-active', 'cursor-hover', 'cursor-down', 'cursor-over-assistant', 'custom-cursor-ready');
+      document.body.classList.remove('cursor-active', 'cursor-hover', 'cursor-down', 'custom-cursor-ready');
       return;
     }
-    syncAssistantSurface(event.relatedTarget);
     if (!interactiveAt(event.relatedTarget)) document.body.classList.remove('cursor-hover');
   }, { passive: true });
   window.addEventListener('pointerdown', () => document.body.classList.add('cursor-down'), { passive: true });
   window.addEventListener('pointerup', () => document.body.classList.remove('cursor-down'), { passive: true });
   window.addEventListener('pointercancel', () => document.body.classList.remove('cursor-down'), { passive: true });
   window.addEventListener('blur', () => {
-    document.body.classList.remove('cursor-active', 'cursor-hover', 'cursor-down', 'cursor-over-assistant');
+    document.body.classList.remove('cursor-active', 'cursor-hover', 'cursor-down');
   });
 })();
 
