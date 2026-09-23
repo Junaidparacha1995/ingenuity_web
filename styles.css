@@ -1625,54 +1625,63 @@ html[data-theme="dark"] .flow-line{background:rgba(185,211,239,.14);}
 html[data-theme="dark"] ::-webkit-scrollbar-track{background:#0A1220;}
 html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-color:#0A1220;}
 
-.theme-transition-layer{
-  position:fixed;inset:0;z-index:10000;pointer-events:none;overflow:hidden;
-  background:
-    radial-gradient(circle at var(--theme-x) var(--theme-y),rgba(255,186,151,.2) 0 1px,rgba(225,53,17,.1) 1px 3px,transparent 4px 18px),
-    linear-gradient(125deg,rgba(255,255,255,.1),transparent 38%,rgba(225,53,17,.06) 62%,transparent 80%),
-    var(--theme-layer-bg);
-  background-size:auto,auto,auto;
-  clip-path:circle(0 at var(--theme-x) var(--theme-y));
+body.theme-transitioning,
+body.theme-transitioning *{
+  transition:color .62s ease,background-color .62s ease,border-color .62s ease,box-shadow .62s ease !important;
 }
-.theme-transition-layer::before{
-  content:"";position:absolute;inset:0;
+body.theme-transitioning .theme-toggle,
+body.theme-transitioning .theme-toggle::before,
+body.theme-transitioning .theme-toggle .theme-glyph{
+  transition:transform .45s var(--ease-spring),opacity .4s ease,background-color .35s ease,box-shadow .35s ease !important;
+}
+.theme-refraction-wave{
+  position:fixed;inset:0;z-index:190;pointer-events:none;overflow:visible;
+  --wave-angle:-18deg;
+}
+.theme-refraction-wave::before,
+.theme-refraction-wave::after{
+  content:"";position:absolute;left:var(--wave-x);top:var(--wave-y);
+  width:168px;height:220vmax;transform:translate3d(-50%,-50%,0) rotate(var(--wave-angle));
+  border-radius:48% 52% 44% 56% / 30% 36% 64% 70%;
+  will-change:transform,opacity;
+}
+.theme-refraction-wave::before{
   background:
-    linear-gradient(115deg,transparent 32%,rgba(255,255,255,.06) 44%,rgba(255,187,157,.5) 50%,rgba(255,255,255,.06) 56%,transparent 68%);
-  transform:translateX(-120%) skewX(-12deg);
+    radial-gradient(ellipse at 34% 50%,rgba(255,255,255,.17),transparent 56%),
+    linear-gradient(90deg,transparent 0%,rgba(225,53,17,.08) 25%,rgba(255,255,255,.24) 50%,rgba(225,53,17,.07) 72%,transparent 100%);
+  border-left:1px solid rgba(255,222,210,.28);
+  border-right:1px solid rgba(225,53,17,.14);
+  filter:blur(4px) brightness(1.05);
+  backdrop-filter:blur(4px) brightness(1.05);
   opacity:0;
 }
-.theme-transition-layer::after{
-  content:"";position:fixed;left:var(--theme-x);top:var(--theme-y);
-  width:0;height:0;border:1px solid rgba(255,183,156,.78);
-  border-radius:50%;transform:translate(-50%,-50%) scale(.25);
-  opacity:0;box-shadow:0 0 12px 1px rgba(225,53,17,.38),0 0 30px 1px rgba(225,53,17,.14);
+.theme-refraction-wave::after{
+  left:calc(var(--wave-x) - 92px);
+  width:310px;
+  background:linear-gradient(90deg,transparent,rgba(225,53,17,.1) 48%,transparent);
+  filter:blur(18px);
+  opacity:0;
 }
-.theme-transition-layer.is-expanding{animation:eclipseReveal .78s cubic-bezier(.22,1,.36,1) forwards;}
-.theme-transition-layer.is-expanding::before{animation:eclipseSheen .7s cubic-bezier(.22,1,.36,1) .08s forwards;}
-.theme-transition-layer.is-expanding::after{animation:eclipseEdge .78s cubic-bezier(.22,1,.36,1) forwards;}
-@keyframes eclipseReveal{
-  0%{clip-path:circle(0 at var(--theme-x) var(--theme-y));}
-  12%{clip-path:circle(12px at var(--theme-x) var(--theme-y));}
-  100%{clip-path:circle(150vmax at var(--theme-x) var(--theme-y));}
+.theme-refraction-wave[data-direction="light"]{--wave-angle:18deg;}
+.theme-refraction-wave.is-traveling::before{animation:refractionWaveTravel .78s cubic-bezier(.22,1,.36,1) forwards;}
+.theme-refraction-wave.is-traveling::after{animation:refractionWaveTrail .26s ease-out .16s forwards;}
+@keyframes refractionWaveTravel{
+  0%{opacity:0;transform:translate3d(-50%,-50%,0) rotate(var(--wave-angle));}
+  8%{opacity:.78;}
+  72%{opacity:.46;}
+  100%{opacity:0;transform:translate3d(calc(100vw + 50%),calc(100vh + 50%),0) rotate(var(--wave-angle));}
 }
-@keyframes eclipseSheen{
-  0%{opacity:0;transform:translateX(-120%) skewX(-12deg);}
-  18%{opacity:.72;}
-  72%{opacity:.48;}
-  100%{opacity:0;transform:translateX(120%) skewX(-12deg);}
-}
-@keyframes eclipseEdge{
-  0%{width:0;height:0;opacity:0;transform:translate(-50%,-50%);}
-  12%{width:28px;height:28px;opacity:.9;}
-  52%{width:100vmax;height:100vmax;opacity:.62;}
-  100%{width:300vmax;height:300vmax;opacity:0;transform:translate(-50%,-50%);}
+@keyframes refractionWaveTrail{
+  0%{opacity:0;transform:translate3d(-50%,-50%,0) rotate(var(--wave-angle));}
+  35%{opacity:.14;}
+  100%{opacity:0;transform:translate3d(calc(100vw + 50%),calc(100vh + 50%),0) rotate(var(--wave-angle));}
 }
 @media(max-width:720px){
   .theme-toggle{width:40px;height:40px;}
   .nav-cta{gap:8px;}
 }
 @media(prefers-reduced-motion:reduce){
-  .theme-transition-layer{display:none;}
+  .theme-refraction-wave{display:none;}
   html[data-theme="dark"] body{transition:none;}
   .theme-toggle,.theme-toggle-icon,.theme-glyph{transition:none;animation:none!important;}
 }
