@@ -1561,7 +1561,7 @@ html[data-theme="dark"]{
   --medium-grey:#34445B;
   --dark-grey:#AEB9C8;
   --page-bg:#0A1220;
-  --page-bg-alt:#05080D;
+  --page-bg-alt:#0D1A2B;
   --page-text:#D8E1EC;
   --heading-text:#F3F7FC;
   --glass-bg:rgba(20,33,53,.7);
@@ -1609,7 +1609,7 @@ html[data-theme="dark"] .sitemap-group{background:var(--page-bg-alt);}
 /* Repeated content sections keep their light glass treatment in light mode,
    but use the black surface requested for the dark theme. */
 html[data-theme="dark"] section.section-pad[style*="rgba(255,255,255,0.55)"]{
-  background:radial-gradient(120% 160% at 25% 0%,rgba(225,53,17,.1),transparent 55%),#000!important;
+  background:radial-gradient(120% 160% at 25% 0%,rgba(225,53,17,.1),transparent 55%),#0D1A2B!important;
 }
 html[data-theme="dark"] .work-tabs{border-color:rgba(185,211,239,.14);}
 html[data-theme="dark"] .work-tab{color:#AEB9C8;}
