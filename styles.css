@@ -1589,6 +1589,13 @@ html[data-theme="dark"] .btn-outline:hover,
 html[data-theme="dark"] .btn-outline:focus-visible{background:#F3F7FC;color:#0A1220;}
 html[data-theme="dark"] header,
 html[data-theme="dark"] header.scrolled{--header-bg:#091322;}
+html[data-theme="dark"] header .brand img.logo-full,
+html[data-theme="dark"] footer .brand img.logo-full{
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal;
+}
 html[data-theme="dark"] .work-tabs,
 html[data-theme="dark"] .project-browser,
 html[data-theme="dark"] .work-projects,
@@ -1616,6 +1623,20 @@ html[data-theme="dark"] .industry-marquee-wrap::after,
 html[data-theme="dark"] .tech-marquee::after{background:linear-gradient(270deg,var(--page-bg-alt),transparent);}
 html[data-theme="dark"] .marquee-item,
 html[data-theme="dark"] .marquee-logo{background:rgba(255,255,255,.06);border-color:rgba(185,211,239,.14);color:#D8E1EC;}
+html[data-theme="dark"] .tech-marquee .marquee-item,
+html[data-theme="dark"] .tech-marquee .marquee-item:hover{
+  color:#E7EEF7;
+}
+html[data-theme="dark"] .tech-marquee .marquee-logo{
+  background:linear-gradient(145deg,#243650,#172840);
+  border-color:rgba(185,211,239,.2);
+}
+html[data-theme="dark"] .tech-marquee .marquee-item[title="PostgreSQL"] img{
+  filter:brightness(1.35) saturate(.9);
+}
+html[data-theme="dark"] .tech-marquee .marquee-item[title="Cursor"] img{
+  filter:invert(1) brightness(1.2);
+}
 html[data-theme="dark"] .assistant-body,
 html[data-theme="dark"] .assistant-suggestions button,
 html[data-theme="dark"] .assistant-form{background:#111F33;border-color:rgba(185,211,239,.16);}

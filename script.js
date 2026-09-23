@@ -30,9 +30,6 @@
   const revealFrames = (x, y, theme) => {
     const width = window.innerWidth;
     const height = window.innerHeight;
-    const edgeGlow = theme === 'dark'
-      ? 'drop-shadow(-14px 0 16px rgba(225,53,17,.27))'
-      : 'drop-shadow(-14px 0 16px rgba(164,205,240,.34))';
     const shape = (edge) => {
       const points = [0, .25, .5, .75, 1].map((fraction) => {
         const py = height * fraction;
@@ -45,20 +42,17 @@
     return [
       {
         clipPath: origin,
-        transform: 'perspective(1100px) rotateY(-5deg) scale(1.035)',
-        filter: `brightness(1.12) ${edgeGlow}`,
+        transform: 'perspective(1100px) rotateY(-2deg) scale(1.012)',
         offset: 0
       },
       {
         clipPath: shape(x),
-        transform: 'perspective(1100px) rotateY(-4deg) scale(1.03)',
-        filter: `brightness(1.1) ${edgeGlow}`,
+        transform: 'perspective(1100px) rotateY(-1deg) scale(1.008)',
         offset: .16
       },
       {
         clipPath: shape(-height * .28 - 80),
         transform: 'perspective(1400px) rotateY(0deg) scale(1)',
-        filter: 'brightness(1) drop-shadow(0 0 0 transparent)',
         offset: 1
       }
     ];
