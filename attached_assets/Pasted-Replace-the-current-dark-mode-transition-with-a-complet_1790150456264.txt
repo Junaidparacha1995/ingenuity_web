@@ -1,0 +1,330 @@
+Replace the current dark-mode transition with a completely different effect.
+
+IMPORTANT:
+The page content must remain visible at all times.
+
+Do NOT:
+- cover the entire screen with a solid overlay
+- hide page content
+- fade the whole page to black
+- make text/cards disappear and then reappear
+- use a basic expanding circle
+- use a generic crossfade
+- create any blank frame during the animation
+
+I want a unique premium dark-mode interaction called:
+
+Luminous Theme Refraction
+
+## Core Concept
+
+When the dark-mode button is clicked, the page should feel like a wave of dark glass/light is passing through the interface.
+
+Imagine a transparent refractive energy wave moving diagonally across the screen.
+
+The existing page stays visible underneath the entire time.
+
+As the wave passes over each section:
+
+light theme
+→ subtle distortion/glow
+→ dark theme
+
+It should look like the theme is physically traveling through the website rather than the website disappearing and reloading.
+
+## Visual Sequence
+
+When switching to dark mode:
+
+1. User clicks the moon icon.
+
+2. The icon emits a very small pulse.
+
+3. A thin luminous wave begins near the toggle.
+
+4. The wave travels diagonally across the viewport.
+
+5. As the wave crosses elements, their colors transition from light to dark.
+
+6. Text, cards, buttons, images, navbar and page content stay visible.
+
+7. The wave leaves a subtle darkened glass-like surface behind it.
+
+8. The effect finishes with a tiny ambient glow near the toggle and disappears.
+
+The wave should look somewhat like:
+
+LIGHT UI
+
+────────────╲
+             ╲
+              ╲   ← moving refractive wave
+               ╲
+                ╲
+
+DARK UI behind the wave
+
+But this should be organic and soft, not a hard straight line.
+
+## Refraction Band
+
+Create a moving band approximately:
+
+100–180px wide
+
+The band should contain:
+
+- subtle blur
+- slight brightness shift
+- faint glass refraction
+- a soft highlight along the leading edge
+- slight contrast increase
+
+Avoid strong blur that makes content unreadable.
+
+Suggested effects:
+
+backdrop-filter:
+blur(4px) brightness(1.05)
+
+opacity:
+0.15–0.30
+
+Use very subtle values.
+
+## Organic Shape
+
+The wave should NOT be a simple rectangle.
+
+Give it an irregular, slightly curved or liquid edge using:
+
+- CSS mask
+- radial gradients
+- multiple layered gradients
+- pseudo-elements
+
+The edge should feel organic, like moving glass or liquid light.
+
+Avoid overly dramatic liquid animations.
+
+## Theme Transition Behavior
+
+The dark theme itself should transition progressively.
+
+Do not wait until the animation finishes before applying dark mode.
+
+Instead, coordinate the theme change with the moving wave so it visually appears that the dark mode is being revealed behind it.
+
+The page should never become blank.
+
+All visible elements must remain rendered.
+
+## Optional Depth Effect
+
+During the transition, apply a very subtle depth response to nearby elements.
+
+For elements close to the moving wave:
+
+transform:
+translateZ(0) scale(1.003)
+
+or a tiny 1–2px visual shift.
+
+Do not move layout positions.
+
+Do not create shaking or snapping.
+
+The effect should be barely noticeable but make the wave feel physical.
+
+## Toggle Animation
+
+The toggle itself should have its own micro-animation.
+
+Dark mode:
+
+sun icon contracts slightly
+→ emits a tiny glow
+→ transforms/morphs into moon icon
+
+Light mode:
+
+moon icon contracts
+→ small warm light pulse
+→ becomes sun icon
+
+Use:
+
+scale
+rotation
+opacity
+blur
+
+Duration:
+
+350–500ms
+
+Do not simply replace the icon instantly.
+
+## Accent Trail
+
+Behind the main wave, add an extremely subtle trailing glow using the site's accent color.
+
+The glow should:
+
+- last less than 300ms
+- have opacity around 0.08–0.15
+- disappear completely after transition
+
+This is only to add depth.
+
+Avoid neon effects.
+
+## Reverse Animation
+
+When returning to light mode, reverse the concept.
+
+A soft bright refractive wave should travel through the dark interface.
+
+It should feel like light is passing through tinted glass and restoring the light theme.
+
+Do not simply reverse the CSS animation mechanically if it looks unnatural.
+
+Tune both directions separately.
+
+## Performance Requirements
+
+This is critical.
+
+The website must remain smooth.
+
+Use:
+
+transform
+opacity
+mask-image
+clip-path
+CSS gradients
+
+Prefer pseudo-elements over creating many DOM elements.
+
+Do NOT animate:
+
+width
+height
+margin
+padding
+top
+left
+
+Avoid layout recalculation.
+
+No continuous requestAnimationFrame loops.
+
+No canvas unless absolutely necessary.
+
+Do not use Three.js or heavy libraries.
+
+## Implementation Approach
+
+Use a fixed pseudo-element or lightweight fixed element positioned above the page visually but transparent enough that all content remains visible.
+
+Example concept:
+
+.theme-refraction-wave
+
+It should:
+
+position: fixed
+pointer-events: none
+inset: 0
+z-index: appropriate
+
+Use a gradient/mask to make only a narrow moving band visible.
+
+The rest of the element must remain transparent.
+
+Move the band using:
+
+transform: translate3d(...)
+
+rather than repeatedly updating layout properties.
+
+Use CSS variables for:
+
+--wave-x
+--wave-angle
+--wave-width
+--wave-opacity
+
+## Important Layering
+
+The transition layer must never completely cover the UI.
+
+At its strongest point, users should still clearly see:
+
+- navbar
+- headings
+- buttons
+- images
+- cards
+- text
+
+The animation should enhance the UI, not replace it.
+
+## Prevent Flicker
+
+Make sure:
+
+- dark class does not cause an instant white/black flash
+- images do not disappear
+- text does not briefly become transparent
+- cards do not vanish
+- route components do not remount
+- scroll position remains unchanged
+- header position remains unchanged
+- no body opacity animation is used
+- no display:none or visibility:hidden is used
+
+Do NOT animate the root/body opacity.
+
+## Premium Finish
+
+After the wave finishes:
+
+- remove the temporary wave element
+- keep the dark theme normally applied
+- leave no animation running
+- no glowing background remains
+- no performance cost remains
+
+## Reduced Motion
+
+For:
+
+prefers-reduced-motion: reduce
+
+skip the refraction wave completely and use a short 150–200ms color transition.
+
+## Overall Feel
+
+The effect should feel:
+
+architectural
+premium
+cinematic
+technical
+subtle
+original
+fluid
+
+It should NOT feel:
+
+common
+like a basic theme switcher
+gaming-style
+neon
+flashy
+like a page transition
+like the website is loading again
+
+The final result should look like the website itself is changing material from light glass to dark glass while the user continues seeing all content.

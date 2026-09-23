@@ -27,12 +27,13 @@
     const y = rect ? `${rect.top + rect.height / 2}px` : '50%';
     const transition = document.createElement('div');
 
-    transition.className = 'theme-transition-layer';
-    transition.style.setProperty('--theme-x', x);
-    transition.style.setProperty('--theme-y', y);
-    transition.style.setProperty('--theme-layer-bg', nextTheme === 'dark' ? '#0a1220' : '#ffffff');
+    transition.className = 'theme-refraction-wave';
+    transition.dataset.direction = nextTheme;
+    transition.style.setProperty('--wave-x', x);
+    transition.style.setProperty('--wave-y', y);
     if (!reducedMotion) document.body.appendChild(transition);
 
+    document.body.classList.add('theme-transitioning');
     root.dataset.theme = nextTheme;
     root.style.colorScheme = nextTheme;
     try {
@@ -44,13 +45,15 @@
     document.dispatchEvent(new CustomEvent('themechange', { detail: { theme: nextTheme } }));
 
     if (!reducedMotion) {
-      requestAnimationFrame(() => transition.classList.add('is-expanding'));
+      requestAnimationFrame(() => transition.classList.add('is-traveling'));
       transition.addEventListener('animationend', (event) => {
-        if (event.animationName !== 'eclipseReveal') return;
+        if (event.animationName !== 'refractionWaveTravel') return;
         transition.remove();
+        document.body.classList.remove('theme-transitioning');
         source?.classList.remove('is-switching');
       });
     } else {
+      window.setTimeout(() => document.body.classList.remove('theme-transitioning'), 180);
       source?.classList.remove('is-switching');
     }
   };
