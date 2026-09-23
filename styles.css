@@ -1563,21 +1563,19 @@ html[data-theme="dark"]{
   --light-grey:#0F1929;
   --medium-grey:#34445B;
   --dark-grey:#AEB9C8;
-  --page-bg:#0A1220;
-  --page-bg-alt:#0D1A2B;
+  --page-bg:#14233B;
+  --page-bg-alt:#14233B;
   --page-text:#D8E1EC;
   --heading-text:#F3F7FC;
-  --glass-bg:rgba(20,33,53,.7);
-  --glass-bg-strong:rgba(21,35,56,.9);
+  --glass-bg:rgba(20,35,59,.78);
+  --glass-bg-strong:rgba(20,35,59,.94);
   --glass-border:rgba(185,211,239,.16);
   --glass-shadow:0 12px 34px rgba(0,0,0,.24),0 1.5px 0 rgba(255,255,255,.06) inset;
   --glass-shadow-hover:0 22px 54px rgba(0,0,0,.34),0 1.5px 0 rgba(255,255,255,.1) inset;
   --orange-glow:rgba(255,102,70,.38);
 }
 html[data-theme="dark"] body{
-  background:
-    radial-gradient(140% 100% at 15% 0%, rgba(225,53,17,.11), transparent 50%),
-    var(--page-bg);
+  background:linear-gradient(112deg,#201D2D 0%,#18263D 50%,#10263D 100%);
   transition:background-color .6s ease,color .6s ease;
 }
 html[data-theme="dark"] body::before{background-image:radial-gradient(rgba(199,220,244,.11) 1.4px,transparent 1.4px);}
@@ -1616,13 +1614,13 @@ html[data-theme="dark"] .project-filter:hover{color:#F3F7FC;border-color:rgba(22
 /* Repeated content sections keep their light glass treatment in light mode,
    but use the black surface requested for the dark theme. */
 html[data-theme="dark"] section.section-pad[style*="rgba(255,255,255,0.55)"]{
-  background:radial-gradient(120% 160% at 25% 0%,rgba(225,53,17,.1),transparent 55%),#0D1A2B!important;
+  background:linear-gradient(112deg,#201D2D 0%,#14233B 58%,#10263D 100%)!important;
 }
 html[data-theme="dark"] .work-tabs{border-color:rgba(185,211,239,.14);}
 html[data-theme="dark"] .work-tab{color:#AEB9C8;}
 html[data-theme="dark"] .work-tab.active{color:#fff;background:rgba(225,53,17,.18);}
 html[data-theme="dark"] .legal-nav,
-html[data-theme="dark"] .legal-document{background:rgba(18,31,50,.82);border-color:rgba(185,211,239,.14);box-shadow:0 20px 54px rgba(0,0,0,.22);}
+html[data-theme="dark"] .legal-document{background:rgba(20,35,59,.9);border-color:rgba(185,211,239,.14);box-shadow:0 20px 54px rgba(0,0,0,.22);}
 html[data-theme="dark"] .legal-nav strong,
 html[data-theme="dark"] .legal-document h2,
 html[data-theme="dark"] .legal-document h3{color:var(--heading-text);}
@@ -1653,8 +1651,8 @@ html[data-theme="dark"] .tech-marquee .marquee-item[title="PostgreSQL"] img{
 html[data-theme="dark"] .tech-marquee .marquee-item[title="Cursor"] img{
   filter:invert(1) brightness(1.2);
 }
-html[data-theme="dark"] .assistant-panel{background:#111F33;border-color:rgba(185,211,239,.16);}
-html[data-theme="dark"] .assistant-body{background:radial-gradient(circle at 100% 0,rgba(225,53,17,.1),transparent 38%),#111F33;}
+html[data-theme="dark"] .assistant-panel{background:#142B47;border-color:rgba(185,211,239,.16);}
+html[data-theme="dark"] .assistant-body{background:radial-gradient(circle at 100% 0,rgba(225,53,17,.1),transparent 38%),#142B47;}
 html[data-theme="dark"] .assistant-suggestions button{
   background:#1B2C44;
   border-color:rgba(185,211,239,.2);
@@ -1667,19 +1665,19 @@ html[data-theme="dark"] .assistant-source{
   color:#D8E1EC;
 }
 html[data-theme="dark"] .assistant-form{
-  background:#111F33;
+  background:#142B47;
   border-top-color:rgba(185,211,239,.16);
 }
 html[data-theme="dark"] .assistant-form input{
   color:#F3F7FC;
-  background:#0A1220;
+  background:#14233B;
   border-color:rgba(185,211,239,.24);
 }
 html[data-theme="dark"] .assistant-form input::placeholder{color:#8F9DB0;}
-html[data-theme="dark"] .assistant-foot{background:#111F33;color:#8F9DB0;}
+html[data-theme="dark"] .assistant-foot{background:#142B47;color:#8F9DB0;}
 html[data-theme="dark"] .flow-line{background:rgba(185,211,239,.14);}
-html[data-theme="dark"] ::-webkit-scrollbar-track{background:#0A1220;}
-html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-color:#0A1220;}
+html[data-theme="dark"] ::-webkit-scrollbar-track{background:#14233B;}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb{border-color:#14233B;}
 
 /* Keep both complete page states visible while the incoming theme crosses
    the viewport. The browser holds a snapshot of the outgoing page underneath. */
