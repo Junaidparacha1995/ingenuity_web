@@ -1364,7 +1364,7 @@ if (revealTargets.length) {
     const themeToggle = document.createElement('button');
     themeToggle.className = 'theme-toggle';
     themeToggle.type = 'button';
-    themeToggle.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"><span class="theme-glyph theme-glyph-sun"></span><span class="theme-glyph theme-glyph-moon"></span></span>';
+    themeToggle.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"><svg class="theme-glyph theme-glyph-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M19.4 4.6L18 6M6 18l-1.4 1.4"></path></svg><svg class="theme-glyph theme-glyph-moon" viewBox="0 0 24 24" aria-hidden="true"><path class="moon-body" d="M20.5 15.2A8.7 8.7 0 0 1 8.8 3.5 8.7 8.7 0 1 0 20.5 15.2Z"></path><path class="moon-star" d="M18.2 3.5v2.2M19.3 4.6h-2.2"></path></svg></span>';
     themeToggle.addEventListener('click', () => window.ingenuityTheme?.toggle(themeToggle));
     cta.prepend(themeToggle);
   }
