@@ -10,7 +10,7 @@
     const theme = getTheme();
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     const icon = button.querySelector('.theme-toggle-icon');
-    if (icon) icon.textContent = theme === 'dark' ? '☀' : '☾';
+    if (icon) icon.textContent = '';
     button.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
     button.setAttribute('aria-pressed', String(theme === 'dark'));
     button.title = `Switch to ${nextTheme} mode`;
