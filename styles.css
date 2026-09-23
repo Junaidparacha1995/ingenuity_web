@@ -1606,6 +1606,11 @@ html[data-theme="dark"] .work-projects,
 html[data-theme="dark"] .decision-layer,
 html[data-theme="dark"] .legal-page,
 html[data-theme="dark"] .sitemap-group{background:var(--page-bg-alt);}
+/* Repeated content sections keep their light glass treatment in light mode,
+   but use the black surface requested for the dark theme. */
+html[data-theme="dark"] section.section-pad[style*="rgba(255,255,255,0.55)"]{
+  background:radial-gradient(120% 160% at 25% 0%,rgba(225,53,17,.1),transparent 55%),#000!important;
+}
 html[data-theme="dark"] .work-tabs{border-color:rgba(185,211,239,.14);}
 html[data-theme="dark"] .work-tab{color:#AEB9C8;}
 html[data-theme="dark"] .work-tab.active{color:#fff;background:rgba(225,53,17,.18);}
