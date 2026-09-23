@@ -1131,6 +1131,14 @@
   .flow-step h4 {margin:0;font-size:17px;line-height:1.2;}
   .flow-step p {margin:0;font-size:13.5px;line-height:1.5;}
 
+  html[data-theme="dark"] .flow-step {
+    background:#14233B;
+    border-color:rgba(185,211,239,.18);
+  }
+
+  html[data-theme="dark"] .flow-step h4 {color:#F3F7FC;}
+  html[data-theme="dark"] .flow-step p {color:#C4CFDC;}
+
   .flow-connector {
     display: none !important;
   }
