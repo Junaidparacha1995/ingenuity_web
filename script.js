@@ -10,7 +10,6 @@
     const theme = getTheme();
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     const icon = button.querySelector('.theme-toggle-icon');
-    if (icon) icon.textContent = '';
     button.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
     button.setAttribute('aria-pressed', String(theme === 'dark'));
     button.title = `Switch to ${nextTheme} mode`;
@@ -22,6 +21,7 @@
     if (nextTheme === currentTheme) return;
 
     const reducedMotion = prefersReducedMotion();
+    source?.classList.add('is-switching');
     const rect = source?.getBoundingClientRect();
     const x = rect ? `${rect.left + rect.width / 2}px` : '50%';
     const y = rect ? `${rect.top + rect.height / 2}px` : '50%';
@@ -45,7 +45,13 @@
 
     if (!reducedMotion) {
       requestAnimationFrame(() => transition.classList.add('is-expanding'));
-      transition.addEventListener('animationend', () => transition.remove(), { once: true });
+      transition.addEventListener('animationend', (event) => {
+        if (event.animationName !== 'eclipseReveal') return;
+        transition.remove();
+        source?.classList.remove('is-switching');
+      });
+    } else {
+      source?.classList.remove('is-switching');
     }
   };
 
@@ -1321,7 +1327,7 @@ if (revealTargets.length) {
     const themeToggle = document.createElement('button');
     themeToggle.className = 'theme-toggle';
     themeToggle.type = 'button';
-    themeToggle.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"></span>';
+    themeToggle.innerHTML = '<span class="theme-toggle-icon" aria-hidden="true"><span class="theme-glyph theme-glyph-sun"></span><span class="theme-glyph theme-glyph-moon"></span></span>';
     themeToggle.addEventListener('click', () => window.ingenuityTheme?.toggle(themeToggle));
     cta.prepend(themeToggle);
   }
