@@ -352,13 +352,14 @@ header.menu-open .mega-dropdown{transform:translateY(0);}
 .theme-toggle[aria-pressed="true"]{background:linear-gradient(145deg,rgba(31,55,84,.76),rgba(10,20,35,.8));}
 .theme-toggle[aria-pressed="true"]::before{border-color:rgba(112,174,229,.25);}
 .theme-toggle[aria-pressed="true"] .theme-glyph-moon{opacity:1;transform:rotate(0) scale(1);}
-.theme-toggle.is-switching{animation:themeButtonCompress .16s cubic-bezier(.22,1,.36,1) both;}
+.theme-toggle.is-switching{animation:themeButtonCompress .16s cubic-bezier(.22,1,.36,1) both,themeButtonHalo .58s ease-out both;}
 .theme-toggle.is-switching[aria-pressed="true"] .theme-glyph-sun{animation:themeSunExit .34s ease both;}
 .theme-toggle.is-switching[aria-pressed="true"] .theme-glyph-moon{animation:themeMoonEnter .48s cubic-bezier(.22,1,.36,1) .08s both;}
 .theme-toggle.is-switching[aria-pressed="false"] .theme-glyph-moon{animation:themeMoonExit .34s ease both;}
 .theme-toggle.is-switching[aria-pressed="false"] .theme-glyph-sun{animation:themeSunEnter .48s cubic-bezier(.22,1,.36,1) .08s both;}
 .theme-toggle:active{transform:scale(.9);}
 @keyframes themeButtonCompress{0%{transform:scale(1);}100%{transform:scale(.86);}}
+@keyframes themeButtonHalo{0%{box-shadow:0 8px 22px rgba(3,13,28,.2),0 0 0 0 rgba(225,53,17,.55),inset 0 1px 0 rgba(255,255,255,.16);}35%{box-shadow:0 8px 22px rgba(3,13,28,.2),0 0 0 8px rgba(225,53,17,.16),0 0 24px 5px rgba(225,53,17,.36),inset 0 1px 0 rgba(255,255,255,.16);}100%{box-shadow:0 8px 22px rgba(3,13,28,.2),0 0 0 18px rgba(225,53,17,0),inset 0 1px 0 rgba(255,255,255,.16);}}
 @keyframes themeSunExit{0%{opacity:1;transform:rotate(0) scale(1);}100%{opacity:0;transform:rotate(75deg) scale(.2);}}
 @keyframes themeMoonEnter{0%{opacity:0;transform:rotate(-70deg) scale(.25);}100%{opacity:1;transform:rotate(0) scale(1);}}
 @keyframes themeMoonExit{0%{opacity:1;transform:rotate(0) scale(1);}100%{opacity:0;transform:rotate(70deg) scale(.2);}}
@@ -1647,21 +1648,32 @@ body.theme-transitioning .theme-toggle .theme-glyph{
 }
 .theme-refraction-wave::before{
   background:
-    radial-gradient(ellipse at 34% 50%,rgba(255,255,255,.17),transparent 56%),
-    linear-gradient(90deg,transparent 0%,rgba(225,53,17,.08) 25%,rgba(255,255,255,.24) 50%,rgba(225,53,17,.07) 72%,transparent 100%);
-  border-left:1px solid rgba(255,222,210,.28);
-  border-right:1px solid rgba(225,53,17,.14);
-  filter:blur(4px) brightness(1.05);
+    radial-gradient(ellipse at 34% 50%,rgba(255,255,255,.3),transparent 56%),
+    linear-gradient(90deg,transparent 0%,rgba(225,53,17,.18) 20%,rgba(255,245,238,.82) 48%,rgba(255,172,141,.45) 55%,rgba(225,53,17,.14) 76%,transparent 100%);
+  border-left:1px solid rgba(255,239,232,.55);
+  border-right:1px solid rgba(255,151,120,.35);
+  box-shadow:0 0 18px 2px rgba(255,194,170,.38),0 0 48px 8px rgba(225,53,17,.2);
+  filter:blur(2px) brightness(1.1);
   backdrop-filter:blur(4px) brightness(1.05);
   opacity:0;
+  mix-blend-mode:screen;
 }
 .theme-refraction-wave::after{
   left:calc(var(--wave-x) - 92px);
-  width:310px;
-  background:linear-gradient(90deg,transparent,rgba(225,53,17,.1) 48%,transparent);
-  filter:blur(18px);
+  width:360px;
+  background:linear-gradient(90deg,transparent,rgba(225,53,17,.22) 48%,rgba(255,196,168,.12) 52%,transparent);
+  filter:blur(20px);
   opacity:0;
 }
+.theme-refraction-wave[data-direction="light"]::before{
+  background:
+    radial-gradient(ellipse at 34% 50%,rgba(255,255,255,.4),transparent 56%),
+    linear-gradient(90deg,transparent 0%,rgba(151,193,232,.16) 20%,rgba(255,255,255,.9) 48%,rgba(211,231,250,.48) 55%,rgba(112,174,229,.1) 76%,transparent 100%);
+  border-left-color:rgba(255,255,255,.7);
+  border-right-color:rgba(170,211,247,.4);
+  box-shadow:0 0 18px 2px rgba(219,239,255,.46),0 0 48px 8px rgba(112,174,229,.24);
+}
+.theme-refraction-wave[data-direction="light"]::after{background:linear-gradient(90deg,transparent,rgba(112,174,229,.2) 48%,rgba(219,239,255,.12) 52%,transparent);}
 .theme-refraction-wave[data-direction="light"]{--wave-angle:18deg;}
 .theme-refraction-wave.is-traveling::before{animation:refractionWaveTravel .78s cubic-bezier(.22,1,.36,1) forwards;}
 .theme-refraction-wave.is-traveling::after{animation:refractionWaveTrail .26s ease-out .16s forwards;}
