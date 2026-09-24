@@ -1648,8 +1648,12 @@ html[data-theme="dark"] .tech-marquee .marquee-logo{
 html[data-theme="dark"] .tech-marquee .marquee-item[title="PostgreSQL"] img{
   filter:brightness(1.35) saturate(.9);
 }
+html[data-theme="dark"] .tech-marquee .marquee-item[title="Cursor"] .marquee-logo{
+  background:linear-gradient(145deg,#f4f6f8,#e7ebef);
+  border-color:rgba(20,35,59,.12);
+}
 html[data-theme="dark"] .tech-marquee .marquee-item[title="Cursor"] img{
-  filter:invert(1) brightness(1.2);
+  filter:none;
 }
 html[data-theme="dark"] .assistant-panel{background:#142B47;border-color:rgba(185,211,239,.16);}
 html[data-theme="dark"] .assistant-body{background:radial-gradient(circle at 100% 0,rgba(225,53,17,.1),transparent 38%),#142B47;}
