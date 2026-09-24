@@ -2087,17 +2087,11 @@ const submitBtn = document.getElementById('submit-btn');
 const contactStatus = document.getElementById('contact-status');
 if (contactForm && submitBtn) {
   const bdEmail = 'info@ingenuitysys.com';
-  const calendlyUrl = 'https://calendly.com/junaidparacha-ingenuitysys';
   // Keep provider URLs server-side. The API router forwards this payload to the
   // configured webhook and can route it to email, Calendly, or both.
   const contactWebhookUrl = String(window.INGENUITY_ROUTER_ENDPOINT || '/api/router/contact').trim();
-  const personalEmailDomains = new Set([
-    'gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com',
-    'icloud.com', 'me.com', 'mac.com', 'proton.me', 'protonmail.com',
-    'aol.com', 'gmx.com', 'mail.com', 'yandex.com', 'msn.com'
-  ]);
   const sendToRouter = async (payload) => {
-    if (!contactWebhookUrl) return false;
+    if (!contactWebhookUrl) return null;
     try {
       const response = await fetch(contactWebhookUrl, {
         method: 'POST',
@@ -2105,11 +2099,11 @@ if (contactForm && submitBtn) {
         body: JSON.stringify(payload),
         keepalive: true
       });
-      if (!response.ok) return false;
+      if (!response.ok) return null;
       const data = await response.json().catch(() => ({}));
-      return data.ok === true;
+      return data.ok === true ? data : null;
     } catch (error) {
-      return false;
+      return null;
     }
   };
   contactForm.addEventListener('submit', async (e) => {
@@ -2122,8 +2116,6 @@ if (contactForm && submitBtn) {
     const timeline = document.getElementById('timeline').value;
     const aiUsage = document.getElementById('ai-usage').value;
     const message = document.getElementById('message')?.value.trim() || '';
-    const domain = email.includes('@') ? email.split('@').pop().toLowerCase() : '';
-    const isBusinessEmail = Boolean(domain && !personalEmailDomains.has(domain));
     const budgetLabel = document.getElementById('budget').selectedOptions[0]?.textContent || budget;
     const interestLabel = document.getElementById('interest').selectedOptions[0]?.textContent || interest;
     const timelineLabel = document.getElementById('timeline').selectedOptions[0]?.textContent || timeline;
@@ -2134,7 +2126,6 @@ if (contactForm && submitBtn) {
       name,
       companyName: company,
       email,
-      emailType: isBusinessEmail ? 'business' : 'personal',
       estimatedBudgetTier: budget,
       estimatedBudgetLabel: budgetLabel,
       interestArea: interest,
@@ -2145,17 +2136,20 @@ if (contactForm && submitBtn) {
       aiUsageLabel,
       message,
       whatAreYouLookingToSolve: message,
-      route: 'webhook-calendly',
-      calendlyUrl,
       page: window.location.href
     };
     submitBtn.classList.add('success');
     submitBtn.disabled = true;
-    const webhookSent = await sendToRouter(webhookPayload);
+    const routerResponse = await sendToRouter(webhookPayload);
     submitBtn.disabled = false;
-    if (webhookSent) {
-      if (contactStatus) contactStatus.textContent = 'Thanks — your details were sent. Opening Calendly…';
-      setTimeout(() => { window.location.href = calendlyUrl; }, 850);
+    if (routerResponse) {
+      if (routerResponse.qualifiesForCalendly === true) {
+        if (contactStatus) contactStatus.textContent = 'Thanks — your details were sent. Opening Calendly…';
+        const calendlyUrl = 'https://calendly.com/junaidparacha-ingenuitysys';
+        setTimeout(() => { window.location.href = calendlyUrl; }, 850);
+      } else if (contactStatus) {
+        contactStatus.textContent = 'Thanks — your details were sent. Our team will follow up by email.';
+      }
     } else {
       if (contactStatus) contactStatus.textContent = 'We could not submit your details right now. Please try again.';
       submitBtn.classList.remove('success');

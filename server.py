@@ -146,11 +146,18 @@ def classify_lead(payload: dict) -> dict:
     email = str(normalized.get("email", "")).strip().lower()
     company = str(normalized.get("companyName", normalized.get("company", ""))).strip()
     budget = str(normalized.get("estimatedBudgetTier", normalized.get("budget", ""))).strip()
+    timeline = str(normalized.get("timeline", "")).strip()
     domain = email.rsplit("@", 1)[-1] if "@" in email else ""
     is_business_email = bool(domain and domain not in PERSONAL_EMAIL_DOMAINS)
     is_low_budget = budget == "under-1000"
     is_personal_quick_start = bool(not company and not is_business_email and is_low_budget)
-    qualifies_for_calendly = bool(company and is_business_email and is_low_budget)
+    is_qualified_budget = budget in {"1000-5000", "5000-25000", "25000-plus"}
+    qualifies_for_calendly = bool(
+        is_business_email
+        and is_qualified_budget
+        and timeline
+        and timeline != "just-exploring"
+    )
 
     normalized["companyName"] = company
     normalized["emailType"] = "business" if is_business_email else "personal"
@@ -164,6 +171,9 @@ def classify_lead(payload: dict) -> dict:
     normalized["qualifiesForCalendly"] = qualifies_for_calendly
     normalized["isPersonalQuickStart"] = is_personal_quick_start
     normalized["allocatedBdEmail"] = "info@ingenuitysys.com"
+    normalized.pop("calendlyUrl", None)
+    if qualifies_for_calendly:
+        normalized["calendlyUrl"] = "https://calendly.com/junaidparacha-ingenuitysys"
     normalized["calendlyUrl"] = "https://calendly.com/junaidparacha-ingenuitysys"
     normalized["automatedMessage"] = (
         "Thanks for reaching out. Our business development team will review your "
@@ -394,7 +404,12 @@ class RouterHandler(SimpleHTTPRequestHandler):
             return
         self.send_json(HTTPStatus.OK, {"ok": True, "answer": answer})
 
-    def forward_router_event(self, event_type: str, data: object) -> None:
+    def forward_router_event(
+        self,
+        event_type: str,
+        data: object,
+        response_data: dict | None = None,
+    ) -> None:
         webhook_url = (
             os.environ.get("INGENUITY_ROUTER_WEBHOOK_URL", "").strip()
             or os.environ.get("MAKE_WEBHOOK_URL", "").strip()
@@ -415,7 +430,10 @@ class RouterHandler(SimpleHTTPRequestHandler):
         if not forwarded:
             self.send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": detail})
             return
-        self.send_json(HTTPStatus.ACCEPTED, {"ok": True, "forwarded": True})
+        response = {"ok": True, "forwarded": True}
+        if response_data:
+            response.update(response_data)
+        self.send_json(HTTPStatus.ACCEPTED, response)
 
     def handle_outbound_router(self, event_type: str) -> None:
         payload, _ = self.read_json()
@@ -425,7 +443,15 @@ class RouterHandler(SimpleHTTPRequestHandler):
         if not str(payload.get("email", "")).strip() or not str(payload.get("name", "")).strip():
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Name and email are required"})
             return
-        self.forward_router_event(event_type, payload)
+        classified = classify_lead(payload)
+        self.forward_router_event(
+            event_type,
+            classified,
+            {
+                "qualifiesForCalendly": classified["qualifiesForCalendly"],
+                "route": classified["route"],
+            },
+        )
 
     def handle_calendly(self) -> None:
         payload, raw_body = self.read_json()
