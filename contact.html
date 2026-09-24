@@ -150,6 +150,28 @@
 <option value="not-sure">Not Sure Yet — Help Me Decide</option>
 </select>
 </div>
+<div class="form-row">
+<div class="form-field">
+<label for="timeline">When are you looking to get started?</label>
+<select id="timeline" required="">
+<option value="" selected disabled>Select a timeline</option>
+<option value="immediately">Immediately</option>
+<option value="within-1-month">Within 1 month</option>
+<option value="1-3-months">1–3 months</option>
+<option value="just-exploring">Just exploring (low intent)</option>
+</select>
+</div>
+<div class="form-field">
+<label for="ai-usage">Are you currently using AI in any part of your business?</label>
+<select id="ai-usage" required="">
+<option value="" selected disabled>Select an option</option>
+<option value="first-ai-initiative">No, this would be our first AI initiative (low intent)</option>
+<option value="standalone-tools">Yes, a few standalone tools (e.g. Claude, ChatGPT, Gemini, Copilot)</option>
+<option value="not-well-integrated">Yes, but it’s not well integrated into our workflows</option>
+<option value="expand-or-improve">Yes, and we’re looking to expand or improve what we have</option>
+</select>
+</div>
+</div>
 <div class="form-field"><label for="message">What are you looking to solve? <span class="field-optional">(optional)</span></label><textarea id="message" placeholder="Tell us about the process, bottleneck, system, or opportunity you're dealing with" rows="4"></textarea></div>
 <button class="btn btn-primary" id="submit-btn" type="submit"><span class="label">Send Inquiry →</span><span class="check">Sent ✓</span></button>
 <p class="contact-status" id="contact-status" aria-live="polite"></p>
@@ -223,6 +245,6 @@
 </div>
 </footer>
 <script>window.INGENUITY_CONTACT_WEBHOOK_URL = '';</script>
-<script src="script.js?v=20260923-theme-line-icon"></script>
+<script src="script.js?v=20260924-contact-qualification"></script>
 </body>
 </html>

@@ -2119,11 +2119,15 @@ if (contactForm && submitBtn) {
     const company = document.getElementById('company').value.trim();
     const budget = document.getElementById('budget').value;
     const interest = document.getElementById('interest').value;
+    const timeline = document.getElementById('timeline').value;
+    const aiUsage = document.getElementById('ai-usage').value;
     const message = document.getElementById('message')?.value.trim() || '';
     const domain = email.includes('@') ? email.split('@').pop().toLowerCase() : '';
     const isBusinessEmail = Boolean(domain && !personalEmailDomains.has(domain));
     const budgetLabel = document.getElementById('budget').selectedOptions[0]?.textContent || budget;
     const interestLabel = document.getElementById('interest').selectedOptions[0]?.textContent || interest;
+    const timelineLabel = document.getElementById('timeline').selectedOptions[0]?.textContent || timeline;
+    const aiUsageLabel = document.getElementById('ai-usage').selectedOptions[0]?.textContent || aiUsage;
     const webhookPayload = {
       source: 'ingenuity-systems-website',
       submittedAt: new Date().toISOString(),
@@ -2135,7 +2139,12 @@ if (contactForm && submitBtn) {
       estimatedBudgetLabel: budgetLabel,
       interestArea: interest,
       interestAreaLabel: interestLabel,
+      timeline,
+      timelineLabel,
+      aiUsage,
+      aiUsageLabel,
       message,
+      whatAreYouLookingToSolve: message,
       route: 'webhook-calendly',
       calendlyUrl,
       page: window.location.href
