@@ -408,28 +408,44 @@ class RouterHandler(SimpleHTTPRequestHandler):
         event_type: str,
         data: object,
         response_data: dict | None = None,
+        mirror_to_form_webhook: bool = False,
     ) -> None:
-        webhook_url = (
+        primary_webhook_url = (
             os.environ.get("INGENUITY_ROUTER_WEBHOOK_URL", "").strip()
             or os.environ.get("MAKE_WEBHOOK_URL", "").strip()
         )
-        if not webhook_url:
+        if not primary_webhook_url:
             self.send_json(
                 HTTPStatus.SERVICE_UNAVAILABLE,
                 {"ok": False, "error": "INGENUITY_ROUTER_WEBHOOK_URL is not configured"},
             )
             return
+        webhook_urls = [primary_webhook_url]
+        if mirror_to_form_webhook:
+            second_webhook_url = os.environ.get("MAKE_SECOND_WEBHOOK_URL", "").strip()
+            if not second_webhook_url:
+                self.send_json(
+                    HTTPStatus.SERVICE_UNAVAILABLE,
+                    {"ok": False, "error": "The second form webhook is not configured"},
+                )
+                return
+            if second_webhook_url != primary_webhook_url:
+                webhook_urls.append(second_webhook_url)
+
         envelope = {
             "source": "ingenuity-systems-router",
             "eventType": event_type,
             "receivedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "data": data,
         }
-        forwarded, detail = post_json(webhook_url, envelope)
-        if not forwarded:
-            self.send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": detail})
-            return
+        for webhook_url in webhook_urls:
+            forwarded, detail = post_json(webhook_url, envelope)
+            if not forwarded:
+                self.send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": detail})
+                return
         response = {"ok": True, "forwarded": True}
+        if mirror_to_form_webhook:
+            response["forwardedToBothFormWebhooks"] = len(webhook_urls) == 2
         if response_data:
             response.update(response_data)
         self.send_json(HTTPStatus.ACCEPTED, response)
@@ -453,6 +469,7 @@ class RouterHandler(SimpleHTTPRequestHandler):
             event_type,
             classified,
             response_data,
+            mirror_to_form_webhook=True,
         )
 
     def handle_calendly(self) -> None:
