@@ -13,9 +13,6 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:5000").rstrip("/")
-RELEASE = "20260918-zoom19"
-
-
 class Resources(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -57,7 +54,7 @@ def main():
             if urlsplit(url).netloc == urlsplit(BASE).netloc:
                 resources.add(url)
         for asset in ["script.js", "styles.css", "responsive-v19.css"]:
-            assert f"{asset}?v={RELEASE}" in html.decode(), (route, asset)
+            assert re.search(rf"{re.escape(asset)}\?v=[^\"']+", html.decode()), (route, asset)
     css_resources = set()
     for url in sorted(resources):
         if urlsplit(url).path.endswith(".css"):
@@ -73,7 +70,13 @@ def main():
     for route in ["/projects/", "/case-studies/"]:
         assert "no-cache" in get(BASE + route)[1].get("Cache-Control", ""), route
     for file in ["script.js", "styles.css", "responsive-v19.css", "orange-ambient.js"]:
-        assert "immutable" in get(f"{BASE}/{file}?v={RELEASE}")[1]["Cache-Control"]
+        versioned_urls = [
+            url for url in resources
+            if urlsplit(url).path.rsplit("/", 1)[-1] == file and "v=" in urlsplit(url).query
+        ]
+        assert versioned_urls, file
+        for url in versioned_urls:
+            assert "immutable" in get(url)[1]["Cache-Control"], url
         assert "no-cache" in get(f"{BASE}/{file}")[1]["Cache-Control"]
     print(f"PASS: {len(routes)} routes, {len(resources)} local resource URLs, gzip responses and cache policy.")
     print("No contact forms, provider APIs, Calendly bookings or outgoing webhooks were submitted.")
