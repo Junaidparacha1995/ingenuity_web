@@ -174,7 +174,6 @@ def classify_lead(payload: dict) -> dict:
     normalized.pop("calendlyUrl", None)
     if qualifies_for_calendly:
         normalized["calendlyUrl"] = "https://calendly.com/junaidparacha-ingenuitysys"
-    normalized["calendlyUrl"] = "https://calendly.com/junaidparacha-ingenuitysys"
     normalized["automatedMessage"] = (
         "Thanks for reaching out. Our business development team will review your "
         "quick-start inquiry and reply by email."
@@ -444,13 +443,16 @@ class RouterHandler(SimpleHTTPRequestHandler):
             self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Name and email are required"})
             return
         classified = classify_lead(payload)
+        response_data = {
+            "qualifiesForCalendly": classified["qualifiesForCalendly"],
+            "route": classified["route"],
+        }
+        if classified["qualifiesForCalendly"]:
+            response_data["calendlyUrl"] = classified["calendlyUrl"]
         self.forward_router_event(
             event_type,
             classified,
-            {
-                "qualifiesForCalendly": classified["qualifiesForCalendly"],
-                "route": classified["route"],
-            },
+            response_data,
         )
 
     def handle_calendly(self) -> None:

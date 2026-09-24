@@ -2086,9 +2086,7 @@ const contactForm = document.getElementById('contact-form');
 const submitBtn = document.getElementById('submit-btn');
 const contactStatus = document.getElementById('contact-status');
 if (contactForm && submitBtn) {
-  const bdEmail = 'info@ingenuitysys.com';
-  // Keep provider URLs server-side. The API router forwards this payload to the
-  // configured webhook and can route it to email, Calendly, or both.
+  // The server classifies submissions and returns a Calendly URL only when eligible.
   const contactWebhookUrl = String(window.INGENUITY_ROUTER_ENDPOINT || '/api/router/contact').trim();
   const sendToRouter = async (payload) => {
     if (!contactWebhookUrl) return null;
@@ -2143,10 +2141,9 @@ if (contactForm && submitBtn) {
     const routerResponse = await sendToRouter(webhookPayload);
     submitBtn.disabled = false;
     if (routerResponse) {
-      if (routerResponse.qualifiesForCalendly === true) {
+      if (routerResponse.qualifiesForCalendly === true && routerResponse.calendlyUrl) {
         if (contactStatus) contactStatus.textContent = 'Thanks — your details were sent. Opening Calendly…';
-        const calendlyUrl = 'https://calendly.com/junaidparacha-ingenuitysys';
-        setTimeout(() => { window.location.href = calendlyUrl; }, 850);
+        setTimeout(() => { window.location.href = routerResponse.calendlyUrl; }, 850);
       } else if (contactStatus) {
         contactStatus.textContent = 'Thanks — your details were sent. Our team will follow up by email.';
       }
