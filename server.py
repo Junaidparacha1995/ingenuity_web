@@ -521,11 +521,13 @@ class RouterHandler(SimpleHTTPRequestHandler):
                 self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Expected form data"})
                 return
             forwarded, detail = post_intake_form(intake_url, intake_form_fields(data))
-            if not forwarded:
-                self.send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": detail})
-                return
             response["forwardedToBothFormWebhooks"] = len(webhook_urls) == 2
-            response["forwardedToIntakeApp"] = True
+            response["forwardedToIntakeApp"] = forwarded
+            if not forwarded:
+                response["intakeAppWarning"] = (
+                    "Your inquiry reached our team, but could not be delivered to the "
+                    "connected intake app. Please do not resubmit."
+                )
         if response_data:
             response.update(response_data)
         self.send_json(HTTPStatus.ACCEPTED, response)
