@@ -19,7 +19,7 @@ from email.utils import formatdate
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit, urlunsplit
+from urllib.parse import parse_qs, urlencode, urlsplit, urlunsplit
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -96,6 +96,62 @@ def post_json(url: str, payload: object, headers: dict[str, str] | None = None) 
         return False, f"upstream status {error.code}"
     except (TimeoutError, URLError, OSError) as error:
         return False, f"upstream request failed: {type(error).__name__}"
+
+
+def post_intake_form(url: str, fields: dict[str, str]) -> tuple[bool, str]:
+    """Forward intake submissions using the receiving app's HTML-form contract."""
+    request = Request(
+        url,
+        data=urlencode(fields).encode("utf-8"),
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "*/*",
+            "bypass-tunnel-reminder": "true",
+        },
+        method="POST",
+    )
+    try:
+        with urlopen(request, timeout=12) as response:
+            status = getattr(response, "status", 200)
+            response.read()
+            return 200 <= status < 300, f"upstream status {status}"
+    except HTTPError as error:
+        return False, f"upstream status {error.code}"
+    except (TimeoutError, URLError, OSError) as error:
+        return False, f"upstream request failed: {type(error).__name__}"
+
+
+def intake_form_fields(data: dict) -> dict[str, str]:
+    """Map the site lead into the local intake app's expected form fields."""
+    def value(*keys: str) -> str:
+        for key in keys:
+            candidate = str(data.get(key, "")).strip()
+            if candidate:
+                return candidate
+        return ""
+
+    message_parts = [value("message", "whatAreYouLookingToSolve")]
+    for key, label in (
+        ("estimatedBudgetLabel", "Estimated budget"),
+        ("timelineLabel", "Timeline"),
+        ("aiUsageLabel", "Current AI usage"),
+    ):
+        detail = value(key)
+        if detail:
+            message_parts.append(f"{label}: {detail}")
+
+    return {
+        "full_name": value("name", "full_name"),
+        "email": value("email"),
+        "company_name": value("companyName", "company", "company_name") or "Not provided",
+        "product_or_service": value(
+            "interestAreaLabel",
+            "interestArea",
+            "productOrService",
+        ) or "General inquiry",
+        "message": "\n\n".join(part for part in message_parts if part)
+        or "No additional details provided.",
+    }
 
 
 def client_address(handler: "RouterHandler") -> str:
@@ -373,6 +429,9 @@ class RouterHandler(SimpleHTTPRequestHandler):
                         os.environ.get("INGENUITY_ROUTER_WEBHOOK_URL", "").strip()
                         or os.environ.get("MAKE_WEBHOOK_URL", "").strip()
                     ),
+                    "intakeWebhookConfigured": bool(
+                        os.environ.get("APP_INTAKE_WEBHOOK_URL", "").strip()
+                    ),
                     "calendlySigningKeyConfigured": bool(
                         os.environ.get("CALENDLY_WEBHOOK_SIGNING_KEY", "").strip()
                     ),
@@ -431,6 +490,19 @@ class RouterHandler(SimpleHTTPRequestHandler):
                 return
             if second_webhook_url != primary_webhook_url:
                 webhook_urls.append(second_webhook_url)
+            intake_url = os.environ.get("APP_INTAKE_WEBHOOK_URL", "").strip()
+            if not intake_url:
+                self.send_json(
+                    HTTPStatus.SERVICE_UNAVAILABLE,
+                    {"ok": False, "error": "The app intake webhook is not configured"},
+                )
+                return
+            if urlsplit(intake_url).scheme.lower() != "https":
+                self.send_json(
+                    HTTPStatus.SERVICE_UNAVAILABLE,
+                    {"ok": False, "error": "The app intake webhook must use HTTPS"},
+                )
+                return
 
         envelope = {
             "source": "ingenuity-systems-router",
@@ -445,7 +517,15 @@ class RouterHandler(SimpleHTTPRequestHandler):
                 return
         response = {"ok": True, "forwarded": True}
         if mirror_to_form_webhook:
+            if not isinstance(data, dict):
+                self.send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": "Expected form data"})
+                return
+            forwarded, detail = post_intake_form(intake_url, intake_form_fields(data))
+            if not forwarded:
+                self.send_json(HTTPStatus.BAD_GATEWAY, {"ok": False, "error": detail})
+                return
             response["forwardedToBothFormWebhooks"] = len(webhook_urls) == 2
+            response["forwardedToIntakeApp"] = True
         if response_data:
             response.update(response_data)
         self.send_json(HTTPStatus.ACCEPTED, response)
