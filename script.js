@@ -2141,10 +2141,16 @@ if (contactForm && submitBtn) {
     const routerResponse = await sendToRouter(webhookPayload);
     submitBtn.disabled = false;
     if (routerResponse) {
+      const intakeUnavailable = routerResponse.forwardedToIntakeApp === false;
+      if (intakeUnavailable && contactStatus) {
+        submitBtn.classList.remove('success');
+        contactStatus.textContent = routerResponse.intakeAppWarning
+          || 'Your inquiry reached our team, but could not be delivered to the connected intake app. Please do not resubmit.';
+      }
       if (routerResponse.qualifiesForCalendly === true && routerResponse.calendlyUrl) {
-        if (contactStatus) contactStatus.textContent = 'Thanks — your details were sent. Opening Calendly…';
+        if (!intakeUnavailable && contactStatus) contactStatus.textContent = 'Thanks — your details were sent. Opening Calendly…';
         setTimeout(() => { window.location.href = routerResponse.calendlyUrl; }, 850);
-      } else if (contactStatus) {
+      } else if (!intakeUnavailable && contactStatus) {
         contactStatus.textContent = 'Thanks — your details were sent. Our team will follow up by email.';
       }
     } else {
