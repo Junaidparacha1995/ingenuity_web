@@ -224,3 +224,17 @@ mtime_ms = 1789730602904
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/1abf717b-6b0e-436a-8315-e1b8924cb4bd/e1ad77df-564d-41b9-84e5-cb330176bbd3"
 storage_version_token = "1789730613057752"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "jhqX3l_F4fcT8-b7av15q"
+uri = "file://deliverables/ingenuity-systems-local.zip"
+type = "unspecified"
+title = "Ingenuity Systems — Run Locally"
+description = "Download the current website source and assets with local run instructions. Requires Python 3.10+; no pip installs needed."
+logical_id = "8568ef01-963e-4a63-b4fe-a0b2b9cc953c"
+content_hash = "sha256:784eefb12d9413d6496cf971bdc1a65f8725e3bef5526d978db6f76fa4756e6c"
+size = 12202405
+mtime_ms = 1790934537938
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:70341701-f318-4945-a82a-248231c314d0/8568ef01-963e-4a63-b4fe-a0b2b9cc953c/e1d00ceb-9dad-4620-afad-607243859b2a"
+storage_version_token = "1790934553601636"
+content_type = "application/octet-stream"
