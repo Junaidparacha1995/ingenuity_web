@@ -8,3 +8,9 @@ The site's hero is already navy in light mode. Merely changing the theme at clic
 **Why:** A convincing transition needs the outgoing and incoming page states visible together during the change. Static before/after screenshots cannot establish that this works.
 
 **How to apply:** Keep content visible, make the actual palette change spatially progressive, and inspect browser captures while the toggle animation is in progress. Check a route with a light below-hero surface as well as the dark home hero; test both directions and the small-screen toggle.
+
+New visits should use light mode even when the operating system prefers dark. Preserve an explicit saved theme choice and keep the toggle available for switching either way.
+
+**Why:** The user requested light as the default and dark mode through the click toggle; the device preference should not silently pick the initial palette.
+
+**How to apply:** Initialize to light when no site preference exists, while honoring saved light/dark choices.
