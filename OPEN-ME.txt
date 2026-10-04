@@ -1,0 +1,45 @@
+INGENUITY SYSTEMS WEBSITE — complete bundle
+============================================
+
+HOW TO VIEW IT
+1. Unzip this folder anywhere on your computer.
+2. Open a terminal in the unzipped folder and run:
+     python3 server.py
+   (or: python3 -m http.server 8000)
+3. Open http://localhost:8000 in your browser.
+
+Opening index.html by double-clicking it will show the page with
+broken styling — browsers block some local file loads for
+security, so the site needs to be served, not opened directly.
+
+WHAT'S INSIDE
+- index.html, about.html, services*.html, industries*.html, etc. — all site pages
+- styles.css, responsive-v18.css, responsive-v19.css — site-wide styles
+  (the header pill itself now expands and contracts as one shape (single edge, no seam) via a CSS-only grid animation with no JS measuring; card/button hover
+  effects switched from lift-on-translate to scale, which eliminates a
+  class of hover flicker/jitter; ambient background blobs on Work,
+  Projects and Case Studies are now static instead of continuously
+  animating, which removed a GPU/paint flicker source on those pages)
+- hero-mesh.css / hero-mesh.js — the homepage's animated hero visual
+  (glossy navy background, boosted orange glow around the mesh)
+- script.js, theme-preload.js — site behavior (header dropdown logic
+  simplified alongside the CSS fix above)
+- assets/ — images, icons, logos
+- tests/check_routes.py — the site's own regression check
+- backups/index-before-hero-redesign.html — the homepage as it was
+  before the hero section redesign, kept for reference
+
+This is your real, current site — the same files already synced to
+your local ingenuity-systems-local folder.
+
+Latest changes:
+- Footer Instagram icon restored (it had been replaced by a plain ring).
+- Case study cards are now equal in height and width.
+- "View Case Studies" on the Projects hero, and the Work page hero/pill, open the Case Studies page.
+- Dark mode: one glossy navy glass backdrop behind the whole site instead of flat navy sections (cards, header and footer unchanged).
+
+Update (folder links + theme control):
+- Case Studies buttons/pills now link straight to case-studies/index.html, so they work even when you open the files directly (no folder view).
+- The site starts in light mode; the theme toggle can switch to dark mode and back.
+
+- Project cards: "Explore project" bar now sits at the same distance from the bottom on every card.

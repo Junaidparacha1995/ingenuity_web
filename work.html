@@ -9,11 +9,11 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="anonymous" href="https://fonts.googleapis.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="styles.css?v=20260924-cursor-logo-dark-fix" rel="stylesheet"/>
+<link href="styles.css?v=20261004-uploaded-theme" rel="stylesheet"/>
 <link href="work-hero-centered-v16.css" rel="stylesheet"/>
-<link href="responsive-v18.css?v=19" rel="stylesheet"/>
-<link href="responsive-v19.css?v=20260923-theme-mobile" rel="stylesheet"/>
-<script src="theme-preload.js?v=20261002-light-default"></script></head>
+<link href="responsive-v18.css?v=20261004-uploaded-layout" rel="stylesheet"/>
+<link href="responsive-v19.css?v=20261004-theme-mobile" rel="stylesheet"/>
+<script src="theme-preload.js?v=20261004-light-dark"></script></head>
 <body>
 <script>
 (() => {
@@ -55,7 +55,7 @@
 <section class="section-pad work-projects" id="projects" data-work-panel="projects">
 <div class="wrap">
 <div class="section-head reveal center"><h2>Systems built to move from idea to working capability.</h2><p>Each project shows the problem space, the system direction, and the engineering workflow behind the solution.</p></div>
-<div class="work-tabs" role="tablist" aria-label="Work categories"><button class="work-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="projects" data-work-tab="projects">Projects</button><a class="work-tab" href="case-studies/" aria-label="Open Case Studies page" data-work-tab="case-studies">Case Studies</a></div>
+<div class="work-tabs" role="tablist" aria-label="Work categories"><button class="work-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="projects" data-work-tab="projects">Projects</button><a class="work-tab" href="case-studies/index.html" aria-label="Open Case Studies page" data-work-tab="case-studies">Case Studies</a></div>
 <div class="work-grid">
 <details class="work-card reveal" open><summary><span class="work-card-index">01</span><span><small>AI AGENTS · WEB3</small><strong>AURA Forge / Cross-Chain Hub</strong></span><b>＋</b></summary><div class="work-card-detail"><p>An autonomous AI system that generates, audits, self-corrects, and prepares smart contracts for EVM and Solana from plain-English requirements.</p><div class="work-meta"><span>LangGraph</span><span>MCP</span><span>Solidity</span><span>Anchor / Rust</span></div><div class="work-flow"><i>Requirements</i><em>→</em><i>Agent audit loop</i><em>→</em><i>Contract output</i></div></div></details>
 <details class="work-card reveal"><summary><span class="work-card-index">02</span><span><small>ML · FORECASTING</small><strong>Retail Sales Forecasting</strong></span><b>＋</b></summary><div class="work-card-detail"><p>Time-series forecasting using multiple machine-learning models and LSTM-based sequence modeling with feature engineering.</p><div class="work-meta"><span>Python</span><span>LSTM</span><span>Feature engineering</span></div><div class="work-flow"><i>Sales history</i><em>→</em><i>Feature engineering</i><em>→</em><i>Forecast</i></div></div></details>
@@ -85,7 +85,7 @@
 </main>
 
 <footer><img alt="" aria-hidden="true" class="footer-watermark" src="assets/logo-icon.png"/><div class="wrap"><div class="footer-top"><div><div class="footer-logo brand"><img alt="Ingenuity Systems" class="logo-full" src="assets/logo-light.png"/></div><p style="font-family:'Manrope',sans-serif;font-weight:700;color:#fff;font-size:14px;margin-bottom:8px">Intelligent Systems. Powerful Outcomes.</p><p>We design, build, integrate, and automate digital systems that help businesses operate smarter and evolve with confidence.</p><div class="footer-location"><span>Lahore, Pakistan</span><span>Wyoming, USA</span></div></div><div class="footer-col"><h5>Company</h5><ul><li><a href="index.html">Home</a></li><li><a href="work.html">Work</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul></div><div class="footer-col"><h5>Services</h5><ul><li><a href="services-ai.html">AI &amp; Intelligent Systems</a></li><li><a href="services-automation.html">Business Process Automation</a></li><li><a href="services-software.html">Software &amp; Digital Engineering</a></li><li><a href="services-integration.html">Systems Integration &amp; Data</a></li></ul></div><div class="footer-col"><h5>Industries</h5><ul><li><a href="industries.html">Explore Industries</a></li><li><a href="industries-technology.html">Technology &amp; SaaS</a></li><li><a href="industries-professional.html">Professional Services</a></li></ul></div></div><div class="flow-line on-dark" style="margin-bottom:28px"></div><div class="footer-bottom"><span>© 2026 Ingenuity Systems. All rights reserved. | Lahore, Pakistan · Wyoming, USA</span><div class="legal-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div></div></footer>
-<script src="script.js?v=20260923-theme-line-icon"></script><script src="orange-ambient.js?v=20260918-zoom19"></script>
+<script src="script.js?v=20261004-theme-toggle"></script><script src="orange-ambient.js?v=20260918-zoom19"></script>
 <script>
 (() => {
   document.querySelectorAll('details.work-card').forEach((card) => card.removeAttribute('open'));
@@ -116,7 +116,7 @@
     if (!workHeroPrimary) return;
     const isCaseStudy = target === 'case-studies';
     workHeroPrimary.textContent = isCaseStudy ? 'Explore Case Studies' : 'Browse Projects';
-    workHeroPrimary.href = isCaseStudy ? '#case-studies' : 'projects/index.html';
+    workHeroPrimary.href = isCaseStudy ? 'case-studies/index.html' : 'projects/index.html';
   };
   // Keep the hero title and CTA tied to the selected panel. Rotating the
   // headline independently can show "Case Studies" above the Projects CTA.

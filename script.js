@@ -1,5 +1,4 @@
-// Shared theme state — the small preload script sets the initial value before
-// paint; this module owns the animated switch and keeps injected headers in sync.
+// The preload sets the initial theme before paint; this module owns the toggle.
 (function initThemeMode() {
   const root = document.documentElement;
   const storageKey = 'ingenuity-theme';
@@ -25,9 +24,7 @@
     document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
   };
 
-  // Both themes remain rendered as snapshots. Only the incoming snapshot is
-  // progressively revealed; a translucent band alone cannot show the theme change.
-  const revealFrames = (x, y, theme) => {
+  const revealFrames = (x, y) => {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const shape = (edge) => {
@@ -74,7 +71,7 @@
     if (!prefersReducedMotion() && typeof document.startViewTransition === 'function') {
       const transition = document.startViewTransition(() => applyTheme(theme));
       transition.ready.then(() => {
-        const animation = root.animate(revealFrames(x, y, theme), {
+        const animation = root.animate(revealFrames(x, y), {
           duration: 1250,
           easing: 'cubic-bezier(.45,0,.18,1)',
           fill: 'forwards',
@@ -136,10 +133,9 @@ function createNavigationArrow(direction = 'next') {
     {
       label: 'Instagram',
       href: 'https://www.instagram.com/ingenuitysystems',
-      path: 'M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.47 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.47.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-. 1.06.36 2.23.41 1.27.06 1.65.07 4.85.07s3.58-.01 4.85-.07c1.17-.05 1.8-.25 2.23-.41.56-.22.96-.47 1.38-.9.42-.42.68-.82.9-1.38.16-.42.36-1.06.41-2.23.06-1.27.07-1.65.07-4.85s-.01-3.58-.07-4.85c-.05-1.17-.25-1.8-.41-2.23-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58-.07-4.85c-.06-1.28-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.13C21.33 1.35 20.66.94 19.87.63c-.76-.3-1.63-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-10.85a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z'
+      path: 'M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.47 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.47.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.47-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.47-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07c-1.28.06-2.15.26-2.91.56-.79.31-1.46.72-2.13 1.38C1.35 2.67.94 3.34.63 4.13c-.3.76-.5 1.63-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.28.26 2.15.56 2.91.31.79.72 1.46 1.38 2.13.67.66 1.34 1.07 2.13 1.38.76.3 1.63.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.28-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.38.66-.67 1.07-1.34 1.38-2.13.3-.76.5-1.63.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.28-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.13C21.33 1.35 20.66.94 19.87.63c-.76-.3-1.63-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-10.85a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z'
     }
   ];
-  socials[2].path = 'M12 2.2a9.8 9.8 0 1 0 0 19.6 9.8 9.8 0 0 0 0-19.6zm0 3a6.8 6.8 0 1 1 0 13.6 6.8 6.8 0 0 1 0-13.6zm5.2-1.2a1.15 1.15 0 1 0 0 2.3 1.15 1.15 0 0 0 0-2.3z';
   const footerNavigation = [
     {
       title: 'Company',
@@ -1527,10 +1523,6 @@ if (revealTargets.length) {
 
   let menuCloseTimer = null;
   const menuLinks = Array.from(navLinks.querySelectorAll('.has-dropdown > .top-link'));
-  const setMenuHeight = (panel) => {
-    const panelHeight = Math.ceil(panel?.scrollHeight || 0);
-    headerEl.style.setProperty('--menu-panel-height', panelHeight + 'px');
-  };
   const closeMenu = () => {
     clearTimeout(menuCloseTimer);
     menuCloseTimer = setTimeout(() => {
@@ -1552,7 +1544,6 @@ if (revealTargets.length) {
       if (window.innerWidth <= 1040) return;
       keepMenuOpen();
       megaWrap.dataset.active = name;
-      setMenuHeight(panel);
       headerEl.classList.add('menu-open');
       menuLinks.forEach((menuLink) => menuLink.setAttribute('aria-expanded', String(menuLink === link)));
     };
@@ -1564,11 +1555,6 @@ if (revealTargets.length) {
   headerEl.addEventListener('mouseleave', closeMenu);
   headerEl.addEventListener('focusout', (event) => {
     if (!headerEl.contains(event.relatedTarget)) closeMenu();
-  });
-  window.addEventListener('viewport:resize-end', () => {
-    if (!headerEl.classList.contains('menu-open')) return;
-    const activePanel = megaWrap.querySelector('[data-panel="' + megaWrap.dataset.active + '"]');
-    setMenuHeight(activePanel);
   });
   document.documentElement.dataset.canonicalHeader = 'true';
 })();
@@ -2288,4 +2274,31 @@ if (indMorph) {
   item.addEventListener('mouseleave', close);
   panel.addEventListener('mouseenter', open);
   panel.addEventListener('mouseleave', close);
+})();
+
+// Case study cards: keep every card the same collapsed height in any layout
+// (including stacked phone layout). Expanding a card still lets it grow.
+(function equalizeCaseStudyCards() {
+  const cards = [...document.querySelectorAll('.case-study-card')];
+  if (cards.length < 2) return;
+  const measure = () => {
+    cards.forEach((card) => { card.style.removeProperty('min-height'); });
+    const expanded = cards.some((card) => card.classList.contains('is-expanded'));
+    if (expanded) return;
+    const tallest = Math.max(...cards.map((card) => card.offsetHeight));
+    if (tallest > 0) cards.forEach((card) => { card.style.setProperty('min-height', tallest + 'px', 'important'); });
+  };
+  const schedule = () => window.requestAnimationFrame(measure);
+  window.addEventListener('viewport:resize-end', schedule);
+  window.addEventListener('load', schedule);
+  if (document.fonts?.ready) document.fonts.ready.then(schedule);
+  cards.forEach((card) => new MutationObserver(() => {
+    if (!card.classList.contains('is-expanded')) window.setTimeout(schedule, 700);
+  }).observe(card, { attributes: true, attributeFilter: ['class'] }));
+  schedule();
+  [400, 1200, 2500].forEach((ms) => window.setTimeout(schedule, ms));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) schedule(); });
+    cards.forEach((card) => io.observe(card));
+  }
 })();

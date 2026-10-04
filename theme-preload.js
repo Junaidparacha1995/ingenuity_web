@@ -1,3 +1,4 @@
+// Start new visitors in light mode, but honor a theme they explicitly saved.
 (function () {
   try {
     const stored = window.localStorage.getItem('ingenuity-theme');

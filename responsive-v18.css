@@ -18,7 +18,7 @@ h1,h2,h3,h4,p,li{overflow-wrap:break-word;}
 
 /* The open mega menu is one continuous header surface, with no separator seam. */
 header.menu-open,header.scrolled.menu-open{background:var(--header-bg);}
-header.menu-open .mega-wrap{width:100%;background:var(--header-bg);border:0;box-shadow:none;}
+header.menu-open .mega-wrap{width:100%;background:transparent;border:0;box-shadow:none;}
 header.menu-open .mega-dropdown{background:transparent;}
 .mobile-contact-link{display:none!important;}
 
