@@ -9,7 +9,9 @@ Requirements: Python 3.10 or newer. No pip packages are required.
 
 Then open http://127.0.0.1:5000. Stop the server with Ctrl+C.
 If port 5000 is occupied, set `PORT` to another port before starting the server.
-The site starts in light mode; use the header toggle to switch to dark mode and back.
+The site currently runs in light-only mode. Dark-mode styles and saved preferences are kept;
+to restore dark mode and its header toggle, set `THEME_TOGGLE_ENABLED` to `true` in
+`theme-preload.js`.
 
 ## Optional integrations
 

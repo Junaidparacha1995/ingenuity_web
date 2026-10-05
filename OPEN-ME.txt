@@ -38,8 +38,8 @@ Latest changes:
 - "View Case Studies" on the Projects hero, and the Work page hero/pill, open the Case Studies page.
 - Dark mode: one glossy navy glass backdrop behind the whole site instead of flat navy sections (cards, header and footer unchanged).
 
-Update (folder links + theme control):
+Update (folder links + temporary light-only mode):
 - Case Studies buttons/pills now link straight to case-studies/index.html, so they work even when you open the files directly (no folder view).
-- The site starts in light mode; the theme toggle can switch to dark mode and back.
+- Dark mode is disabled for now. Its styles and saved preference remain; set THEME_TOGGLE_ENABLED to true in theme-preload.js to restore the header toggle and saved theme.
 
 - Project cards: "Explore project" bar now sits at the same distance from the bottom on every card.

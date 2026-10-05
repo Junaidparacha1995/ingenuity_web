@@ -1356,7 +1356,8 @@ if (revealTargets.length) {
   });
   nav.querySelector('.nav-cta a')?.setAttribute('href', siteBase + 'contact.html');
   const cta = nav.querySelector('.nav-cta');
-  if (cta && !cta.querySelector('.theme-toggle')) {
+  const themeToggleEnabled = document.documentElement.dataset.themeToggle !== 'disabled';
+  if (themeToggleEnabled && cta && !cta.querySelector('.theme-toggle')) {
     const themeToggle = document.createElement('button');
     themeToggle.className = 'theme-toggle';
     themeToggle.type = 'button';
