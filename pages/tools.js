@@ -121,13 +121,36 @@
       if (download) download.disabled = false;
       try { localStorage.setItem('ingenuityMaturity', JSON.stringify({ answers, score, stage: current.title })); } catch (error) { /* private browsing */ }
     };
-    $$('.maturity-q').forEach((question) => question.addEventListener('click', (event) => {
-      const button = event.target.closest('button[data-score]');
-      if (!button) return;
-      question.querySelectorAll('button').forEach((option) => option.classList.toggle('selected', option === button));
-      answers[question.dataset.q] = Number(button.dataset.score);
-      update();
-    }));
+    $$('.maturity-q').forEach((question) => {
+      const options = $$('button[role="radio"]', question);
+      const selectAnswer = (button) => {
+        options.forEach((option) => {
+          const selected = option === button;
+          option.classList.toggle('selected', selected);
+          option.setAttribute('aria-checked', String(selected));
+          option.tabIndex = selected ? 0 : -1;
+        });
+        answers[question.dataset.q] = Number(button.dataset.score);
+        update();
+      };
+      question.addEventListener('click', (event) => {
+        const button = event.target.closest('button[role="radio"]');
+        if (options.includes(button)) selectAnswer(button);
+      });
+      question.addEventListener('keydown', (event) => {
+        const index = options.indexOf(event.target);
+        if (index < 0) return;
+        let next;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (index + 1) % options.length;
+        else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (index + options.length - 1) % options.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = options.length - 1;
+        else return; // Native buttons already handle Space and Enter.
+        event.preventDefault();
+        selectAnswer(options[next]);
+        options[next].focus();
+      });
+    });
     $('#download-maturity')?.addEventListener('click', () => {
       if (!current) return;
       const score = Object.values(answers).reduce((sum, value) => sum + value, 0);
