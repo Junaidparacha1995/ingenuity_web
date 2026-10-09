@@ -1,3 +1,12 @@
+function trackSiteEvent(eventName, eventData = {}) {
+  if (typeof window === 'undefined') return;
+  try {
+    window.umami?.track?.(eventName, eventData);
+  } catch (error) {
+    // Analytics must never interrupt a user flow.
+  }
+}
+
 // The preload sets the initial theme before paint; this module owns the toggle.
 (function initThemeMode() {
   const root = document.documentElement;
@@ -1153,8 +1162,12 @@ if (revealTargets.length) {
       return String(data.answer || data.response || data.message || data.output_text || '').trim() || null;
     } catch (error) { return null; }
   };
-  const ask = async (query) => {
+  const ask = async (query, entry = 'typed') => {
     const clean = String(query || '').trim(); if (!clean) return;
+    trackSiteEvent('assistant_prompt_submitted', {
+      surface: 'site_assistant',
+      entry
+    });
     addMessage(clean, true); input.value = '';
     const docs = retrieve(clean); const pending = typing();
     const modelAnswer = await requestModel(clean, docs);
@@ -1165,13 +1178,13 @@ if (revealTargets.length) {
     if (keepAtBottom) window.requestAnimationFrame(() => { body.scrollTop = body.scrollHeight; });
   };
   const suggestions = document.createElement('div'); suggestions.className = 'assistant-suggestions';
-  ['Recommend a solution', 'Automation ideas', 'Recent projects', 'Book a call'].forEach((label) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.addEventListener('click', () => ask(label)); suggestions.appendChild(button); });
+  ['Recommend a solution', 'Automation ideas', 'Recent projects', 'Book a call'].forEach((label) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.addEventListener('click', () => ask(label, 'suggestion')); suggestions.appendChild(button); });
   body.appendChild(suggestions);
   addMessage('I can help diagnose a business problem, recommend an AI or automation solution, answer questions from the website, explore projects, or help you start a conversation. What are you trying to improve?');
   launcher.addEventListener('click', () => root.classList.contains('is-open') ? close() : open());
   root.querySelector('.assistant-close').addEventListener('click', close);
   root.querySelector('.assistant-expand').addEventListener('click', () => root.classList.toggle('is-fullscreen'));
-  form.addEventListener('submit', (event) => { event.preventDefault(); ask(input.value); });
+  form.addEventListener('submit', (event) => { event.preventDefault(); ask(input.value, 'typed'); });
   panel.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(); });
 
   const assistantSafeZones = document.querySelectorAll('.solution-finder, .assessment-shell, .interactive-tool, .contact-wrap');
@@ -1269,12 +1282,20 @@ if (revealTargets.length) {
     steps.forEach(step => { step.classList.remove('is-active'); step.hidden = true; });
     const fallback = ['A practical starting point', 'We can map the constraint, define the smallest useful first step, and connect it to the systems your team already uses.'];
     const recommendation = recommendations[selections[0]] || recommendations[selections[1]] || fallback;
+    const recommendationCategory = Object.prototype.hasOwnProperty.call(recommendations, selections[0])
+      ? selections[0]
+      : Object.prototype.hasOwnProperty.call(recommendations, selections[1])
+        ? selections[1]
+        : 'fallback';
     const title = root.querySelector('#solution-result-title');
     const copy = root.querySelector('#solution-result-copy');
     if (title) title.textContent = recommendation[0];
     if (copy) copy.textContent = recommendation[1];
     result.hidden = false;
     updateProgress(steps.length);
+    trackSiteEvent('solution_finder_completed', {
+      recommendation_category: recommendationCategory
+    });
   };
 
   root.querySelectorAll('[data-answer]').forEach(button => {
@@ -2129,18 +2150,27 @@ if (contactForm && submitBtn) {
     submitBtn.disabled = false;
     if (routerResponse) {
       const intakeUnavailable = routerResponse.forwardedToIntakeApp === false;
+      const qualifiesForCalendly = routerResponse.qualifiesForCalendly === true;
+      trackSiteEvent('contact_submission_result', {
+        outcome: intakeUnavailable ? 'partial_intake' : 'accepted',
+        make_accepted: true,
+        intake_received: routerResponse.forwardedToIntakeApp === true,
+        qualifies_for_calendly: qualifiesForCalendly
+      });
       if (intakeUnavailable && contactStatus) {
         submitBtn.classList.remove('success');
         contactStatus.textContent = routerResponse.intakeAppWarning
           || 'Your inquiry reached our team, but could not be delivered to the connected intake app. Please do not resubmit.';
       }
-      if (routerResponse.qualifiesForCalendly === true && routerResponse.calendlyUrl) {
+      if (qualifiesForCalendly && routerResponse.calendlyUrl) {
+        trackSiteEvent('calendly_redirect_started', { source: 'contact_form' });
         if (!intakeUnavailable && contactStatus) contactStatus.textContent = 'Thanks — your details were sent. Opening Calendly…';
         setTimeout(() => { window.location.href = routerResponse.calendlyUrl; }, 850);
       } else if (!intakeUnavailable && contactStatus) {
         contactStatus.textContent = 'Thanks — your details were sent. Our team will follow up by email.';
       }
     } else {
+      trackSiteEvent('contact_submission_result', { outcome: 'not_confirmed' });
       if (contactStatus) contactStatus.textContent = 'We could not submit your details right now. Please try again.';
       submitBtn.classList.remove('success');
     }
