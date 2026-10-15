@@ -22,6 +22,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlencode, urlsplit, urlunsplit
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+from xml.etree import ElementTree
 
 
 ROOT = Path(__file__).resolve().parent
@@ -81,6 +82,21 @@ CLEAN_ROUTES = {
 }
 CLEAN_REDIRECTS = {target: route for route, target in CLEAN_ROUTES.items() if route != "/"}
 CLEAN_REDIRECTS["/index.html"] = "/"
+CLEAN_REDIRECTS.update({"/projects/": "/projects", "/case-studies/": "/case-studies"})
+
+# Primary origin verified through the deployment configuration, not request Host
+# headers or development domains. Keep public SEO URLs on this deployment.
+SITE_ORIGIN = "https://ingenuitysys.com"
+PUBLIC_ROUTES = dict(CLEAN_ROUTES)
+
+
+def sitemap_bytes() -> bytes:
+    namespace = "http://www.sitemaps.org/schemas/sitemap/0.9"
+    root = ElementTree.Element("urlset", xmlns=namespace)
+    for route in PUBLIC_ROUTES:
+        entry = ElementTree.SubElement(root, "url")
+        ElementTree.SubElement(entry, "loc").text = SITE_ORIGIN + route
+    return ElementTree.tostring(root, encoding="utf-8", xml_declaration=True)
 
 
 def json_bytes(value: object) -> bytes:
@@ -339,8 +355,35 @@ class RouterHandler(SimpleHTTPRequestHandler):
         super().end_headers()
 
     def send_head(self):
-        """Serve compressible static files with gzip when the browser supports it."""
-        path = urlsplit(self.path).path
+        """Resolve public routes for both GET and HEAD, then serve static files."""
+        parsed = urlsplit(self.path)
+        path = parsed.path
+        canonical = CLEAN_REDIRECTS.get(path)
+        if canonical:
+            self.send_response(HTTPStatus.PERMANENT_REDIRECT)
+            self.send_header("Location", urlunsplit(("", "", canonical, parsed.query, parsed.fragment)))
+            self.send_header("Cache-Control", "public, max-age=86400")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return None
+
+        if path in {"/sitemap.xml", "/robots.txt"}:
+            if path == "/sitemap.xml":
+                body = sitemap_bytes()
+                content_type = "application/xml; charset=utf-8"
+            else:
+                body = f"User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: {SITE_ORIGIN}/sitemap.xml\n".encode("utf-8")
+                content_type = "text/plain; charset=utf-8"
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Cache-Control", "no-cache, must-revalidate")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            return io.BytesIO(body)
+
+        if path in CLEAN_ROUTES:
+            path = CLEAN_ROUTES[path]
+            self.path = path + (f"?{parsed.query}" if parsed.query else "")
         file_path = Path(self.translate_path(path))
         accepts_gzip = "gzip" in self.headers.get("Accept-Encoding", "").lower()
         has_range = bool(self.headers.get("Range"))
@@ -404,24 +447,6 @@ class RouterHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed = urlsplit(self.path)
         path = parsed.path
-
-        # Keep legacy .html URLs functional, but make the clean route canonical
-        # in the browser address bar.
-        canonical = CLEAN_REDIRECTS.get(path)
-        if canonical:
-            location = urlunsplit(("", "", canonical, parsed.query, parsed.fragment))
-            self.send_response(HTTPStatus.PERMANENT_REDIRECT)
-            self.send_header("Location", location)
-            self.send_header("Cache-Control", "public, max-age=86400")
-            self.end_headers()
-            return
-
-        if path in CLEAN_ROUTES and path != "/":
-            target = CLEAN_ROUTES[path]
-            self.path = target + (f"?{parsed.query}" if parsed.query else "")
-            super().do_GET()
-            return
-
         if path == "/api/health":
             self.send_json(
                 HTTPStatus.OK,

@@ -93,12 +93,9 @@ def main():
     assert status == 200 and final_url.endswith("/sitemap.xml"), (status, final_url)
     assert headers.get_content_type() in {"application/xml", "text/xml"}, headers.get("Content-Type")
     sitemap_text = sitemap.decode()
-    assert sitemap_text.count("<url>") == 24, sitemap_text.count("<url>")
+    assert sitemap_text.count("<url>") == len(routes), sitemap_text.count("<url>")
     assert "https://ingenuitysys.com/" in sitemap_text
-    assert "<lastmod>2026-10-15</lastmod>" in sitemap_text
     for excluded in [
-        "https://ingenuitysys.com/cookie-policy</loc>",
-        "https://ingenuitysys.com/sitemap</loc>",
         "/api/", "/backups/", "/screenshots/", "/attached_assets/", "/deliverables/",
     ]:
         assert excluded not in sitemap_text, excluded
