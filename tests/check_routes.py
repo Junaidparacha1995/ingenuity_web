@@ -41,20 +41,32 @@ def main():
     tree = ast.parse((ROOT / "server.py").read_text())
     routes = next(ast.literal_eval(node.value) for node in tree.body
                   if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "CLEAN_ROUTES" for t in node.targets))
-    assert len(routes) == 22, len(routes)
+    assert len(routes) == 26, len(routes)
     resources = set()
     for route in routes:
         status, headers, html, final_url = get(BASE + route, compressed=True)
         assert status == 200, route
         assert "no-cache" in headers.get("Cache-Control", ""), route
+        page = html.decode()
+        canonical = re.search(r'<link rel="canonical" href="([^"]+)"', page)
+        assert canonical and canonical.group(1) == f"https://ingenuitysys.com{route}", (route, canonical.group(1) if canonical else None)
+        for marker in [
+            'property="og:type"', 'property="og:site_name"', 'property="og:title"',
+            'property="og:description"', 'property="og:url"', 'property="og:image"',
+            'name="twitter:card"', 'name="twitter:title"',
+            'name="twitter:description"', 'name="twitter:image"',
+        ]:
+            assert marker in page, (route, marker)
+        assert '<a href="/privacy">Privacy Policy</a>' in page, route
+        assert re.search(r'<a href="/terms">Terms(?: of Service| &amp; Conditions)</a>', page), route
         parsed = Resources()
-        parsed.feed(html.decode())
+        parsed.feed(page)
         for value in parsed.urls:
             url = urljoin(final_url, value)
             if urlsplit(url).netloc == urlsplit(BASE).netloc:
                 resources.add(url)
         for asset in ["script.js", "styles.css", "responsive-v19.css"]:
-            assert re.search(rf"{re.escape(asset)}\?v=[^\"']+", html.decode()), (route, asset)
+            assert re.search(rf"{re.escape(asset)}\?v=[^\"']+", page), (route, asset)
     css_resources = set()
     for url in sorted(resources):
         if urlsplit(url).path.endswith(".css"):
@@ -69,6 +81,38 @@ def main():
             assert result[0] == 200, url
     for route in ["/projects/", "/case-studies/"]:
         assert "no-cache" in get(BASE + route)[1].get("Cache-Control", ""), route
+    for legacy, canonical in [
+        ("/privacy.html", "/privacy"),
+        ("/terms.html", "/terms"),
+        ("/cookie-policy.html", "/cookie-policy"),
+        ("/sitemap.html", "/sitemap"),
+    ]:
+        status, _, _, final_url = get(BASE + legacy)
+        assert status == 200 and urlsplit(final_url).path == canonical, (legacy, status, final_url)
+    status, headers, sitemap, final_url = get(BASE + "/sitemap.xml")
+    assert status == 200 and final_url.endswith("/sitemap.xml"), (status, final_url)
+    assert headers.get_content_type() in {"application/xml", "text/xml"}, headers.get("Content-Type")
+    sitemap_text = sitemap.decode()
+    assert sitemap_text.count("<url>") == 24, sitemap_text.count("<url>")
+    assert "https://ingenuitysys.com/" in sitemap_text
+    assert "<lastmod>2026-10-15</lastmod>" in sitemap_text
+    for excluded in [
+        "https://ingenuitysys.com/cookie-policy</loc>",
+        "https://ingenuitysys.com/sitemap</loc>",
+        "/api/", "/backups/", "/screenshots/", "/attached_assets/", "/deliverables/",
+    ]:
+        assert excluded not in sitemap_text, excluded
+    status, headers, robots, _ = get(BASE + "/robots.txt")
+    assert status == 200 and headers.get_content_type() == "text/plain"
+    robots_text = robots.decode()
+    assert "User-agent: *" in robots_text and "Disallow: /api/" in robots_text
+    assert "Sitemap: https://ingenuitysys.com/sitemap.xml" in robots_text
+    home = get(BASE + "/", compressed=True)[2].decode()
+    assert re.search(
+        r'<meta[^>]+content="Ingenuity Systems is an AI-native solutions company[^"]*"[^>]+name="description"',
+        home,
+    )
+    assert 'type="application/ld+json"' in home
     for file in ["script.js", "styles.css", "responsive-v19.css", "orange-ambient.js"]:
         versioned_urls = [
             url for url in resources
@@ -78,7 +122,7 @@ def main():
         for url in versioned_urls:
             assert "immutable" in get(url)[1]["Cache-Control"], url
         assert "no-cache" in get(f"{BASE}/{file}")[1]["Cache-Control"]
-    print(f"PASS: {len(routes)} routes, {len(resources)} local resource URLs, gzip responses and cache policy.")
+    print(f"PASS: {len(routes)} routes, {len(resources)} local resource URLs, metadata endpoints and cache policy.")
     print("No contact forms, provider APIs, Calendly bookings or outgoing webhooks were submitted.")
 
 

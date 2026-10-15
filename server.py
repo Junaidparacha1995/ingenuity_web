@@ -74,6 +74,10 @@ CLEAN_ROUTES = {
     "/case-studies": "/case-studies/index.html",
     "/ai-maturity": "/pages/ai-maturity.html",
     "/build-your-system": "/pages/build-your-system.html",
+    "/privacy": "/privacy.html",
+    "/terms": "/terms.html",
+    "/cookie-policy": "/cookie-policy.html",
+    "/sitemap": "/sitemap.html",
 }
 CLEAN_REDIRECTS = {target: route for route, target in CLEAN_ROUTES.items() if route != "/"}
 CLEAN_REDIRECTS["/index.html"] = "/"
