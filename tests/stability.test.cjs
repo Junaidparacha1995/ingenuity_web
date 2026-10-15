@@ -344,3 +344,29 @@ test('a pinch gesture does not change carousel slides or start a marquee drag', 
     }
   } finally { f.close(); }
 });
+
+test('tech marquee duplicates one exact logo group and keeps drag offset inside the loop', () => {
+  const f = fixture('index.html');
+  try {
+    f.load();
+    const wrap = f.w.document.querySelector('#tech-marquee');
+    const track = wrap.querySelector('.marquee-track');
+    const groups = track.querySelectorAll('.tech-marquee-group');
+    assert.equal(groups.length, 2);
+    assert.equal(groups[1].getAttribute('aria-hidden'), 'true');
+    assert.equal(groups[0].querySelectorAll('.marquee-item').length, 18);
+    groups[0].getBoundingClientRect = () => ({ width: 1000 });
+
+    const down = new f.w.Event('pointerdown', { bubbles: true });
+    Object.defineProperties(down, {
+      isPrimary: { value: true }, pointerType: { value: 'mouse' }, button: { value: 0 },
+      pointerId: { value: 1 }, clientX: { value: 0 }
+    });
+    wrap.dispatchEvent(down);
+    const move = new f.w.Event('pointermove', { bubbles: true });
+    Object.defineProperties(move, { clientX: { value: 8450 } });
+    wrap.dispatchEvent(move);
+    const offset = Number.parseFloat(track.style.getPropertyValue('--tech-marquee-offset'));
+    assert.ok(offset >= 0 && offset < 1000, offset);
+  } finally { f.close(); }
+});

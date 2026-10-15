@@ -1244,7 +1244,8 @@ footer > .wrap{position:relative; z-index:1;}
 
 /* Compact technology cards keep the logo strip legible without dominating the page. */
 .tech-marquee{padding:4px 0 12px;}
-.tech-marquee .marquee-track{gap:12px;}
+.tech-marquee .marquee-track{gap:0;}
+.tech-marquee-group{display:flex;flex:0 0 auto;align-items:center;gap:12px;padding-right:12px;}
 .tech-marquee .marquee-item{min-width:172px;height:64px;padding:8px 13px 8px 8px;gap:10px;border-radius:16px;font-size:13px;box-shadow:0 10px 22px rgba(20,35,59,.07),0 1px 0 rgba(255,255,255,.9) inset;}
 .tech-marquee .marquee-logo{width:40px;height:40px;flex-basis:40px;border-radius:11px;}
 .tech-marquee .marquee-logo-azure{grid-template-columns:repeat(2,7px);grid-template-rows:repeat(2,7px);gap:2px;padding:9px;}
@@ -1256,6 +1257,15 @@ footer > .wrap{position:relative; z-index:1;}
 .tech-marquee .marquee-logo-cursor{font-size:24px;}
 .tech-marquee .marquee-logo-make{font-size:20px;}
 .tech-marquee .marquee-logo>img{display:block;width:72%;height:72%;object-fit:contain;}
+.tech-marquee .marquee-item[title="Manus"] .marquee-logo{background:linear-gradient(145deg,#f2f0ff,#e5e1ff);color:#5145cd;}
+.tech-logo-manus{font-size:22px;font-weight:800;letter-spacing:-.1em;padding-right:3px;}
+.tech-marquee .marquee-item[title="Google Antigravity"] .marquee-logo{background:#f7f9fc;}
+.tech-marquee .marquee-item[title="DeepSeek"] .marquee-logo{background:linear-gradient(145deg,#edf4ff,#dce9ff);}
+.tech-marquee .marquee-item[title="xAI"] .marquee-logo{background:linear-gradient(145deg,#f4f6f8,#e7ebef);color:#111827;}
+.tech-logo-xai{font-size:13px;font-weight:800;letter-spacing:-.08em;}
+.tech-marquee .marquee-item[title="LangGraph"] .marquee-logo{background:linear-gradient(145deg,#eef9ff,#dff2ff);}
+.tech-marquee .marquee-item[title="PyTorch"] .marquee-logo{background:linear-gradient(145deg,#fff3ed,#ffe4d8);}
+.tech-marquee .marquee-item[title="TensorFlow"] .marquee-logo{background:linear-gradient(145deg,#fff8e9,#fff0ce);}
 @media(max-width:900px){.who-image{aspect-ratio:auto;}}
 @media(max-width:620px){.tech-marquee .marquee-item{min-width:160px;height:58px;padding-right:11px;font-size:12px;}.tech-marquee .marquee-logo{width:36px;height:36px;flex-basis:36px;}}
 

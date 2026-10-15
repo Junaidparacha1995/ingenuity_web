@@ -1841,10 +1841,17 @@ initSlider('testimonial-slider-1');
 (function initTechMarquee() {
   const wrap = document.getElementById('tech-marquee');
   const track = wrap?.querySelector('.marquee-track');
-  if (!wrap || !track) return;
+  const group = track?.querySelector('.tech-marquee-group');
+  if (!wrap || !track || !group) return;
+  if (!track.querySelector('.tech-marquee-group[aria-hidden="true"]')) {
+    const duplicate = group.cloneNode(true);
+    duplicate.setAttribute('aria-hidden', 'true');
+    track.appendChild(duplicate);
+  }
   let dragging = false;
   let lastX = 0;
   let offset = 0;
+  const getLoopWidth = () => group.getBoundingClientRect().width;
 
   const setOffset = () => track.style.setProperty('--tech-marquee-offset', offset + 'px');
   const endDrag = () => {
@@ -1865,6 +1872,8 @@ initSlider('testimonial-slider-1');
   wrap.addEventListener('pointermove', event => {
     if (!dragging) return;
     offset += event.clientX - lastX;
+    const loopWidth = getLoopWidth();
+    if (loopWidth > 0) offset = ((offset % loopWidth) + loopWidth) % loopWidth;
     lastX = event.clientX;
     setOffset();
     event.preventDefault();
