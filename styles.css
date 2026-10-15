@@ -716,6 +716,7 @@ header.menu-open .mega-wrap{
 .tech-marquee{cursor:grab;touch-action:pan-y;user-select:none;}
 .tech-marquee.is-dragging{cursor:grabbing;}
 .tech-marquee .marquee-track{translate:var(--tech-marquee-offset,0px) 0;}
+.tech-marquee .marquee-track{animation-name:techMarqueeScroll;}
 .tech-marquee.is-dragging .marquee-track{animation-play-state:paused;}
 .marquee-item{display:inline-flex; align-items:center; gap:10px; font-family:'Manrope',sans-serif; font-weight:700; font-size:15px; color:var(--dark-grey); opacity:.55; white-space:nowrap; transition:opacity .3s ease, color .3s ease, transform .3s var(--ease);}
 .marquee-item:hover{transform:scale(1.06);}
@@ -734,6 +735,7 @@ header.menu-open .mega-wrap{
 .marquee-logo-cursor{font-size:20px; color:#111827; font-family:Georgia,serif;}
 .marquee-logo-postgresql{font-size:9px; color:#336791; background:rgba(51,103,145,.08); letter-spacing:-.08em;}
 @keyframes marqueeScroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+@keyframes techMarqueeScroll{from{transform:translateX(0);} to{transform:translateX(var(--tech-marquee-end,-50%));}}
 
 /* ============ Founder / team cards — identity above, message below ============ */
 .founders-grid{display:grid; grid-template-columns:1fr 1fr; gap:26px;}
@@ -1245,6 +1247,8 @@ footer > .wrap{position:relative; z-index:1;}
 /* Compact technology cards keep the logo strip legible without dominating the page. */
 .tech-marquee{padding:4px 0 12px;}
 .tech-marquee .marquee-track{gap:0;}
+.tech-marquee:hover .marquee-track{animation-play-state:running;}
+.tech-marquee.is-dragging .marquee-track{animation-play-state:paused;}
 .tech-marquee-group{display:flex;flex:0 0 auto;align-items:center;gap:12px;padding-right:12px;}
 .tech-marquee .marquee-item{min-width:172px;height:64px;padding:8px 13px 8px 8px;gap:10px;border-radius:16px;font-size:13px;box-shadow:0 10px 22px rgba(20,35,59,.07),0 1px 0 rgba(255,255,255,.9) inset;}
 .tech-marquee .marquee-logo{width:40px;height:40px;flex-basis:40px;border-radius:11px;}

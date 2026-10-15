@@ -1837,21 +1837,36 @@ function initSlider(rootId) {
 }
 initSlider('testimonial-slider-1');
 
-// Technology stack marquee — hover pause plus direct drag control
+// Technology stack marquee — continuous loop sizing plus direct drag control
 (function initTechMarquee() {
   const wrap = document.getElementById('tech-marquee');
   const track = wrap?.querySelector('.marquee-track');
   const group = track?.querySelector('.tech-marquee-group');
   if (!wrap || !track || !group) return;
-  if (!track.querySelector('.tech-marquee-group[aria-hidden="true"]')) {
+  const addDuplicate = () => {
     const duplicate = group.cloneNode(true);
     duplicate.setAttribute('aria-hidden', 'true');
     track.appendChild(duplicate);
-  }
+  };
+  track.querySelectorAll('.tech-marquee-group[aria-hidden="true"]').forEach(node => node.remove());
+  addDuplicate();
   let dragging = false;
   let lastX = 0;
   let offset = 0;
   const getLoopWidth = () => group.getBoundingClientRect().width;
+  const syncLoop = () => {
+    const loopWidth = getLoopWidth();
+    if (!loopWidth) return;
+    const desiredGroups = Math.max(2, Math.ceil((wrap.clientWidth + loopWidth) / loopWidth));
+    while (track.querySelectorAll('.tech-marquee-group').length < desiredGroups) addDuplicate();
+    while (track.querySelectorAll('.tech-marquee-group').length > desiredGroups) {
+      track.querySelector('.tech-marquee-group[aria-hidden="true"]:last-child')?.remove();
+    }
+    track.style.setProperty('--tech-marquee-end', `-${loopWidth}px`);
+  };
+  syncLoop();
+  window.addEventListener('resize', syncLoop);
+  document.fonts?.ready?.then(syncLoop);
 
   const setOffset = () => track.style.setProperty('--tech-marquee-offset', offset + 'px');
   const endDrag = () => {
