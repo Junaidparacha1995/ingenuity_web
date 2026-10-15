@@ -345,7 +345,7 @@ test('a pinch gesture does not change carousel slides or start a marquee drag', 
   } finally { f.close(); }
 });
 
-test('tech marquee duplicates one exact logo group and keeps drag offset inside the loop', () => {
+test('tech marquee duplicates its logo group and scrubs one loop without a separate drag translation', () => {
   const f = fixture('index.html');
   try {
     f.load();
@@ -356,6 +356,11 @@ test('tech marquee duplicates one exact logo group and keeps drag offset inside 
     assert.equal(groups[1].getAttribute('aria-hidden'), 'true');
     assert.equal(groups[0].querySelectorAll('.marquee-item').length, 18);
     groups[0].getBoundingClientRect = () => ({ width: 1000 });
+    const animation = {
+      animationName: 'techMarqueeScroll', currentTime: 1500,
+      effect: { getTiming: () => ({ duration: 38000 }) }
+    };
+    track.getAnimations = () => [animation];
 
     const down = new f.w.Event('pointerdown', { bubbles: true });
     Object.defineProperties(down, {
@@ -366,7 +371,8 @@ test('tech marquee duplicates one exact logo group and keeps drag offset inside 
     const move = new f.w.Event('pointermove', { bubbles: true });
     Object.defineProperties(move, { clientX: { value: 8450 } });
     wrap.dispatchEvent(move);
-    const offset = Number.parseFloat(track.style.getPropertyValue('--tech-marquee-offset'));
-    assert.ok(offset >= 0 && offset < 1000, offset);
+    assert.ok(animation.currentTime >= 0 && animation.currentTime < 38000);
+    assert.equal(animation.currentTime, 22400);
+    assert.equal(track.style.getPropertyValue('--tech-marquee-offset'), '');
   } finally { f.close(); }
 });

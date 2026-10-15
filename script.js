@@ -1852,7 +1852,6 @@ initSlider('testimonial-slider-1');
   addDuplicate();
   let dragging = false;
   let lastX = 0;
-  let offset = 0;
   const getLoopWidth = () => group.getBoundingClientRect().width;
   const syncLoop = () => {
     const loopWidth = getLoopWidth();
@@ -1868,7 +1867,6 @@ initSlider('testimonial-slider-1');
   window.addEventListener('resize', syncLoop);
   document.fonts?.ready?.then(syncLoop);
 
-  const setOffset = () => track.style.setProperty('--tech-marquee-offset', offset + 'px');
   const endDrag = () => {
     if (!dragging) return;
     dragging = false;
@@ -1886,11 +1884,17 @@ initSlider('testimonial-slider-1');
   });
   wrap.addEventListener('pointermove', event => {
     if (!dragging) return;
-    offset += event.clientX - lastX;
+    const delta = event.clientX - lastX;
     const loopWidth = getLoopWidth();
-    if (loopWidth > 0) offset = ((offset % loopWidth) + loopWidth) % loopWidth;
+    // Scrub the existing loop, not a second translation that can move the
+    // entire track outside its clipped viewport at the animation boundary.
+    const animation = track.getAnimations?.().find(item => item.animationName === 'techMarqueeScroll');
+    const duration = animation?.effect?.getTiming().duration;
+    if (loopWidth > 0 && typeof duration === 'number' && duration > 0) {
+      const time = Number(animation.currentTime || 0) - delta / loopWidth * duration;
+      animation.currentTime = ((time % duration) + duration) % duration;
+    }
     lastX = event.clientX;
-    setOffset();
     event.preventDefault();
   });
   wrap.addEventListener('pointerup', endDrag);

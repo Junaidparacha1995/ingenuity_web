@@ -5,3 +5,4 @@
 - [Case-study card layout](case-study-card-layout.md) — Case-study cards must use natural height instead of inheriting shared Work-card percentage height.
 - [Theme defaults and motion visibility](theme-motion-visibility.md) — Default to light, preserve explicit choices, and test actual mid-transition states.
 - [Contact intake delivery](contact-intake-delivery.md) — Keep Make delivery distinct from local-app delivery; warn on partial success to prevent retries and duplicate submissions.
+- [Marquee drag and loop phase](marquee-loop-phase.md) — Keep drag and autoplay in one normalized loop; separate translation can hide the entire strip.
