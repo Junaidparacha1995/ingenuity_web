@@ -6,4 +6,4 @@ OpenAI and Salesforce marks are from Font Awesome Free Brands 7.1.0: https://fon
 Microsoft Azure uses the existing local Azure icon asset from the earlier site package.
 These files are displayed as nominative technology references. Vendor names and marks remain the property of their respective owners.
 DeepSeek, Google, LangChain, PyTorch and TensorFlow SVGs are local copies from https://cdn.simpleicons.org.
-Antigravity, xAI and Manus use user-supplied logos. The Antigravity checkerboard was removed locally; xAI and Manus transparent PNGs were trimmed to their artwork.
+Antigravity, xAI, Manus, LangChain, LangGraph and PostgreSQL use user-supplied logos. Checkerboard backgrounds were removed locally from the Antigravity and Manus uploads; the transparent xAI, LangGraph and PostgreSQL PNGs were trimmed to their artwork. The LangChain parrot-and-chain artwork uses the supplied image with its white background removed locally.
