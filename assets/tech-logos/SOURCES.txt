@@ -6,4 +6,4 @@ OpenAI and Salesforce marks are from Font Awesome Free Brands 7.1.0: https://fon
 Microsoft Azure uses the existing local Azure icon asset from the earlier site package.
 These files are displayed as nominative technology references. Vendor names and marks remain the property of their respective owners.
 DeepSeek, Google, LangChain, PyTorch and TensorFlow SVGs are local copies from https://cdn.simpleicons.org.
-The Manus and xAI cards use typographic marks rather than vendor artwork.
+Antigravity, xAI and Manus use user-supplied logos. The Antigravity checkerboard was removed locally; xAI and Manus transparent PNGs were trimmed to their artwork.

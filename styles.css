@@ -1260,12 +1260,13 @@ footer > .wrap{position:relative; z-index:1;}
 .tech-marquee .marquee-logo-cursor{font-size:24px;}
 .tech-marquee .marquee-logo-make{font-size:20px;}
 .tech-marquee .marquee-logo>img{display:block;width:72%;height:72%;object-fit:contain;}
-.tech-marquee .marquee-item[title="Manus"] .marquee-logo{background:linear-gradient(145deg,#f2f0ff,#e5e1ff);color:#5145cd;}
-.tech-logo-manus{font-size:22px;font-weight:800;letter-spacing:-.1em;padding-right:3px;}
+.tech-marquee .marquee-item[title="Manus"] .marquee-logo{background:linear-gradient(145deg,#f2f0ff,#e5e1ff);}
+.tech-marquee .marquee-item[title="Manus"] .marquee-logo img{width:92%;height:92%;filter:none;}
 .tech-marquee .marquee-item[title="Google Antigravity"] .marquee-logo{background:#f7f9fc;}
+.tech-marquee .marquee-item[title="Google Antigravity"] .marquee-logo img{width:86%;height:86%;filter:none;}
 .tech-marquee .marquee-item[title="DeepSeek"] .marquee-logo{background:linear-gradient(145deg,#edf4ff,#dce9ff);}
 .tech-marquee .marquee-item[title="xAI"] .marquee-logo{background:linear-gradient(145deg,#f4f6f8,#e7ebef);color:#111827;}
-.tech-logo-xai{font-size:13px;font-weight:800;letter-spacing:-.08em;}
+.tech-marquee .marquee-item[title="xAI"] .marquee-logo img{width:78%;height:78%;filter:none;}
 .tech-marquee .marquee-item[title="LangGraph"] .marquee-logo{background:linear-gradient(145deg,#eef9ff,#dff2ff);}
 .tech-marquee .marquee-item[title="PyTorch"] .marquee-logo{background:linear-gradient(145deg,#fff3ed,#ffe4d8);}
 .tech-marquee .marquee-item[title="TensorFlow"] .marquee-logo{background:linear-gradient(145deg,#fff8e9,#fff0ce);}
