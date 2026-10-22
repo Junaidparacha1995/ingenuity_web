@@ -1234,9 +1234,6 @@ if (revealTargets.length) {
       const card = toggle.closest('.decision-card');
       if (!card) return;
       const expanded = !card.classList.contains('is-expanded');
-      cards.forEach((other) => {
-        if (other !== card) setCardState(other, false);
-      });
       setCardState(card, expanded);
     });
   });
@@ -2335,29 +2332,52 @@ if (indMorph) {
   panel.addEventListener('mouseleave', close);
 })();
 
-// Case study cards: keep every card the same collapsed height in any layout
-// (including stacked phone layout). Expanding a card still lets it grow.
-(function equalizeCaseStudyCards() {
-  const cards = [...document.querySelectorAll('.case-study-card')];
-  if (cards.length < 2) return;
-  const measure = () => {
-    cards.forEach((card) => { card.style.removeProperty('min-height'); });
-    const expanded = cards.some((card) => card.classList.contains('is-expanded'));
-    if (expanded) return;
-    const tallest = Math.max(...cards.map((card) => card.offsetHeight));
-    if (tallest > 0) cards.forEach((card) => { card.style.setProperty('min-height', tallest + 'px', 'important'); });
+// Keep accordion cards the same height while collapsed; expanded cards grow independently.
+(function equalizeExpandableCardGroups() {
+  const equalize = (cards) => {
+    if (cards.length < 2) return;
+    let collapsedHeight = 0;
+    const measure = (force = false) => {
+      const expanded = cards.filter((card) => card.classList.contains('is-expanded'));
+      const collapsed = cards.filter((card) => !card.classList.contains('is-expanded'));
+
+      if (expanded.length && !force) {
+        if (!collapsedHeight && collapsed.length) {
+          collapsedHeight = Math.max(...collapsed.map((card) => card.offsetHeight));
+        }
+        if (collapsedHeight > 0) collapsed.forEach((card) => {
+          card.style.setProperty('min-height', collapsedHeight + 'px', 'important');
+        });
+        expanded.forEach((card) => card.style.removeProperty('min-height'));
+        return;
+      }
+
+      cards.forEach((card) => { card.style.removeProperty('min-height'); });
+      if (collapsed.length) {
+        collapsedHeight = Math.max(...collapsed.map((card) => card.offsetHeight));
+      } else if (!expanded.length) {
+        collapsedHeight = 0;
+      }
+      if (collapsedHeight > 0) collapsed.forEach((card) => {
+        card.style.setProperty('min-height', collapsedHeight + 'px', 'important');
+      });
+      expanded.forEach((card) => card.style.removeProperty('min-height'));
+    };
+    const schedule = (force = false) => window.requestAnimationFrame(() => measure(force));
+    window.addEventListener('viewport:resize-end', () => schedule(true));
+    window.addEventListener('load', () => schedule(true));
+    if (document.fonts?.ready) document.fonts.ready.then(() => schedule(true));
+    cards.forEach((card) => new MutationObserver(() => {
+      window.setTimeout(() => schedule(), 700);
+    }).observe(card, { attributes: true, attributeFilter: ['class'] }));
+    schedule(true);
+    [400, 1200, 2500].forEach((ms) => window.setTimeout(() => schedule(), ms));
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) schedule(); });
+      cards.forEach((card) => io.observe(card));
+    }
   };
-  const schedule = () => window.requestAnimationFrame(measure);
-  window.addEventListener('viewport:resize-end', schedule);
-  window.addEventListener('load', schedule);
-  if (document.fonts?.ready) document.fonts.ready.then(schedule);
-  cards.forEach((card) => new MutationObserver(() => {
-    if (!card.classList.contains('is-expanded')) window.setTimeout(schedule, 700);
-  }).observe(card, { attributes: true, attributeFilter: ['class'] }));
-  schedule();
-  [400, 1200, 2500].forEach((ms) => window.setTimeout(schedule, ms));
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => { if (entries.some((e) => e.isIntersecting)) schedule(); });
-    cards.forEach((card) => io.observe(card));
-  }
+
+  equalize([...document.querySelectorAll('.case-study-card')]);
+  equalize([...document.querySelectorAll('.decision-card')]);
 })();
