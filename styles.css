@@ -1667,9 +1667,9 @@ html,body{max-width:100%;overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){
 }
 
-/* Case study cards: identical height and width across the row. Cards stretch to the tallest
-   one and the "Explore case study" bar sits at the bottom of each, so the bars line up. */
-.work-case-studies .work-grid{align-items:stretch;grid-auto-rows:auto;}
+/* On the tabbed Work page, keep case-study cards equal-height. The standalone page lets
+   only the expanded card grow. */
+.work-page-shell:not(.case-study-page) .work-case-studies .work-grid{align-items:stretch;grid-auto-rows:auto;}
 .work-case-studies .case-study-card{height:auto;}
 .work-case-studies .case-study-card .work-flow{margin-bottom:24px;}
 .work-case-studies .case-study-card .case-study-explore{margin-top:auto;}
