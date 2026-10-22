@@ -532,7 +532,7 @@ header.menu-open .mega-wrap{
 
 /* ============ Testimonials — left copy, right card stack (dark glass) ============ */
 .testimonial-split{display:grid; grid-template-columns:0.85fr 1.15fr; gap:56px; align-items:center;}
-.testimonial-slider{position:relative; padding:26px 0 0;}
+.testimonial-slider{position:relative; min-width:0; padding:26px 0 0;}
 .testimonial-track{position:relative; height:440px;}
 .testimonial-slide{
   position:absolute; inset:0; padding:40px 40px 84px; box-sizing:border-box; text-align:left;
@@ -685,9 +685,10 @@ header.menu-open .mega-wrap{
 .testimonial-slider::before{content:""; position:absolute; right:0; bottom:0; width:48%; height:38%; background-image:url("assets/twinkle-testimonial.svg"); background-size:cover; background-position:bottom right; -webkit-mask-image:radial-gradient(circle at bottom right, black, transparent 78%); mask-image:radial-gradient(circle at bottom right, black, transparent 78%); pointer-events:none; z-index:0;}
 .testimonial-slider > *{position:relative; z-index:1;}
 
-.testimonial-author{display:flex; align-items:center; justify-content:flex-start; gap:14px; margin-bottom:14px;}
-.testimonial-author .avatar{width:56px; height:56px; border-radius:50%; overflow:hidden; background:linear-gradient(155deg, var(--orange), #F05838); color:var(--white); display:flex; align-items:center; justify-content:center; font-family:'Manrope',sans-serif; font-weight:800; font-size:15px;}
+.testimonial-author{display:flex; align-items:center; justify-content:flex-start; gap:14px; margin-bottom:14px; min-width:0;}
+.testimonial-author .avatar{flex:0 0 56px; width:56px; height:56px; border-radius:50%; overflow:hidden; background:linear-gradient(155deg, var(--orange), #F05838); color:var(--white); display:flex; align-items:center; justify-content:center; font-family:'Manrope',sans-serif; font-weight:800; font-size:15px;}
 .testimonial-author .avatar img{width:100%; height:100%; object-fit:cover;}
+.testimonial-author>div:last-child{flex:1 1 auto; min-width:0;}
 .testimonial-author h4{font-size:15px; color:var(--text-on-dark);}
 .testimonial-author span{font-size:13px; color:var(--text-on-dark-soft);}
 .testimonial-slide .stars{color:var(--orange); font-size:17px; letter-spacing:3px; margin-bottom:16px;}

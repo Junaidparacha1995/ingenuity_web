@@ -692,8 +692,7 @@
 
   .contact-wrap,
   .about-who-grid,
-  .who-split,
-  .testimonial-split {
+  .who-split {
     grid-template-columns: 1fr 1fr !important;
     gap: 34px !important;
   }
