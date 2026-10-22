@@ -1,0 +1,26 @@
+# Ingenuity Systems
+
+Ingenuity Systems is an AI-native technology company with locations in Lahore, Pakistan, and Wyoming, USA. It builds AI agents, chatbots, RAG systems, workflow and business-process automation, systems integration and APIs, and custom software.
+
+## Main pages
+
+- [Home](https://ingenuitysys.com/): Overview of Ingenuity Systems and its AI-native solutions.
+- [About](https://ingenuitysys.com/about): Company background, founders, and approach to technology.
+- [Services](https://ingenuitysys.com/services): Software engineering, AI, business-process automation, and systems integration.
+- [AI & Intelligent Systems](https://ingenuitysys.com/services-ai): AI agents, RAG systems, chatbots, and intelligent systems.
+- [Business Process Automation](https://ingenuitysys.com/services-automation): Business-process automation, workflows, and connected operations.
+- [Systems Integration & Data](https://ingenuitysys.com/services-integration): Systems, APIs, and data integration.
+- [Software & Digital Engineering](https://ingenuitysys.com/services-software): Custom software, applications, digital products, and internal systems.
+- [Industries](https://ingenuitysys.com/industries): Technology solutions across the industries served by the company.
+- [Ecommerce & Retail](https://ingenuitysys.com/industries-ecommerce): Digital commerce, automation, and intelligent workflows.
+- [Financial Services](https://ingenuitysys.com/industries-financial): Process automation and intelligent operations.
+- [Healthcare](https://ingenuitysys.com/industries-healthcare): Digital workflows and operational technology.
+- [Manufacturing & Supply Chain](https://ingenuitysys.com/industries-manufacturing): Connected operations and data integration.
+- [Professional & Business Services](https://ingenuitysys.com/industries-professional): Connected systems and workflow automation.
+- [Real Estate & Property](https://ingenuitysys.com/industries-realestate): Digital platforms, lead automation, and CRM workflows.
+- [Technology & SaaS](https://ingenuitysys.com/industries-technology): Platform engineering, AI, and automation.
+- [Work](https://ingenuitysys.com/work): Recent engineering projects and applied AI experiments.
+- [Case Studies](https://ingenuitysys.com/case-studies): Case studies of engineering work and implemented systems.
+- [Contact](https://ingenuitysys.com/contact): Contact the company about software, AI, automation, or systems integration.
+
+Contact email: info@ingenuitysys.com

@@ -1,7 +1,9 @@
 """Read-only HTTP/asset/caching checks against a locally running server."""
 import ast
 import gzip
+import html as html_lib
 import importlib.util
+import json
 import re
 import sys
 import threading
@@ -26,6 +28,16 @@ class Resources(HTMLParser):
         ):
             if attrs.get(key):
                 self.urls.add(attrs[key])
+
+
+class ImageAlts(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.alts = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "img":
+            self.alts.append(dict(attrs).get("alt"))
 
 
 def get(url, compressed=False):
@@ -59,6 +71,44 @@ def main():
             assert marker in page, (route, marker)
         assert '<a href="/privacy">Privacy Policy</a>' in page, route
         assert re.search(r'<a href="/terms">Terms(?: of Service| &amp; Conditions)</a>', page), route
+        title_match = re.search(r"<title\b[^>]*>(.*?)</title>", page, re.IGNORECASE | re.DOTALL)
+        assert title_match, route
+        title = html_lib.unescape(title_match.group(1)).strip()
+        assert len(title) <= 60, (route, len(title), title)
+        description_tag = next(
+            (tag for tag in re.findall(r"<meta\b[^>]*>", page, re.IGNORECASE)
+             if re.search(r'\bname=["\']description["\']', tag, re.IGNORECASE)),
+            None,
+        )
+        assert description_tag, route
+        description_match = re.search(
+            r'\bcontent=["\'](.*?)["\']', description_tag, re.IGNORECASE | re.DOTALL
+        )
+        assert description_match, route
+        description = html_lib.unescape(description_match.group(1))
+        assert len(description) <= 160, (route, len(description), description)
+        images = ImageAlts()
+        images.feed(page)
+        assert all(alt is not None for alt in images.alts), route
+        if route != "/":
+            assert '"@type":"BreadcrumbList"' in page, route
+        for href in re.findall(r'<a\b[^>]*\bhref=["\']([^"\']+)["\']', page, re.IGNORECASE | re.DOTALL):
+            parsed_href = urlsplit(href)
+            is_local = not parsed_href.netloc or parsed_href.hostname == "ingenuitysys.com"
+            assert not (is_local and parsed_href.path.lower().endswith(".html")), (route, href)
+        data_blocks = [
+            json.loads(block)
+            for block in re.findall(
+                r'<script type="application/ld\+json">(.*?)</script>',
+                page,
+                re.IGNORECASE | re.DOTALL,
+            )
+        ]
+        if route in {
+            "/services-ai", "/services-automation",
+            "/services-integration", "/services-software",
+        }:
+            assert any(block.get("@type") == "Service" for block in data_blocks), route
         parsed = Resources()
         parsed.feed(page)
         for value in parsed.urls:
@@ -93,8 +143,19 @@ def main():
     assert status == 200 and final_url.endswith("/sitemap.xml"), (status, final_url)
     assert headers.get_content_type() in {"application/xml", "text/xml"}, headers.get("Content-Type")
     sitemap_text = sitemap.decode()
-    assert sitemap_text.count("<url>") == len(routes), sitemap_text.count("<url>")
-    assert "https://ingenuitysys.com/" in sitemap_text
+    sitemap_routes = [
+        "/", "/about", "/careers", "/contact", "/services", "/services-ai",
+        "/services-automation", "/services-integration", "/services-software",
+        "/industries", "/industries-ecommerce", "/industries-financial",
+        "/industries-healthcare", "/industries-manufacturing",
+        "/industries-professional", "/industries-realestate",
+        "/industries-technology", "/work", "/projects", "/case-studies",
+        "/ai-maturity", "/build-your-system", "/privacy", "/terms",
+    ]
+    sitemap_locs = re.findall(r"<loc>(.*?)</loc>", sitemap_text)
+    assert sitemap_locs == [f"https://ingenuitysys.com{route}" for route in sitemap_routes]
+    assert sitemap_text.count("<url>") == len(sitemap_routes)
+    assert re.findall(r"<lastmod>(.*?)</lastmod>", sitemap_text) == ["2026-10-22"] * len(sitemap_routes)
     for excluded in [
         "/api/", "/backups/", "/screenshots/", "/attached_assets/", "/deliverables/",
     ]:
@@ -104,12 +165,41 @@ def main():
     robots_text = robots.decode()
     assert "User-agent: *" in robots_text and "Disallow: /api/" in robots_text
     assert "Sitemap: https://ingenuitysys.com/sitemap.xml" in robots_text
+    status, headers, llms, final_url = get(BASE + "/llms.txt")
+    assert status == 200 and urlsplit(final_url).path == "/llms.txt", (status, final_url)
+    assert headers.get_content_type() == "text/plain", headers.get("Content-Type")
+    llms_text = llms.decode()
+    for expected in [
+        "AI-native technology company", "Lahore, Pakistan", "Wyoming, USA",
+        "AI agents", "RAG systems", "info@ingenuitysys.com",
+        "https://ingenuitysys.com/services-ai",
+        "https://ingenuitysys.com/industries-technology",
+    ]:
+        assert expected in llms_text, expected
     home = get(BASE + "/", compressed=True)[2].decode()
     assert re.search(
         r'<meta[^>]+content="Ingenuity Systems is an AI-native solutions company[^"]*"[^>]+name="description"',
         home,
     )
     assert 'type="application/ld+json"' in home
+    assert len(re.findall(r"<h1\b", home, re.IGNORECASE)) == 1
+    assert len(re.findall(r"<h2\b", home, re.IGNORECASE)) >= 5
+    home_data = [
+        json.loads(block)
+        for block in re.findall(
+            r'<script type="application/ld\+json">(.*?)</script>',
+            home,
+            re.IGNORECASE | re.DOTALL,
+        )
+    ]
+    assert any(
+        block.get("@type") == "Organization"
+        and block.get("founder")
+        and block.get("areaServed")
+        and block.get("knowsAbout")
+        for block in home_data
+    )
+    assert any(block.get("@type") == "WebSite" for block in home_data)
     for file in ["script.js", "styles.css", "responsive-v19.css", "orange-ambient.js"]:
         versioned_urls = [
             url for url in resources

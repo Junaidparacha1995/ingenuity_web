@@ -644,6 +644,7 @@ header.menu-open .mega-wrap{
 .hc-copy .hero-slide{position:absolute; inset:0; opacity:0; transform:translateY(16px); transition:opacity .7s var(--ease), transform .7s var(--ease); pointer-events:none;}
 .hc-copy .hero-slide.active{opacity:1; transform:translateY(0); pointer-events:auto; position:relative;}
 .hc-copy h1{font-size:clamp(28px,3vw,40px); color:var(--white); line-height:1.14; letter-spacing:-0.02em; margin-bottom:14px;}
+.home-page .hc-copy h2{font-size:clamp(28px,3vw,40px); color:var(--white); font-weight:800; line-height:1.14; letter-spacing:-0.02em; margin-top:0.67em; margin-bottom:14px;}
 .hc-copy p.lead{font-size:15px; color:rgba(255,255,255,0.8); max-width:36ch; margin-bottom:24px;}
 .hc-copy .hero-actions{display:flex; flex-direction:column; align-items:flex-start; gap:12px;}
 .hc-copy .hero-dots{margin-top:26px;}
@@ -1389,6 +1390,7 @@ html,body{max-width:100%;overflow-x:hidden}
   .home-page .hero-console-grid{gap:10px}
   .home-page .hc-copy .hero-rotator{min-height:190px}
   .home-page .hc-copy h1{font-size:clamp(27px,7.3vw,34px);line-height:1.08;margin-bottom:10px}
+  .home-page .hc-copy h2{font-size:clamp(27px,7.3vw,34px);line-height:1.08;margin-bottom:10px}
   .home-page .hc-copy p.lead{font-size:13px;line-height:1.5;margin-bottom:14px}
   .home-page .hc-copy .hero-actions{flex-direction:row;gap:8px;flex-wrap:nowrap}
   .home-page .hc-copy .hero-actions .btn{width:auto;justify-content:center;padding:11px 12px;font-size:11px}

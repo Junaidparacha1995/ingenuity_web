@@ -9,11 +9,14 @@ chat requests are sent to OpenAI from the server.
 from __future__ import annotations
 
 import hashlib
+import html
 import hmac
 import gzip
 import io
 import json
 import os
+import posixpath
+import re
 import time
 from email.utils import formatdate
 from http import HTTPStatus
@@ -87,16 +90,246 @@ CLEAN_REDIRECTS.update({"/projects/": "/projects", "/case-studies/": "/case-stud
 # Primary origin verified through the deployment configuration, not request Host
 # headers or development domains. Keep public SEO URLs on this deployment.
 SITE_ORIGIN = "https://ingenuitysys.com"
-PUBLIC_ROUTES = dict(CLEAN_ROUTES)
+SITEMAP_ROUTES = (
+    "/", "/about", "/careers", "/contact", "/services",
+    "/services-ai", "/services-automation", "/services-integration", "/services-software",
+    "/industries", "/industries-ecommerce", "/industries-financial",
+    "/industries-healthcare", "/industries-manufacturing", "/industries-professional",
+    "/industries-realestate", "/industries-technology", "/work", "/projects",
+    "/case-studies", "/ai-maturity", "/build-your-system", "/privacy", "/terms",
+)
+SITEMAP_LASTMOD = "2026-10-22"
+PUBLIC_ROUTES = {route: CLEAN_ROUTES[route] for route in SITEMAP_ROUTES}
+CLEAN_ROUTE_BY_FILE = {target: route for route, target in CLEAN_ROUTES.items()}
+
+SEO_TITLES = {
+    "/": "Ingenuity Systems | AI Agents, Automation & Custom Software",
+    "/services": "AI, Automation & Software Dev Services | Ingenuity Systems",
+    "/services-ai": "AI Agents, RAG & Chatbot Development | Ingenuity Systems",
+    "/services-automation": "Business Process & Workflow Automation | Ingenuity Systems",
+    "/services-integration": "Systems Integration & API Development | Ingenuity Systems",
+    "/services-software": "Custom Software & Web Development | Ingenuity Systems",
+    "/about": "About Ingenuity Systems | AI & Software Company in Lahore",
+    "/contact": "Contact Ingenuity Systems | AI Automation Consultants",
+    "/industries": "AI & Automation Solutions by Industry | Ingenuity Systems",
+    "/build-your-system": "Build Your AI System | Ingenuity Systems",
+}
+SEO_DESCRIPTIONS = {
+    "/about": "Ingenuity Systems is a technology company built on software engineering, AI, automation, systems integration, and data, founded by Junaid Paracha and Iqra Zahid",
+    "/services-ai": "Put Intelligence to Work. — We build practical AI systems that help businesses understand information, support people, automate work, and take action.",
+    "/services-integration": "Make Your Systems Work Together. — We connect applications, APIs, data, and systems so information moves across a connected technology environment.",
+    "/services-software": "Build What Your Business Needs. — We design custom software, applications, digital products, and internal systems for your requirements, users, and operations.",
+    "/industries": "Ingenuity Systems applies AI, automation, and integration to retail, finance, real estate, healthcare, manufacturing, technology, and professional services.",
+    "/industries-ecommerce": "Make Every Part of Commerce Work Better. — We help ecommerce and retail businesses improve customer experience, automate operations, and connect systems.",
+    "/industries-financial": "Make Financial Operations More Intelligent. — We help financial businesses automate processes, connect systems, improve information flow, and apply AI.",
+    "/industries-healthcare": "Technology for Better Healthcare Operations. — We help healthcare organizations connect information systems and automate administrative work.",
+    "/industries-manufacturing": "Connect the Operations Behind Production. — We help manufacturers and supply-chain businesses automate processes, connect systems, and improve data visibility.",
+    "/industries-professional": "Make Complex Work Simpler. — We help professional and business service firms automate operations, connect systems, and improve knowledge access.",
+    "/industries-realestate": "Make Property Operations Work Smarter. — We help real estate businesses connect customer operations, automate workflows, and improve information flow.",
+    "/industries-technology": "Build, Connect, and Scale Digital Products. — We help technology and SaaS businesses engineer products, integrate systems, automate operations, and add AI.",
+}
+
+BREADCRUMB_LABELS = {
+    "/about": "About", "/careers": "Careers", "/contact": "Contact",
+    "/industries": "Industries", "/industries-ecommerce": "Ecommerce & Retail",
+    "/industries-financial": "Financial Services", "/industries-healthcare": "Healthcare",
+    "/industries-manufacturing": "Manufacturing & Supply Chain",
+    "/industries-professional": "Professional & Business Services",
+    "/industries-realestate": "Real Estate & Property", "/industries-technology": "Technology & SaaS",
+    "/services": "Services", "/services-ai": "AI & Intelligent Systems",
+    "/services-automation": "Business Process Automation",
+    "/services-integration": "Systems Integration & Data",
+    "/services-software": "Software & Digital Engineering", "/work": "Work",
+    "/projects": "Projects", "/case-studies": "Case Studies",
+    "/ai-maturity": "AI Maturity Assessment", "/build-your-system": "Build Your AI System",
+    "/privacy": "Privacy Policy", "/terms": "Terms & Conditions",
+    "/cookie-policy": "Cookie Policy", "/sitemap": "Sitemap",
+}
+BREADCRUMB_PARENTS = {
+    **{route: "/industries" for route in (
+        "/industries-ecommerce", "/industries-financial", "/industries-healthcare",
+        "/industries-manufacturing", "/industries-professional",
+        "/industries-realestate", "/industries-technology",
+    )},
+    **{route: "/services" for route in (
+        "/services-ai", "/services-automation", "/services-integration", "/services-software",
+    )},
+    "/projects": "/work",
+    "/case-studies": "/work",
+}
+SERVICE_DATA = {
+    "/services-ai": (
+        "AI Agents, RAG & Chatbot Development",
+        SEO_DESCRIPTIONS["/services-ai"],
+    ),
+    "/services-automation": (
+        "Business Process & Workflow Automation",
+        "Make Work Flow Better. — We design and automate business processes that reduce manual effort, connect teams and systems, and keep operations moving.",
+    ),
+    "/services-integration": (
+        "Systems Integration & API Development",
+        SEO_DESCRIPTIONS["/services-integration"],
+    ),
+    "/services-software": (
+        "Custom Software & Web Development",
+        SEO_DESCRIPTIONS["/services-software"],
+    ),
+}
+
+ANCHOR_HREF_RE = re.compile(
+    r'(?P<prefix><a\b[^>]*?\bhref\s*=\s*)(?P<quote>["\'])(?P<url>.*?)(?P=quote)',
+    re.IGNORECASE | re.DOTALL,
+)
+TITLE_TAG_RE = re.compile(r"<title\b[^>]*>.*?</title>", re.IGNORECASE | re.DOTALL)
+META_TAG_RE = re.compile(r"<meta\b[^>]*>", re.IGNORECASE)
+META_ATTRIBUTE_RE = re.compile(r'([\w:-]+)\s*=\s*(["\'])(.*?)\2', re.DOTALL)
 
 
 def sitemap_bytes() -> bytes:
     namespace = "http://www.sitemaps.org/schemas/sitemap/0.9"
     root = ElementTree.Element("urlset", xmlns=namespace)
-    for route in PUBLIC_ROUTES:
+    for route in SITEMAP_ROUTES:
         entry = ElementTree.SubElement(root, "url")
         ElementTree.SubElement(entry, "loc").text = SITE_ORIGIN + route
+        ElementTree.SubElement(entry, "lastmod").text = SITEMAP_LASTMOD
     return ElementTree.tostring(root, encoding="utf-8", xml_declaration=True)
+
+
+def _clean_internal_href(value: str, base_dir: str) -> str:
+    parts = urlsplit(value)
+    if parts.scheme and not parts.netloc:
+        return value
+    if parts.netloc and parts.hostname != urlsplit(SITE_ORIGIN).hostname:
+        return value
+    if not parts.path.lower().endswith(".html"):
+        return value
+    target = parts.path if parts.path.startswith("/") else posixpath.join(base_dir, parts.path)
+    target = posixpath.normpath(target)
+    if not target.startswith("/"):
+        target = "/" + target
+    clean_route = CLEAN_ROUTE_BY_FILE.get(target)
+    if clean_route is None:
+        return value
+    return urlunsplit(("", "", clean_route, parts.query, parts.fragment))
+
+
+def _replace_meta_content(document: str, attr_name: str, attr_value: str, content: str) -> str:
+    def update_tag(match: re.Match) -> str:
+        tag = match.group(0)
+        attrs = {
+            name.lower(): value
+            for name, _, value in META_ATTRIBUTE_RE.findall(tag)
+        }
+        if attrs.get(attr_name) != attr_value:
+            return tag
+        escaped_content = html.escape(content, quote=True)
+        return re.sub(
+            r'(\bcontent\s*=\s*)(["\']).*?\2',
+            lambda item: f"{item.group(1)}{item.group(2)}{escaped_content}{item.group(2)}",
+            tag,
+            count=1,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+
+    return META_TAG_RE.sub(update_tag, document)
+
+
+def _breadcrumb_data(route: str) -> dict | None:
+    if route == "/" or route not in BREADCRUMB_LABELS:
+        return None
+    trail = [("/", "Home")]
+    parent = BREADCRUMB_PARENTS.get(route)
+    if parent:
+        trail.append((parent, BREADCRUMB_LABELS[parent]))
+    trail.append((route, BREADCRUMB_LABELS[route]))
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": position,
+                "name": label,
+                "item": SITE_ORIGIN + item_route,
+            }
+            for position, (item_route, label) in enumerate(trail, start=1)
+        ],
+    }
+
+
+def _prepare_html_response(raw_body: bytes, file_path: Path) -> bytes:
+    document = raw_body.decode("utf-8")
+    relative_path = "/" + file_path.relative_to(ROOT).as_posix()
+    route = CLEAN_ROUTE_BY_FILE.get(relative_path)
+    if route is None:
+        return raw_body
+
+    base_dir = "/" + posixpath.dirname(file_path.relative_to(ROOT).as_posix())
+    document = ANCHOR_HREF_RE.sub(
+        lambda match: (
+            match.group("prefix")
+            + match.group("quote")
+            + _clean_internal_href(match.group("url"), base_dir)
+            + match.group("quote")
+        ),
+        document,
+    )
+
+    title = SEO_TITLES.get(route)
+    description = SEO_DESCRIPTIONS.get(route)
+    if title:
+        escaped_title = html.escape(title, quote=False)
+        document = TITLE_TAG_RE.sub(
+            f"<title>{escaped_title}</title>", document, count=1
+        )
+        for attr_name, attr_value in (
+            ("property", "og:title"),
+            ("name", "twitter:title"),
+        ):
+            document = _replace_meta_content(document, attr_name, attr_value, title)
+    if description:
+        for attr_name, attr_value in (
+            ("name", "description"),
+            ("property", "og:description"),
+            ("name", "twitter:description"),
+        ):
+            document = _replace_meta_content(document, attr_name, attr_value, description)
+
+    structured_data = []
+    breadcrumb = _breadcrumb_data(route)
+    if breadcrumb:
+        structured_data.append(breadcrumb)
+    service = SERVICE_DATA.get(route)
+    if service:
+        service_name, service_description = service
+        structured_data.append({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": service_name,
+            "serviceType": service_name,
+            "description": service_description,
+            "url": SITE_ORIGIN + route,
+            "provider": {
+                "@type": "Organization",
+                "name": "Ingenuity Systems",
+                "url": SITE_ORIGIN,
+            },
+        })
+    if structured_data:
+        scripts = "".join(
+            '<script type="application/ld+json">'
+            + json.dumps(item, ensure_ascii=False, separators=(",", ":"))
+            + "</script>"
+            for item in structured_data
+        )
+        document = re.sub(
+            r"</head\s*>",
+            lambda match: scripts + match.group(0),
+            document,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+    return document.encode("utf-8")
 
 
 def json_bytes(value: object) -> bytes:
@@ -387,13 +620,16 @@ class RouterHandler(SimpleHTTPRequestHandler):
         file_path = Path(self.translate_path(path))
         accepts_gzip = "gzip" in self.headers.get("Accept-Encoding", "").lower()
         has_range = bool(self.headers.get("Range"))
+        prepared_html = None
+        if file_path.is_file() and file_path.suffix.lower() == ".html":
+            prepared_html = _prepare_html_response(file_path.read_bytes(), file_path)
         if (
             file_path.is_file()
             and file_path.suffix.lower() in self.GZIP_EXTENSIONS
             and accepts_gzip
             and not has_range
         ):
-            raw_body = file_path.read_bytes()
+            raw_body = prepared_html if prepared_html is not None else file_path.read_bytes()
             compressed_body = gzip.compress(raw_body, compresslevel=9, mtime=0)
             self.send_response(HTTPStatus.OK)
             self.send_header("Content-type", self.guess_type(str(file_path)))
@@ -403,6 +639,13 @@ class RouterHandler(SimpleHTTPRequestHandler):
             self.send_header("Content-Length", str(len(compressed_body)))
             self.end_headers()
             return io.BytesIO(compressed_body)
+        if prepared_html is not None:
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-type", self.guess_type(str(file_path)))
+            self.send_header("Last-Modified", formatdate(file_path.stat().st_mtime, usegmt=True))
+            self.send_header("Content-Length", str(len(prepared_html)))
+            self.end_headers()
+            return io.BytesIO(prepared_html)
         return super().send_head()
 
     def send_json(self, status: int, payload: object) -> None:
