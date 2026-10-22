@@ -2517,3 +2517,14 @@ body.motion-paused .motion-region *::after {
   from { transform: translate3d(0, 0, 0) scale(1.01); }
   to { transform: translate3d(-1.5%, 1%, 0) scale(1.045); }
 }
+
+@media (max-width: 767px) {
+  .decision-grid {
+    align-items: stretch;
+    grid-auto-rows: 1fr;
+  }
+
+  .decision-card {
+    align-self: stretch;
+  }
+}
