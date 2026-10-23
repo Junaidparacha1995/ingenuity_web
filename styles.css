@@ -1432,21 +1432,16 @@ html,body{max-width:100%;overflow-x:hidden}
 .work-case-studies .work-grid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;}
 .work-case-studies{scroll-margin-top:calc(var(--site-header-height) + 20px);}
 .work-case-studies .case-study-card{min-width:0;min-height:0;}
-.case-study-page .work-grid{align-items:start;grid-auto-rows:auto;}
+.case-study-page .work-grid{align-items:stretch;grid-auto-rows:1fr;}
 .case-study-page .case-study-card{height:auto;min-height:390px;}
 .case-study-page .case-study-card .case-study-result{flex:0 0 auto;margin-bottom:0;}
-.case-study-page .case-study-explore{flex:0 0 auto;display:flex;min-height:48px;margin-top:auto;background:rgba(225,53,17,.1);border-color:rgba(225,53,17,.34);}
-.case-study-page .case-study-explore span{color:#fff;}
-.case-study-page .case-study-explore:hover{background:rgba(225,53,17,.2);border-color:rgba(225,53,17,.62);}
-.case-study-page .case-study-card.is-expanded{height:auto;min-height:390px;align-self:start;}
-.case-study-page .case-study-card.is-expanded .case-study-explore{margin-top:20px;}
-.case-study-page .case-study-card.is-expanded .case-study-detail{flex:0 0 auto;}
+.case-study-page .case-study-detail{flex:0 0 auto;max-height:none;margin-top:auto;overflow:visible;opacity:1;transform:none;}
+.case-study-page .case-study-card .case-study-detail{display:block!important;visibility:visible!important;flex:0 0 auto!important;height:auto!important;max-height:none!important;margin-top:auto!important;overflow:visible!important;opacity:1!important;transform:none!important;}
 @media(max-width:720px){
   .project-page .project-browser{padding-top:42px;}
   .work-case-studies .work-grid{grid-template-columns:1fr;}
-  .case-study-page .work-grid{gap:18px;}
+  .case-study-page .work-grid{gap:18px;align-items:stretch;grid-auto-rows:1fr;}
   .case-study-page .case-study-card{height:auto;min-height:0;}
-  .case-study-page .case-study-explore{margin-top:20px;}
 }
 
 /* Home page rhythm: keep the carousel controls close to their section and the next heading visible. */
@@ -1659,13 +1654,11 @@ html,body{max-width:100%;overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){
 }
 
-/* On the tabbed Work page, keep case-study cards equal-height. The standalone page lets
-   only the expanded card grow. */
+/* On the tabbed Work page and standalone Case Studies page, keep cards equal-height. */
 .work-page-shell:not(.case-study-page) .work-case-studies .work-grid{align-items:stretch;grid-auto-rows:auto;}
 .work-projects[data-work-panel="projects"] .work-grid{align-items:start;grid-auto-rows:max-content;}
 .work-case-studies .case-study-card{height:auto;}
 .work-case-studies .case-study-card .work-flow{margin-bottom:24px;}
-.work-case-studies .case-study-card .case-study-explore{margin-top:auto;}
 
 /* Project cards: the "Explore project" bar and footer sit at the same distance from the
    bottom of every card; the description and tags above absorb any height difference. */
