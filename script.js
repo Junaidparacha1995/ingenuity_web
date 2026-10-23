@@ -2341,6 +2341,14 @@ if (indMorph) {
       const expanded = cards.filter((card) => card.classList.contains('is-expanded'));
       const collapsed = cards.filter((card) => !card.classList.contains('is-expanded'));
 
+      if (!force && collapsedHeight > 0) {
+        collapsed.forEach((card) => {
+          card.style.setProperty('min-height', collapsedHeight + 'px', 'important');
+        });
+        expanded.forEach((card) => card.style.removeProperty('min-height'));
+        return;
+      }
+
       if (expanded.length && !force) {
         if (!collapsedHeight && collapsed.length) {
           collapsedHeight = Math.max(...collapsed.map((card) => card.offsetHeight));
@@ -2367,9 +2375,8 @@ if (indMorph) {
     window.addEventListener('viewport:resize-end', () => schedule(true));
     window.addEventListener('load', () => schedule(true));
     if (document.fonts?.ready) document.fonts.ready.then(() => schedule(true));
-    cards.forEach((card) => new MutationObserver(() => {
-      window.setTimeout(() => schedule(), 700);
-    }).observe(card, { attributes: true, attributeFilter: ['class'] }));
+    cards.forEach((card) => new MutationObserver(() => schedule())
+      .observe(card, { attributes: true, attributeFilter: ['class'] }));
     schedule(true);
     [400, 1200, 2500].forEach((ms) => window.setTimeout(() => schedule(), ms));
     if ('IntersectionObserver' in window) {

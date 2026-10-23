@@ -17,4 +17,4 @@ Expandable cards across the site should allow multiple panels to remain open; to
 
 **Why:** the user explicitly requested independent multi-open dropdowns and sizing across every page that contains these cards.
 
-**How to apply:** Keep state changes local to the toggled card, remove sibling auto-close handlers, and size grid rows so only expanded cards change height.
+**How to apply:** Keep state changes local to the toggled card, remove sibling auto-close handlers, and size grid rows so only expanded cards change height. Apply the cached collapsed height on the next frame; do not clear and recalculate it after the collapse animation, which can cause a visible shrink-and-grow jump.
