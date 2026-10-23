@@ -1213,32 +1213,6 @@ if (revealTargets.length) {
   }
 })();
 
-// Restored decision-layer cards — reveal the supporting detail without changing page flow.
-(function initDecisionLayer() {
-  const cards = [...document.querySelectorAll('.decision-card')];
-  const toggles = [...document.querySelectorAll('.decision-toggle')];
-  if (!cards.length || !toggles.length) return;
-
-  const setCardState = (card, expanded) => {
-    const toggle = card.querySelector('.decision-toggle');
-    const detail = card.querySelector('.decision-detail');
-    card.classList.toggle('is-expanded', expanded);
-    toggle?.setAttribute('aria-expanded', String(expanded));
-    detail?.setAttribute('aria-hidden', String(!expanded));
-    if (detail) detail.inert = !expanded;
-  };
-  cards.forEach((card) => setCardState(card, false));
-
-  toggles.forEach(toggle => {
-    toggle.addEventListener('click', () => {
-      const card = toggle.closest('.decision-card');
-      if (!card) return;
-      const expanded = !card.classList.contains('is-expanded');
-      setCardState(card, expanded);
-    });
-  });
-})();
-
 // Home-page solution finder — four lightweight questions that lead to a useful next step.
 (function initSolutionFinder() {
   const root = document.querySelector('.solution-finder');

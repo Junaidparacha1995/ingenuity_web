@@ -13,8 +13,8 @@ The `/work#case-studies` entry path should preserve its hash without letting the
 
 **Why:** The Work page is the canonical tabbed destination from the hero CTA, and fragment navigation must not produce a blank offset before the selected panel.
 
-Expandable cards across the site should allow multiple panels to remain open; toggling one must not close another, and collapsed cards must keep their height while open cards grow.
+The homepage decision cards show all supporting detail by default and should remain equal-height; expandable project and case-study panels elsewhere allow multiple cards to stay open independently.
 
-**Why:** the user explicitly requested independent multi-open dropdowns and sizing across every page that contains these cards.
+**Why:** the homepage cards no longer have Explore controls, while the user still expects independent expansion for project and case-study detail panels.
 
-**How to apply:** Keep state changes local to the toggled card, remove sibling auto-close handlers, and size grid rows so only expanded cards change height. Apply the cached collapsed height on the next frame; do not clear and recalculate it after the collapse animation, which can cause a visible shrink-and-grow jump.
+**How to apply:** Keep homepage decision-card details visible and equalize their heights across breakpoints. For expandable project and case-study panels, keep state changes local to each card, remove sibling auto-close handlers, and preserve collapsed heights while expanded cards grow. Apply cached collapsed heights immediately; do not clear and recalculate them after collapse animations.

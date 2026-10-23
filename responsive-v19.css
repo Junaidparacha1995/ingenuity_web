@@ -2520,11 +2520,11 @@ body.motion-paused .motion-region *::after {
 
 @media (max-width: 767px) {
   .decision-grid {
-    align-items: start;
-    grid-auto-rows: auto;
+    align-items: stretch !important;
+    grid-auto-rows: 1fr !important;
   }
 
   .decision-card {
-    align-self: start;
+    align-self: stretch !important;
   }
 }
