@@ -296,12 +296,8 @@ body.home-page .hc-copy .hero-slide h2 .hm-hl {
   color: var(--orange, #e13511);
 }
 
-body.home-page .hero-slide-engineering h2 {
-  max-width: none;
-}
-
-body.home-page .hero-slide-engineering .hero-title-nowrap {
-  white-space: nowrap;
+body.home-page .hero-slide-engineering .hero-title-line {
+  display: block;
 }
 
 @media (max-width: 1079px) {
@@ -313,10 +309,6 @@ body.home-page .hero-slide-engineering .hero-title-nowrap {
     text-align: center;
     font-size: clamp(36px, 7vw, 54px);
   }
-
-  body.home-page .hero-slide-engineering h2 {
-    max-width: 100%;
-  }
 }
 
 @media (max-width: 767px) {
@@ -327,9 +319,5 @@ body.home-page .hero-slide-engineering .hero-title-nowrap {
     font-size: clamp(34px, 9.6vw, 42px) !important;
     line-height: 1.08;
     letter-spacing: -.035em;
-  }
-
-  body.home-page .hero-slide-engineering h2 {
-    max-width: 100%;
   }
 }
